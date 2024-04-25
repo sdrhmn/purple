@@ -58,11 +58,11 @@ class LaunchScreenHeadings {
 }
 
 // Icons
-const tab1Icon = Icon(Icons.timelapse);
-const tab2Icon = Icon(Icons.repeat);
-const tab3Icon = Icon(Icons.calendar_month);
-const tab4Icon = Icon(Icons.device_unknown);
-const tab5Icon = Icon(Icons.repeat_on_rounded);
+final tab1Icon = Image.asset("assets/icons/tab_1_icon.png");
+final tab2Icon = Image.asset("assets/icons/tab_2_icon.png");
+final tab3Icon = Image.asset("assets/icons/tab_3_icon.png");
+final tab4Icon = Image.asset("assets/icons/tab_4_icon.png");
+final tab5Icon = Image.asset("assets/icons/tab_5_icon.png");
 const tab6Icon = Icon(Icons.construction_rounded);
 const tab7Icon = Icon(Icons.construction_rounded);
 const tab8Icon = Icon(Icons.construction_rounded);

@@ -593,3 +593,10 @@
 - Tab 1 
 
 - M -> C 
+
+---
+
+**Bismillahir-Rahmanir-Rahim** 
+
+- Remove plus FAB from tab 1 -> invisible
+- Make the settings icon invisible

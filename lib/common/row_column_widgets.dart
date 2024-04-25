@@ -26,7 +26,7 @@ class CancelSubmitRowMolecule extends StatelessWidget {
               color: Colors.red[800],
             ),
             TextButtonAtom(
-              color: Colors.indigo[800],
+              color: Colors.purple[800],
               onPressed: onSubmitPressed,
               text: "Submit",
             ),

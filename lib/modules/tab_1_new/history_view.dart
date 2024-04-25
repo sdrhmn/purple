@@ -18,7 +18,7 @@ class Tab1HistoryView extends ConsumerWidget {
           return ListView.builder(
             itemBuilder: (context, index) {
               return Container(
-                color: index % 2 == 0 ? Colors.indigo[700] : Colors.indigo[800],
+                color: index % 2 == 0 ? Colors.purple[700] : Colors.purple[800],
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(children: [
@@ -48,6 +48,7 @@ class Tab1HistoryView extends ConsumerWidget {
           NavigationRowMolecule(
             onPressedHome: () =>
                 ref.read(tabIndexProvider.notifier).setIndex(12),
+            hideAddButton: true,
           ),
           const SizedBox(
             height: 20,

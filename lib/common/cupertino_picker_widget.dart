@@ -38,7 +38,7 @@ class CupertinoPickerRowOrganism extends StatelessWidget {
               initialItemIndex: initialItemIndices[index],
               size: Size(0, pickerHeight),
               containerColor: pickerContainerColors[index],
-              selectionOverlayColor: const Color.fromARGB(129, 33, 149, 243),
+              selectionOverlayColor: Color.fromARGB(129, 201, 33, 243),
             ),
           );
         }),

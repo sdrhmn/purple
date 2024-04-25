@@ -98,14 +98,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                           return Text(headings[index] ?? "Purple");
                         },
                       ),
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: IconButton.outlined(
-                              onPressed: () {},
-                              icon: const Icon(Icons.settings)),
-                        )
-                      ],
+                      // actions: [
+                      //   // Padding(
+                      //   //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                      //   //   child: IconButton.outlined(
+                      //   //     onPressed: () {},
+                      //   //     icon: const Icon(Icons.settings),
+                      //   //   ),
+                      //   // )
+                      // ],
                     ),
                     body: tabs[ref.watch(tabIndexProvider)],
                   ),

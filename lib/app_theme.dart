@@ -5,7 +5,7 @@ final appDarkTheme = ThemeData(
 
   // Define the default brightness and colors.
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.indigo,
+    seedColor: Colors.purple,
     // ···
     brightness: Brightness.dark,
   ),
@@ -36,31 +36,31 @@ final appDarkTheme = ThemeData(
 );
 
 class Tab1Colors {
-  static List<Color> alternateTileColors = [Colors.indigo, Colors.indigo[900]!];
+  static List<Color> alternateTileColors = [Colors.purple, Colors.purple[900]!];
 }
 
 class LaunchScreenColors {
   static const Color bgTimer = Colors.green;
   static const Color bgAlert = Colors.green;
-  static Color bgInternal = Colors.indigo[700]!;
-  static Color bgFMS = Colors.indigo[900]!;
+  static Color bgInternal = Colors.purple[700]!;
+  static Color bgFMS = Colors.purple[900]!;
   static const List<Color> bgFMSRadioButtons = [
     Colors.green,
     Colors.yellow,
     Colors.red
   ];
-  static const Color bgExternalHeader = Colors.indigo;
+  static const Color bgExternalHeader = Colors.purple;
   static const Color bgSeparator = Colors.black;
-  static const Color bgTaskTodayTile = Colors.indigo;
-  static const Color bgNonScheduledTile = Colors.indigo;
+  static const Color bgTaskTodayTile = Colors.purple;
+  static const Color bgNonScheduledTile = Colors.purple;
 }
 
 class SchedulingColors {
   static const Color? bgTodaysTasksHeader = null;
   static const Color? bgUpcomingTasksHeader = null;
 
-  static Color bgTodaysTaskTile = Colors.indigo[800]!;
-  static Color bgUpcomingTaskTile = Colors.indigo[800]!;
+  static Color bgTodaysTaskTile = Colors.purple[800]!;
+  static Color bgUpcomingTaskTile = Colors.purple[800]!;
 }
 
 class Tab3Colors {
@@ -89,9 +89,9 @@ class SPWPageColors {
   static const Color bgWeightCell = Colors.black;
 
   static List<Color> pickerColumnColors = [
-    Colors.indigo[800]!,
-    Colors.indigo[700]!,
-    Colors.indigo[800]!,
+    Colors.purple[800]!,
+    Colors.purple[700]!,
+    Colors.purple[800]!,
   ];
 }
 
@@ -187,7 +187,7 @@ Icon tabElevenIcon = const Icon(Icons.pentagon);
 Icon tabTwelveIcon = const Icon(Icons.pentagon);
 
 // Tab Colors
-Color bgTabButtonColor = Colors.indigoAccent;
+Color bgTabButtonColor = Colors.purpleAccent;
 
 // LaunchScreen Section Colors
 Color launchSectionOneTimerColor = Colors.green;

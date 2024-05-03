@@ -6,6 +6,7 @@ import 'package:timely/app_theme.dart';
 import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/common/splash.dart';
+import 'package:timely/modules/settings/view.dart';
 import 'package:timely/modules/tab_1_new/incrementor.dart';
 import 'package:timely/modules/tab_1_new/repository.dart';
 import 'package:timely/reusables.dart';
@@ -98,15 +99,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                           return Text(headings[index] ?? "Purple");
                         },
                       ),
-                      // actions: [
-                      //   // Padding(
-                      //   //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                      //   //   child: IconButton.outlined(
-                      //   //     onPressed: () {},
-                      //   //     icon: const Icon(Icons.settings),
-                      //   //   ),
-                      //   // )
-                      // ],
+                      actions: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: IconButton.outlined(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return const ReminderView();
+                                },
+                              ));
+                            },
+                            icon: const Icon(Icons.settings),
+                          ),
+                        )
+                      ],
                     ),
                     body: tabs[ref.watch(tabIndexProvider)],
                   ),

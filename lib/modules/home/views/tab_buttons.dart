@@ -73,7 +73,7 @@ class _TabButtonsState extends ConsumerState<TabButtons> {
                     ref.read(tabIndexProvider.notifier).setIndex(i);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.p_8 / 2),
+                    padding: const EdgeInsets.all(AppSizes.p_12),
                     child: tabIcons[i],
                   ),
                 ),

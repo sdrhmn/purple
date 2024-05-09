@@ -73,6 +73,14 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
     's': timeIcon,
   };
 
+  List<String> levels = [
+    'Great',
+    'High',
+    'Normal',
+    'Low',
+    'None',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -91,99 +99,112 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
             return StatefulBuilder(
               builder: (context, setDialogState) {
                 return AlertDialog(
-                    content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (String word in 'comm.food.spending'.split(".")) ...[
-                      Row(
+                    title: Text("Controls"),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          ...[
-                            Text(word),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            ChoiceChip(
-                              checkmarkColor: Colors.black,
-                              color:
-                                  const MaterialStatePropertyAll(Colors.yellow),
-                              label: const SizedBox(
-                                  width: 40,
-                                  child: Center(
-                                      child: Text(
-                                    "Pause",
-                                    style: TextStyle(color: Colors.black),
-                                  ))),
-                              selected: actions[word[0]] == 0,
-                              onSelected: (selected) {
-                                actions[word[0]] = 0;
-                                setDialogState(() {});
-                              },
+                          for (String word
+                              in 'Communication.Food.Spending'.split(".")) ...[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...[
+                                  Text(word),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ChoiceChip(
+                                        checkmarkColor: Colors.black,
+                                        color: const MaterialStatePropertyAll(
+                                            Colors.yellow),
+                                        label: const SizedBox(
+                                            width: 40,
+                                            child: Center(
+                                                child: Text(
+                                              "Fair",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ))),
+                                        selected:
+                                            actions[word[0].toLowerCase()] == 0,
+                                        onSelected: (selected) {
+                                          actions[word[0].toLowerCase()] = 0;
+                                          setDialogState(() {});
+                                        },
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      ChoiceChip(
+                                        color: const MaterialStatePropertyAll(
+                                            Colors.red),
+                                        label: const SizedBox(
+                                            width: 40,
+                                            child: Center(child: Text("Poor"))),
+                                        selected: actions[word[0]] == 1,
+                                        onSelected: (selected) {
+                                          actions[word[0]] = 1;
+                                          setDialogState(() {});
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ]
+                              ],
                             ),
                             const SizedBox(
-                              width: 5,
+                              height: 10,
                             ),
-                            ChoiceChip(
-                              color: const MaterialStatePropertyAll(Colors.red),
-                              label: const SizedBox(
-                                  width: 40,
-                                  child: Center(child: Text("Stop"))),
-                              selected: actions[word[0]] == 1,
-                              onSelected: (selected) {
-                                actions[word[0]] = 1;
-                                setDialogState(() {});
-                              },
-                            ),
-                          ]
+                          ],
+                          Row(
+                            children: [
+                              const Text("Enthusiasm"),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Container(),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CupertinoPicker(
+                                    itemExtent: 40,
+                                    onSelectedItemChanged: (index) {
+                                      level = index + 1;
+                                    },
+                                    children: List.generate(
+                                        5,
+                                        (index) => Center(
+                                            child: Text(levels[index])))),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          IconButton.filledTonal(
+                            onPressed: () {
+                              for (String letter in actions.keys) {
+                                ref
+                                    .read(progressModelController.notifier)
+                                    .pause(letter, actions[letter]);
+                              }
+                              ref
+                                  .read(progressModelController.notifier)
+                                  .setLevel(level);
+
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.done),
+                          ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                    Row(
-                      children: [
-                        const Text("Level"),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Container(),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: CupertinoPicker(
-                              itemExtent: 40,
-                              onSelectedItemChanged: (index) {
-                                level = index + 1;
-                              },
-                              children: List.generate(
-                                  5,
-                                  (index) => Center(
-                                      child: Text((++index).toString())))),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    IconButton.filledTonal(
-                      onPressed: () {
-                        for (String letter in actions.keys) {
-                          ref
-                              .read(progressModelController.notifier)
-                              .pause(letter, actions[letter]);
-                        }
-                        ref
-                            .read(progressModelController.notifier)
-                            .setLevel(level);
-
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.done),
-                    ),
-                  ],
-                ));
+                    ));
               },
             );
           },

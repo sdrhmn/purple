@@ -81,6 +81,9 @@ flutter:
     - assets/icons/tab_9_icon.png
     - assets/icons/tab_10_icon.png
     - assets/icons/tab_11_icon.png
+    - assets/icons/food.png
+    - assets/icons/communication.png
+    - assets/icons/time.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

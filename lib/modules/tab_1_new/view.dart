@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/tab_1_new/model_provider.dart';
+import 'package:timely/values.dart';
 
 class ProgressView extends ConsumerStatefulWidget {
   const ProgressView({super.key});
@@ -66,6 +67,12 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
   };
   int level = 0;
 
+  Map<String, Image> icons = {
+    'c': communicationIcon,
+    'f': foodIcon,
+    's': timeIcon,
+  };
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -87,11 +94,11 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                     content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (String letter in 'c.f.s'.split(".")) ...[
+                    for (String word in 'comm.food.spending'.split(".")) ...[
                       Row(
                         children: [
                           ...[
-                            Text(letter.toUpperCase()),
+                            Text(word),
                             Expanded(
                               child: Container(),
                             ),
@@ -106,9 +113,9 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                     "Pause",
                                     style: TextStyle(color: Colors.black),
                                   ))),
-                              selected: actions[letter] == 0,
+                              selected: actions[word[0]] == 0,
                               onSelected: (selected) {
-                                actions[letter] = 0;
+                                actions[word[0]] = 0;
                                 setDialogState(() {});
                               },
                             ),
@@ -120,9 +127,9 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                               label: const SizedBox(
                                   width: 40,
                                   child: Center(child: Text("Stop"))),
-                              selected: actions[letter] == 1,
+                              selected: actions[word[0]] == 1,
                               onSelected: (selected) {
-                                actions[letter] = 1;
+                                actions[word[0]] = 1;
                                 setDialogState(() {});
                               },
                             ),
@@ -206,7 +213,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                   : model.paused.containsKey(letter)
                                       ? Colors.yellow[800]
                                       : Colors.green,
-                              child: Text(letter.toUpperCase()),
+                              child: icons[letter],
                             )
                         ],
                       );

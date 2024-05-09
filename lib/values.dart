@@ -69,3 +69,8 @@ const tab8Icon = Icon(Icons.construction_rounded);
 const tab9Icon = Icon(Icons.construction_rounded);
 const tab10Icon = Icon(Icons.construction_rounded);
 const tab11Icon = Icon(Icons.construction_rounded);
+final foodIcon = Image.asset("assets/icons/food.png");
+final communicationIcon = Image.asset("assets/icons/communication.png");
+final timeIcon = Image.asset("assets/icons/time.png");
+
+

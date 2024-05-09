@@ -99,7 +99,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
             return StatefulBuilder(
               builder: (context, setDialogState) {
                 return AlertDialog(
-                    title: Text("Controls"),
+                    title: Text("Control Status"),
                     content: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -133,6 +133,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                             actions[word[0].toLowerCase()] == 0,
                                         onSelected: (selected) {
                                           actions[word[0].toLowerCase()] = 0;
+                                          print(actions);
                                           setDialogState(() {});
                                         },
                                       ),
@@ -145,9 +146,12 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                         label: const SizedBox(
                                             width: 40,
                                             child: Center(child: Text("Poor"))),
-                                        selected: actions[word[0]] == 1,
+                                        selected:
+                                            actions[word[0].toLowerCase()] == 1,
                                         onSelected: (selected) {
-                                          actions[word[0]] = 1;
+                                          actions[word[0].toLowerCase()] = 1;
+                                          print(actions);
+
                                           setDialogState(() {});
                                         },
                                       ),

@@ -132,8 +132,15 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                         selected:
                                             actions[word[0].toLowerCase()] == 0,
                                         onSelected: (selected) {
-                                          actions[word[0].toLowerCase()] = 0;
-                                          print(actions);
+                                          // Select and deselect
+                                          if (actions[word[0].toLowerCase()] ==
+                                              0) {
+                                            actions[word[0].toLowerCase()] =
+                                                null;
+                                          } else {
+                                            actions[word[0].toLowerCase()] = 0;
+                                          }
+
                                           setDialogState(() {});
                                         },
                                       ),
@@ -149,8 +156,13 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                         selected:
                                             actions[word[0].toLowerCase()] == 1,
                                         onSelected: (selected) {
-                                          actions[word[0].toLowerCase()] = 1;
-                                          print(actions);
+                                          if (actions[word[0].toLowerCase()] ==
+                                              1) {
+                                            actions[word[0].toLowerCase()] =
+                                                null;
+                                          } else {
+                                            actions[word[0].toLowerCase()] = 1;
+                                          }
 
                                           setDialogState(() {});
                                         },
@@ -191,20 +203,31 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                           const SizedBox(
                             height: 20,
                           ),
-                          IconButton.filledTonal(
-                            onPressed: () {
-                              for (String letter in actions.keys) {
-                                ref
-                                    .read(progressModelController.notifier)
-                                    .pause(letter, actions[letter]);
-                              }
-                              ref
-                                  .read(progressModelController.notifier)
-                                  .setLevel(level);
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton.filledTonal(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(Icons.cancel),
+                              ),
+                              IconButton.filledTonal(
+                                onPressed: () {
+                                  for (String letter in actions.keys) {
+                                    ref
+                                        .read(progressModelController.notifier)
+                                        .pause(letter, actions[letter]);
+                                  }
+                                  ref
+                                      .read(progressModelController.notifier)
+                                      .setLevel(level);
 
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(Icons.done),
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(Icons.done),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -84,7 +84,9 @@ flutter:
     - assets/icons/food.png
     - assets/icons/communication.png
     - assets/icons/time.png
-    
+    - assets/icons/weight.png
+    - assets/icons/bowel.png
+    - assets/icons/sleep.png    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

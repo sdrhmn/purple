@@ -29,18 +29,20 @@ class Tab5OutputTemplate extends StatelessWidget {
       children: [
         Column(
           children: [
-            TextRowMolecule(
-              height: 40,
-              bolded: true,
-              rowColor: SPWPageColors.bgSPWHeaderRow,
-              texts: [
-                Tab4Headings.date,
-                Tab4Headings.s,
-                Tab4Headings.p,
-                Tab4Headings.w,
-                Tab4Headings.weight
-              ],
-              customWidths: const {0: 120, 4: 100},
+            Container(
+              color: SPWPageColors.bgSPWHeaderRow,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(children: [
+                  const SizedBox(
+                      width: 120, child: Center(child: Text("Date"))),
+                  Expanded(child: CircleAvatar(child: sleepIcon)),
+                  Expanded(child: CircleAvatar(child: bowelIcon)),
+                  Expanded(child: CircleAvatar(child: weightIcon)),
+                  const SizedBox(
+                      width: 100, child: Center(child: Text("Weight"))),
+                ]),
+              ),
             ),
             ListView.builder(
               shrinkWrap: true,

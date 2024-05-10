@@ -50,7 +50,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
     final tenPM = DateTime(now.year, now.month, now.day, 22, 0);
     final sixAM = DateTime(now.year, now.month, now.day, 6, 0);
 
-    if (now.isBefore(tenPM)) {
+    if (now.isAfter(sixAM) && now.isBefore(tenPM)) {
       _remainingTime = tenPM.difference(now);
       _elapsedTime = now.difference(sixAM);
     } else {
@@ -99,7 +99,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
             return StatefulBuilder(
               builder: (context, setDialogState) {
                 return AlertDialog(
-                    title: Text("Control Status"),
+                    title: const Text("Control Status"),
                     content: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -111,7 +111,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                               children: [
                                 ...[
                                   Text(word),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(

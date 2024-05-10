@@ -72,5 +72,6 @@ const tab11Icon = Icon(Icons.construction_rounded);
 final foodIcon = Image.asset("assets/icons/food.png");
 final communicationIcon = Image.asset("assets/icons/communication.png");
 final timeIcon = Image.asset("assets/icons/time.png");
-
-
+final weightIcon = Image.asset("assets/icons/weight.png");
+final sleepIcon = Image.asset("assets/icons/sleep.png");
+final bowelIcon = Image.asset("assets/icons/bowel.png");

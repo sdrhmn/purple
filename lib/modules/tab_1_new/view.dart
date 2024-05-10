@@ -232,13 +232,20 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           for (String letter in "c.f.s".split("."))
-                            CircleAvatar(
-                              backgroundColor: model.stopped.contains(letter)
-                                  ? Colors.red
-                                  : model.paused.containsKey(letter)
-                                      ? Colors.yellow[800]
-                                      : Colors.green,
-                              child: icons[letter],
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: model.stopped.contains(letter)
+                                    ? Colors.red
+                                    : model.paused.containsKey(letter)
+                                        ? Colors.yellow[800]
+                                        : Colors.green,
+                              ),
+                              child: CircleAvatar(
+                                radius: 22,
+                                child: icons[letter],
+                              ),
                             )
                         ],
                       );

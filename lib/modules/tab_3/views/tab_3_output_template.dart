@@ -78,8 +78,8 @@ class Tab3OutputTemplate extends StatelessWidget {
                                     dateToday.day),
                               )
                                   ? Tab3Colors.bgDatePassed
-                                  : Tab3Colors
-                                      .bgPriorities[tab3Models[index].priority],
+                                  : Tab3OutputColors.priorityColors[
+                                      tab3Models[index].priority],
                               customWidths: const {1: 70},
                               texts: [
                                 tab3Models[index].text_1,

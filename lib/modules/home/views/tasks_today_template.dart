@@ -5,6 +5,7 @@ import 'package:timely/app_theme.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/home/models/task_today.dart';
 import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/tokens/tab_3_colors.dart';
 
 class TasksTodayTemplate extends StatefulWidget {
   final List data;
@@ -100,7 +101,10 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                           child: Column(
                             children: [
                               Container(
-                                color: LaunchScreenColors.bgTaskTodayTile,
+                                color: tasksToday[index].tabNumber == 3
+                                    ? Tab3OutputColors.priorityColors[
+                                        tasksToday[index].model.priority]
+                                    : LaunchScreenColors.bgTaskTodayTile,
                                 child: FadeTransition(
                                   opacity: blinkIndices.contains(index)
                                       ? _controller
@@ -190,7 +194,10 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                       return ConstrainedBox(
                         constraints: const BoxConstraints(minHeight: 30),
                         child: Container(
-                          color: LaunchScreenColors.bgNonScheduledTile,
+                          color: tasksToday[index].tabNumber == 3
+                              ? Tab3OutputColors.priorityColors[
+                                  tasksToday[index].model.priority + 1]
+                              : LaunchScreenColors.bgTaskTodayTile,
                           child: Padding(
                             padding: const EdgeInsets.all(AppSizes.p_8),
                             child: Row(

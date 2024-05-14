@@ -75,13 +75,29 @@ class Tab5InputTemplate extends StatelessWidget {
         ),
 
         // Weight Text Field
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p_16),
-          child: TextFormFieldAtom(
-            initialValue: model.weight != null ? model.weight.toString() : "",
-            onChanged: onWeightChanged,
-            hintText: Tab4Headings.weight,
-          ),
+        Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                ),
+                Text("Weight in kg/lbs"),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.p_16),
+              child: TextFormFieldAtom(
+                initialValue:
+                    model.weight != null ? model.weight.toString() : "",
+                onChanged: onWeightChanged,
+                hintText: Tab4Headings.weightTextHint,
+              ),
+            ),
+          ],
         ),
 
         const Divider(

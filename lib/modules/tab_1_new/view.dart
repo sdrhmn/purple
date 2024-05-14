@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/tab_1_new/model_provider.dart';
+import 'package:timely/modules/tab_2/controllers/output_controller.dart';
 import 'package:timely/values.dart';
 
 class ProgressView extends ConsumerStatefulWidget {
@@ -18,41 +19,48 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
   Duration _elapsedTime = Duration.zero;
   Timer? _timer;
 
-  @override
-  void initState() {
-    super.initState();
-    _updateTime();
-    _startTimerIfWithinRange();
-  }
+  get loading => null;
 
-  void _startTimerIfWithinRange() {
+  void _startTimerIfWithinRange(sleepTime) {
     final now = DateTime.now();
-    final tenPM = DateTime(now.year, now.month, now.day, 22, 0);
-    final sixAM = DateTime(now.year, now.month, now.day, 6, 0);
 
-    if (now.isAfter(sixAM) && now.isBefore(tenPM)) {
+    DateTime sleepDateTime = sleepTime.hour > 12
+        ? DateTime(
+            now.year, now.month, now.day, sleepTime.hour, sleepTime.minute)
+        : DateTime(
+            now.year, now.month, now.day + 1, sleepTime.hour, sleepTime.minute);
+    final wakeupTime = sleepTime.hour > 12
+        ? sleepDateTime.copyWith(hour: (sleepTime.hour + 8) % 24)
+        : sleepDateTime.copyWith(
+            day: now.day - 1, hour: (sleepTime.hour + 8) % 24);
+
+    if (now.isAfter(wakeupTime) && now.isBefore(sleepDateTime)) {
+      _remainingTime = sleepDateTime.difference(now);
+      _elapsedTime = now.difference(wakeupTime);
+
       _timer = Timer.periodic(
           const Duration(seconds: 1),
           (_) => setState(() {
-                _updateTime();
+                _updateTime(sleepDateTime, wakeupTime);
               }));
     }
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void initState() {
+    Future.delayed(Duration.zero, () async {
+      _startTimerIfWithinRange(
+          await ref.read(tab2OutputProvider.notifier).fetchSleepTime());
+    });
+    super.initState();
   }
 
-  void _updateTime() {
-    final now = DateTime.now();
-    final tenPM = DateTime(now.year, now.month, now.day, 22, 0);
-    final sixAM = DateTime(now.year, now.month, now.day, 6, 0);
+  void _updateTime(sleepDateTime, wakeupTime) {
+    DateTime now = DateTime.now();
 
-    if (now.isAfter(sixAM) && now.isBefore(tenPM)) {
-      _remainingTime = tenPM.difference(now);
-      _elapsedTime = now.difference(sixAM);
+    if (now.isAfter(wakeupTime) && now.isBefore(sleepDateTime)) {
+      _remainingTime = sleepDateTime.difference(now);
+      _elapsedTime = now.difference(wakeupTime);
     } else {
       _remainingTime = Duration.zero;
       _elapsedTime = Duration.zero;
@@ -60,6 +68,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
     }
   }
 
+// State variables
   Map actions = {
     "m": null,
     "f": null,
@@ -80,6 +89,12 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
     'Low',
     'None',
   ];
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +271,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                         children: [
                           for (String letter in "c.f.s".split("."))
                             Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: model.stopped.contains(letter)

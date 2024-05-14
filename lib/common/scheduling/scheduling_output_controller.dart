@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/common/scheduling/scheduling_repository.dart';
@@ -35,6 +36,23 @@ class SchedulingOutputNotifier<T>
         .fetchActivities(SchedulingModel.fromJson, pendingFile);
 
     return models;
+  }
+
+  Future<TimeOfDay> fetchSleepTime() async {
+    pendingFile = (await ref.read(dbFilesProvider.future))[tabNumber]![0];
+    List<SchedulingModel> models = await ref
+        .read(schedulingRepositoryServiceProvider.notifier)
+        .getActivitiesForToday(SchedulingModel.fromJson, pendingFile);
+
+    late SchedulingModel sleep;
+    for (SchedulingModel model in models) {
+      if (model.name == "Sleep") {
+        sleep = model;
+        break;
+      }
+    }
+
+    return sleep.startTime;
   }
 
   Future<void> deleteModel(SchedulingModel model) async {

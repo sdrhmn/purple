@@ -6,7 +6,7 @@ import 'package:timely/app_theme.dart';
 import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/common/splash.dart';
-import 'package:timely/modules/settings/view.dart';
+// import 'package:timely/modules/settings/view.dart';
 import 'package:timely/modules/tab_1_new/incrementor.dart';
 import 'package:timely/modules/tab_1_new/repository.dart';
 import 'package:timely/reusables.dart';

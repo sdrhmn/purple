@@ -43,11 +43,11 @@ class Tab4Headings {
   static String weight = "Weight";
 
   // Input Screen
-  static String sScore = "S Score";
-  static String pScore = "P Score";
-  static String wScore = "W Score";
+  static String sScore = "Sleep";
+  static String pScore = "Bowel";
+  static String wScore = "Weight";
   static List<String> sliderHeadings = ["Good", "Fair", "Poor"];
-  static String weightTextHint = "Weight";
+  static String weightTextHint = "65.0";
 }
 
 class LaunchScreenHeadings {

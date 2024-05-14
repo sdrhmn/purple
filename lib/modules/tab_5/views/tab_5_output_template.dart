@@ -55,8 +55,7 @@ class Tab5OutputTemplate extends StatelessWidget {
                     child: SPWTextRowMolecule(
                       height: 50,
                       texts: [
-                        DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY)
-                            .format(model.date),
+                        DateFormat(DateFormat.MONTH_DAY).format(model.date),
                         model.sScore.toString(),
                         model.pScore.toString(),
                         model.wScore.toString(),

@@ -36,10 +36,29 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
             onDismissed: (DismissDirection direction, SchedulingModel model,
                 String type) {
               if (direction == DismissDirection.startToEnd) {
-                controller.deleteModel(model);
-                models[type]!
-                    .removeWhere((element) => element.uuid == model.uuid);
-                setState(() {});
+                if (model.name != "Sleep") {
+                  controller.deleteModel(model);
+                  models[type]!
+                      .removeWhere((element) => element.uuid == model.uuid);
+                  setState(() {});
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text("This item cannot be deleted."),
+                        actions: [
+                          FilledButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Okay"))
+                        ],
+                      );
+                    },
+                  );
+                  setState(() {});
+                }
               } else {
                 models[type]!.removeWhere((e) => e.uuid == model.uuid);
                 setState(() {});

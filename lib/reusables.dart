@@ -46,7 +46,23 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
       File file = File('${docDir.path}/tab_${tabNumber}_pending.json');
 
       switch (tabNumber) {
-        case 2 || 6 || 7:
+        case 2:
+          ref.read(schedulingRepositoryServiceProvider.notifier).writeModel(
+                SchedulingModel(
+                  name: "Sleep",
+                  startTime: TimeOfDay(hour: 22, minute: 0),
+                  startDate: DateTime.now(),
+                  dur: Duration(hours: 8),
+                  every: 1,
+                  basis: Basis.day,
+                  frequency: Frequency.daily,
+                  repetitions: {},
+                ),
+                file,
+              );
+          break;
+
+        case 6 || 7:
           ref.read(schedulingRepositoryServiceProvider.notifier).writeModel(
                 SchedulingModel(
                   name: "This is a sample entry that repeats daily.",

@@ -196,7 +196,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                         child: Container(
                           color: tasksToday[index].tabNumber == 3
                               ? Tab3OutputColors.priorityColors[
-                                  tasksToday[index].model.priority + 1]
+                                  nonScheduledTasks[index].priority]
                               : LaunchScreenColors.bgTaskTodayTile,
                           child: Padding(
                             padding: const EdgeInsets.all(AppSizes.p_8),

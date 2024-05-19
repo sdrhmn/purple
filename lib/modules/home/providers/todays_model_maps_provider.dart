@@ -32,7 +32,7 @@ final todaysModelMapsProvider = FutureProvider.autoDispose<List>((ref) async {
     var now = DateTime.now();
     if ("${now.year} ${now.month} ${now.day}" ==
             "${nextDateTime.year} ${nextDateTime.month} ${nextDateTime.day}" &&
-        !model.name!.contains("This is a sample entry that repeats daily.")) {
+        !model.name!.contains("Sleep")) {
       modelMaps.add({
         "Tab Number": 2,
         "Data": model.toJson(),

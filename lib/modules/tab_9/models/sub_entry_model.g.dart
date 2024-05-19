@@ -19,7 +19,7 @@ _$Tab9SubEntryModelImpl _$$Tab9SubEntryModelImplFromJson(
 Map<String, dynamic> _$$Tab9SubEntryModelImplToJson(
         _$Tab9SubEntryModelImpl instance) =>
     <String, dynamic>{
-      'ID': instance.uuid ?? const Uuid().v4(),
+      'ID': instance.uuid,
       'date': instance.date.toIso8601String(),
       'time': instance.time,
       'task': instance.task,

@@ -74,32 +74,35 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     return models;
   }
 
-  Future<void> writeModel(Tab3Model model) async {
-    final scheduled = (ref.read(dbFilesProvider)).requireValue[3]![0];
-    final nonScheduled = (ref.read(dbFilesProvider)).requireValue[3]![1];
+  Future<void> writeModel(Tab3Model model, {bool? completed}) async {
+    final scheduledFile = (ref.read(dbFilesProvider)).requireValue[3]![0];
+    final nonScheduledFile = (ref.read(dbFilesProvider)).requireValue[3]![1];
 
-    final scheduledContent = jsonDecode(await scheduled.readAsString());
-    final nonScheduledContent = jsonDecode(await nonScheduled.readAsString());
+    final scheduledContent = jsonDecode(await scheduledFile.readAsString());
+    final nonScheduledContent =
+        jsonDecode(await nonScheduledFile.readAsString());
 
-    if (model.date != null && model.time != null) {
-      String date = model.date.toString().substring(0, 10);
+    if (completed == false) {
+      if (model.date != null && model.time != null) {
+        String date = model.date.toString().substring(0, 10);
 
-      if (!scheduledContent.keys.contains(date)) {
-        scheduledContent[date] = [];
+        if (!scheduledContent.keys.contains(date)) {
+          scheduledContent[date] = [];
+        }
+
+        scheduledContent[date] = [
+          ...scheduledContent[date], // -> Existing data
+          // New data:
+          model.toJson(),
+        ];
+        await scheduledFile.writeAsString(jsonEncode(scheduledContent));
+      } else {
+        nonScheduledContent.add(
+          model.toJson(),
+        );
+        await nonScheduledFile.writeAsString(jsonEncode(nonScheduledContent));
       }
-
-      scheduledContent[date] = [
-        ...scheduledContent[date], // -> Existing data
-        // New data:
-        model.toJson(),
-      ];
-      await scheduled.writeAsString(jsonEncode(scheduledContent));
-    } else {
-      nonScheduledContent.add(
-        model.toJson(),
-      );
-      await nonScheduled.writeAsString(jsonEncode(nonScheduledContent));
-    }
+    } else {}
   }
 
   Future<void> deleteModel(Tab3Model model) async {
@@ -131,6 +134,13 @@ class Tab3RepositoryNotifier extends Notifier<void> {
   Future<void> editModel(Tab3Model model) async {
     await deleteModel(model);
     await writeModel(model);
+  }
+
+  Future<void> markComplete(Tab3Model model) async {
+// Delete from pending
+    await deleteModel(model);
+
+    // Write to completed
   }
 }
 

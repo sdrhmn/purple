@@ -27,7 +27,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
               if (direction == DismissDirection.startToEnd) {
                 controller.deleteModel(model);
               } else {
-                controller.markModelAsComplete(model);
+                controller.markComplete(model);
               }
             },
             onTap: (model) {

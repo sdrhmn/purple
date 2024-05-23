@@ -18,6 +18,8 @@ class TaskToday {
   });
 
   TaskToday.fromJson(Map json) {
+    json["Data"] = {"ID": json["ID"], ...json["Data"]};
+
     tabNumber = json["Tab Number"];
     name = json["Data"][tabNumber == 3 ? "Activity" : "Name"];
 

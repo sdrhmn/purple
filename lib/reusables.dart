@@ -205,6 +205,11 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
         }
       }
 
+      // Create completed file for tab 3
+      if (tabNumber == 3) {
+        await completed.create();
+      }
+
       if ([2, 6, 7].contains(tabNumber)) {
         File current =
             File('${docDir.path}/tab_${tabNumber}_current_activities.json');
@@ -239,6 +244,7 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
     files[3] = [
       scheduled,
       nonSchedulued,
+      files[3]!.last,
     ];
 
     for (int i in [2, 6, 7]) {
@@ -256,7 +262,16 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
       await tasksToday.writeAsString("{}");
     }
 
-    files[0] = [tasksToday];
+    File tasksTodayCompleted =
+        File('${docDir.path}/tasks_today_completed.json');
+    await tasksTodayCompleted.create();
+    if ((await tasksTodayCompleted.readAsString()).isEmpty) {
+      await tasksTodayCompleted.writeAsString("{}");
+    }
+    files[0] = [
+      tasksToday,
+      tasksTodayCompleted,
+    ];
 
     return files;
   },

@@ -10,8 +10,12 @@ import 'package:timely/modules/tab_3/tokens/tab_3_colors.dart';
 class TasksTodayTemplate extends StatefulWidget {
   final List data;
   final Function(dynamic model, int tabNumber) onTap;
-  final Function(DismissDirection direction, dynamic model, int tabNumber)
-      onDismissed;
+  final Function(
+    DismissDirection direction,
+    dynamic model,
+    int? tabNumber,
+    TaskToday? task,
+  ) onDismissed;
 
   const TasksTodayTemplate({
     super.key,
@@ -96,8 +100,8 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                       return InkWell(
                         onTap: () => widget.onTap(model, tabNumber),
                         child: DismissibleEntryRowMolecule(
-                          onDismissed: (direction) =>
-                              widget.onDismissed(direction, model, tabNumber),
+                          onDismissed: (direction) => widget.onDismissed(
+                              direction, model, tabNumber, tasksToday[index]),
                           child: Column(
                             children: [
                               Container(
@@ -191,25 +195,28 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                     itemBuilder: (context, index) {
                       String name = nonScheduledTasks[index].text_1;
 
-                      return ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 30),
-                        child: Container(
-                          color: tasksToday[index].tabNumber == 3
-                              ? Tab3OutputColors.priorityColors[
-                                  nonScheduledTasks[index].priority]
-                              : LaunchScreenColors.bgTaskTodayTile,
-                          child: Padding(
-                            padding: const EdgeInsets.all(AppSizes.p_8),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    name,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                      return DismissibleEntryRowMolecule(
+                        onDismissed: (direction) => widget.onDismissed(
+                            direction, nonScheduledTasks[index], null, null),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 30),
+                          child: Container(
+                            color: Tab3OutputColors.priorityColors[
+                                nonScheduledTasks[index].priority],
+                            child: Padding(
+                              padding: const EdgeInsets.all(AppSizes.p_8),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

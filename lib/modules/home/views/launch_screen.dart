@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/scheduling/input_controller.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/home/views/tasks_today_template.dart';
 import 'package:timely/modules/home/providers/external_models_provider.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
@@ -10,6 +11,7 @@ import 'package:timely/modules/tab_1_new/model_provider.dart';
 import 'package:timely/modules/tab_1_new/view.dart';
 import 'package:timely/modules/tab_2/controllers/output_controller.dart';
 import 'package:timely/modules/tab_2/pages/tab_2_input_page.dart';
+import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
 import 'package:timely/modules/tab_3/controllers/output_controller.dart';
@@ -126,7 +128,7 @@ class LaunchScreen extends ConsumerWidget {
                       flex: 4,
                       child: TasksTodayTemplate(
                         data: data,
-                        onDismissed: (dir, model, tabNumber) async {
+                        onDismissed: (dir, model, tabNumber, task) async {
                           if (model is Tab3Model) {
                             if (dir == DismissDirection.startToEnd) {
                               await ref
@@ -134,23 +136,33 @@ class LaunchScreen extends ConsumerWidget {
                                   .deleteModel(model);
                             } else {
                               await ref
-                                  .read(tab3OutputProvider.notifier)
-                                  .markModelAsComplete(model);
+                                  .read(tab3RepositoryProvider.notifier)
+                                  .markComplete(model);
+
+                              if (task != null) {
+                                await ref
+                                    .read(tasksTodayRepositoryProvider.notifier)
+                                    .markTaskAsComplete(task);
+                              }
                             }
                           } else if (model is SchedulingModel) {
-                            if (tabNumber == 2) {
-                              if (dir == DismissDirection.startToEnd) {
+                            if (dir == DismissDirection.startToEnd) {
+                              if (tabNumber == 2) {
                                 ref
                                     .read(tab2OutputProvider.notifier)
                                     .deleteModel(model);
+                              } else if (tabNumber == 6 || tabNumber == 7) {
+                                ref
+                                    .read([
+                                      tab6OutputProvider.notifier,
+                                      tab7OutputProvider.notifier
+                                    ][7 - tabNumber!])
+                                    .deleteModel(model);
                               }
-                            } else if (tabNumber == 6 || tabNumber == 7) {
-                              ref
-                                  .read([
-                                    tab6OutputProvider.notifier,
-                                    tab7OutputProvider.notifier
-                                  ][7 - tabNumber])
-                                  .deleteModel(model);
+                            } else {
+                              await ref
+                                  .read(tasksTodayRepositoryProvider.notifier)
+                                  .markTaskAsComplete(task!);
                             }
                           }
                         },

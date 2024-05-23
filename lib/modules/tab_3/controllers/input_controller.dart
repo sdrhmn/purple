@@ -31,7 +31,6 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
 
   void setPriority(int index) {
     state = state.copyWith(priority: index);
-    print("PRIORITY SETTER CALLED");
   }
 
   void removeDateAndTime() {
@@ -46,7 +45,7 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
 
     ref.invalidate(tab3OutputProvider);
 
-    ref.read(tasksTodayRepositoryProvider.notifier).createTodaysTasks();
+    ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
     ref.invalidate(tasksTodayOutputProvider);
   }
 

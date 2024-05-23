@@ -19,14 +19,14 @@ class Tab3Model {
   Map toJson() {
     if (time != null && date != null) {
       return {
-        "ID": const Uuid().v4(),
+        "ID": uuid ?? const Uuid().v4(),
         "Activity": text_1,
         "Time": "${time!.hour}: ${time!.minute}",
         "Priority": priority
       };
     } else {
       return {
-        "ID": const Uuid().v4(),
+        "ID": uuid ?? const Uuid().v4(),
         "Activity": text_1,
         "Priority": priority
       };

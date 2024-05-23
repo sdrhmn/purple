@@ -7,6 +7,7 @@ import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/common/scheduling/scheduling_repository.dart';
 import 'package:timely/modules/home/controllers/tasks_today_controller.dart';
 import 'package:timely/modules/home/providers/todays_model_maps_provider.dart';
+import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/reusables.dart';
 
 // This is the tab 2 output controller.
@@ -64,7 +65,6 @@ class SchedulingOutputNotifier<T>
         .read(schedulingRepositoryServiceProvider.notifier)
         .deleteModel(model, pendingFile);
 
-    ref.invalidate(todaysModelMapsProvider);
-    ref.invalidate(tasksTodayOutputProvider);
+    await ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
   }
 }

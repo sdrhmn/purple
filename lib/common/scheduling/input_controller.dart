@@ -179,7 +179,7 @@ class SchedulingInputNotifier extends Notifier<SchedulingModel> {
       ref.invalidate(provider);
     }
 
-    await ref.read(tasksTodayRepositoryProvider.notifier).createTodaysTasks();
+    await ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
     ref.invalidate(tasksTodayOutputProvider);
   }
 

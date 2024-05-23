@@ -13,19 +13,15 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
   }
 
   Future<void> generateTodaysTasks() async {
-    File file = ref.read(dbFilesProvider).requireValue[0]![0];
-    var content = jsonDecode(await file.readAsString());
-
-    String dateToday = DateTime.now().toString().substring(0, 10);
-
-    if (!content.keys.contains(dateToday)) {
-      await createTodaysTasks();
-    }
+    await _createTodaysTasks();
   }
 
-  Future<void> createTodaysTasks() async {
+  Future<void> _createTodaysTasks() async {
     File file = ref.read(dbFilesProvider).requireValue[0]![0];
-    var content = jsonDecode(await file.readAsString());
+    File completedFile = ref.read(dbFilesProvider).requireValue[0]!.last;
+
+    Map content = jsonDecode(await file.readAsString());
+    Map completedContent = jsonDecode(await completedFile.readAsString());
 
     String dateToday = DateTime.now().toString().substring(0, 10);
 
@@ -34,7 +30,21 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
     List<TaskToday> tasksToday = [];
 
     for (Map modelMap in modelMaps) {
-      tasksToday.add(TaskToday.fromJson(modelMap));
+      // Iterate through all the completed tasks for today's date
+      // If the task exists then discard it
+      // Else, add it
+      bool alreadyExists = false;
+
+      for (Map completedTask in completedContent[dateToday] ?? {}) {
+        if (TaskToday.fromJson(completedTask).model.uuid ==
+            TaskToday.fromJson(modelMap).model.uuid) {
+          alreadyExists = true;
+        }
+      }
+
+      if (!alreadyExists) {
+        tasksToday.add(TaskToday.fromJson(modelMap));
+      }
     }
 
     tasksToday.sort(
@@ -52,7 +62,7 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
 
     content[dateToday] = tasksToday.map((e) => e.toJson()).toList();
 
-    file.writeAsString(jsonEncode(content));
+    await file.writeAsString(jsonEncode(content));
   }
 
   Future<List<TaskToday>> fetchTodaysTasks() async {
@@ -63,11 +73,53 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
 
     List<TaskToday> tasksToday = [];
 
-    for (Map taskJson in content[dateToday]) {
+    for (Map taskJson in content[dateToday] ?? {}) {
       tasksToday.add(TaskToday.fromJson(taskJson));
     }
 
     return tasksToday;
+  }
+
+  Future<void> markTaskAsComplete(TaskToday model) async {
+    // Get the 'completed' file
+    File tasksTodayCompletedFile =
+        ref.read(dbFilesProvider).requireValue[0]!.last;
+    // Get the 'pending' file
+    File tasksTodayFile = ref.read(dbFilesProvider).requireValue[0]!.first;
+
+    String dateToday = DateTime.now().toString().substring(0, 10);
+
+    Map completedContent =
+        jsonDecode(await tasksTodayCompletedFile.readAsString());
+
+    if (!completedContent.keys.contains(dateToday)) {
+      completedContent[dateToday] = [];
+    }
+
+    completedContent[dateToday] = [
+      ...completedContent[dateToday],
+      model.toJson(),
+    ];
+
+    // Save as completed
+    await tasksTodayCompletedFile.writeAsString(jsonEncode(completedContent));
+
+    // Delete the task from 'pending'
+    Map content = jsonDecode(await tasksTodayFile.readAsString());
+    for (String date in content.keys) {
+      for (int i in Iterable.generate(content[date]!.length)) {
+        TaskToday task = TaskToday.fromJson(content[date]![i]);
+        if (task.model.uuid == model.model.uuid) {
+          content[date]!.removeAt(i);
+        }
+      }
+    }
+
+    // If any dates are empty, delete them
+    content.removeWhere((key, value) => value.isEmpty);
+
+    // Persist
+    await tasksTodayFile.writeAsString(jsonEncode(content));
   }
 }
 

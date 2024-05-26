@@ -11,6 +11,7 @@ class Tab3OutputTemplate extends StatelessWidget {
   final Function(Tab3Model model) onTap;
   final VoidCallback onPressedHome;
   final VoidCallback onPressedAdd;
+  final Widget checkbox;
 
   const Tab3OutputTemplate({
     super.key,
@@ -19,28 +20,45 @@ class Tab3OutputTemplate extends StatelessWidget {
     required this.onTap,
     required this.onPressedHome,
     required this.onPressedAdd,
+    required this.checkbox,
   });
 
   @override
   Widget build(BuildContext context) {
     List<String> dates = models["scheduled"]!.keys.toList().cast<String>();
+    print(models);
     return Stack(
       children: [
         ListView(
           children: [
-            Container(
-              color: Tab3Colors.bgScheduledHeader,
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Scheduled",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: Container(),
+                ),
+                checkbox,
+              ],
             ),
+            (models["scheduled"].keys.isEmpty && models["nonScheduled"].isEmpty)
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Text(
+                        "No tasks here. Start creating using the + buttton."),
+                  )
+                : Container(
+                    color: Tab3Colors.bgScheduledHeader,
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Scheduled",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -99,19 +117,24 @@ class Tab3OutputTemplate extends StatelessWidget {
               },
               itemCount: dates.length,
             ),
-            Container(
-              height: 40,
-              color: Tab3Colors.bgNonScheduledHeader,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Non-Scheduled",
-                    style: Theme.of(context).textTheme.titleMedium,
+            (models["scheduled"].keys.isEmpty && models["nonScheduled"].isEmpty)
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(),
+                  )
+                : Container(
+                    height: 40,
+                    color: Tab3Colors.bgNonScheduledHeader,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Non-Scheduled",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
             ListView.separated(
               separatorBuilder: (context, index) => const Divider(
                 height: 0.3,

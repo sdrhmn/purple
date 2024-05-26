@@ -18,45 +18,78 @@ class Tab3RepositoryNotifier extends Notifier<void> {
   @override
   void build() {}
 
-  Future<Map<String, dynamic>> fetchModels() async {
+  Future<Map<String, dynamic>> fetchModels({bool? fetchCompleted}) async {
     final scheduled = (ref.read(dbFilesProvider)).requireValue[3]![0];
     final nonScheduled = (ref.read(dbFilesProvider)).requireValue[3]![1];
 
     final scheduledContent = jsonDecode(await scheduled.readAsString());
     final nonScheduledContent = jsonDecode(await nonScheduled.readAsString());
 
-    final dates = scheduledContent.keys.toList();
+    File completedFile = ref.read(dbFilesProvider).requireValue[3]!.last;
+    Map completedContent = jsonDecode(await completedFile.readAsString());
+
+    final dates = fetchCompleted == true
+        ? completedContent['scheduled'].keys.toList()
+        : scheduledContent.keys.toList();
 
     Map<String, dynamic> tab3Models = {
       "scheduled": {},
       "nonScheduled": [],
     };
-    for (String date in dates) {
-      tab3Models["scheduled"]![date] = [];
-      for (Map content in scheduledContent[date]) {
-        tab3Models["scheduled"]![date]!.add(
-          Tab3Model.fromJson(
-            DateTime.parse(date),
-            content,
-          ),
-        );
+
+    if (fetchCompleted == true) {
+      for (String date in dates) {
+        tab3Models["scheduled"]![date] = [];
+        for (Map content in completedContent['scheduled'][date] ?? {}) {
+          tab3Models["scheduled"]![date]!.add(
+            Tab3Model.fromJson(
+              DateTime.parse(date),
+              content,
+            ),
+          );
+        }
+      }
+    } else {
+      for (String date in dates) {
+        tab3Models["scheduled"]![date] = [];
+        for (Map content in scheduledContent[date]) {
+          tab3Models["scheduled"]![date]!.add(
+            Tab3Model.fromJson(
+              DateTime.parse(date),
+              content,
+            ),
+          );
+        }
+      }
+
+      tab3Models["scheduled"] =
+          SplayTreeMap<String, List>.from(tab3Models["scheduled"], (a, b) {
+        return a.compareTo(b);
+      });
+
+      for (var date in tab3Models["scheduled"].keys) {
+        List<Tab3Model> models =
+            tab3Models["scheduled"][date].cast<Tab3Model>();
+        models.sort((a, b) => DateTime(0, 0, 0, a.time!.hour, a.time!.minute)
+            .difference(DateTime(0, 0, 0, b.time!.hour, b.time!.minute))
+            .inSeconds);
       }
     }
 
-    tab3Models["scheduled"] =
-        SplayTreeMap<String, List>.from(tab3Models["scheduled"], (a, b) {
-      return a.compareTo(b);
-    });
-
-    for (var date in tab3Models["scheduled"].keys) {
-      List<Tab3Model> models = tab3Models["scheduled"][date].cast<Tab3Model>();
-      models.sort((a, b) => DateTime(0, 0, 0, a.time!.hour, a.time!.minute)
-          .difference(DateTime(0, 0, 0, b.time!.hour, b.time!.minute))
-          .inSeconds);
-    }
-
-    for (Map modelMap in nonScheduledContent) {
-      tab3Models["nonScheduled"]!.add(Tab3Model.fromJson(null, modelMap));
+    if (fetchCompleted == true) {
+      for (Map modelMap in completedContent["unscheduled"]) {
+        tab3Models["nonScheduled"] = [
+          ...tab3Models["nonScheduled"],
+          Tab3Model.fromJson(null, modelMap)
+        ];
+      }
+    } else {
+      for (Map modelMap in nonScheduledContent) {
+        tab3Models["nonScheduled"] = [
+          ...tab3Models["nonScheduled"],
+          Tab3Model.fromJson(null, modelMap)
+        ];
+      }
     }
 
     return tab3Models;
@@ -141,8 +174,19 @@ class Tab3RepositoryNotifier extends Notifier<void> {
 
     // Write to completed
     File completedFile = (ref.read(dbFilesProvider)).requireValue[3]!.last;
+    Map content = jsonDecode(await completedFile.readAsString());
 
-    await completedFile.writeAsString(jsonEncode(model.toJson()));
+    // If model was a scheduled one, then save it along with the date
+    if (model.date != null) {
+      content['scheduled'][model.date.toString().substring(0, 10)] = [
+        model.toJson(),
+        ...content['scheduled'][model.date.toString().substring(0, 10)] ?? {}
+      ];
+    } else {
+      content['unscheduled'] = [...content['unscheduled'], model.toJson()];
+    }
+
+    await completedFile.writeAsString(jsonEncode(content));
   }
 }
 

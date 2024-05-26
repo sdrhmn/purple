@@ -208,6 +208,10 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
       // Create completed file for tab 3
       if (tabNumber == 3) {
         await completed.create();
+        (await completed.readAsString()).isEmpty
+            ? await completed
+                .writeAsString('{"scheduled": {}, "unscheduled":[]}')
+            : null;
       }
 
       if ([2, 6, 7].contains(tabNumber)) {

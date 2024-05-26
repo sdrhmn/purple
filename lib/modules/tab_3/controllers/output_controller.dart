@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
+import 'package:timely/modules/tab_3/controllers/show_completed_controller.dart';
 import 'package:timely/modules/tab_3/models/tab_3_model.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 
@@ -11,7 +12,11 @@ class OutputNotifier extends AutoDisposeAsyncNotifier<Map<String, dynamic>> {
 
   @override
   FutureOr<Map<String, dynamic>> build() async {
-    return await ref.read(repositoryServiceProvider.notifier).fetchModels();
+    return await ref.read(repositoryServiceProvider.notifier).fetchModels(
+          fetchCompleted: ref.watch(
+            shouldFetchCompletedProvider,
+          ),
+        );
   }
 
   Future<void> deleteModel(Tab3Model model) async {

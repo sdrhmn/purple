@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/modules/tab_3/controllers/show_completed_controller.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_3/views/tab_3_output_template.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
@@ -22,6 +23,12 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
     return provider.when(
         data: (models) {
           return Tab3OutputTemplate(
+            checkbox: Checkbox(
+                value: ref.watch(shouldFetchCompletedProvider),
+                onChanged: (value) {
+                  ref.read(shouldFetchCompletedProvider.notifier).state =
+                      value!;
+                }),
             models: models,
             onDismissed: (direction, model) {
               if (direction == DismissDirection.startToEnd) {

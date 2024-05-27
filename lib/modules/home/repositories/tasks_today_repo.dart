@@ -111,6 +111,7 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
         TaskToday task = TaskToday.fromJson(content[date]![i]);
         if (task.model.uuid == model.model.uuid) {
           content[date]!.removeAt(i);
+          break;
         }
       }
     }

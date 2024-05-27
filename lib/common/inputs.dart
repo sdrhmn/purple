@@ -86,6 +86,7 @@ class TextFormFieldAtom extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       initialValue: initialValue,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         hintStyle: Theme.of(context).textTheme.titleSmall,
         border: const OutlineInputBorder(

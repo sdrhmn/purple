@@ -159,7 +159,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                                                                     context),
                                                             style:
                                                                 const TextStyle(
-                                                              fontSize: 12,
+                                                              fontSize: 15,
                                                             ),
                                                           ),
                                                         ),
@@ -170,7 +170,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                                           ],
                                         ),
                                       ),
-                                    ],
+                                    ].reversed.toList(),
                                   ),
                                 ),
                               ),

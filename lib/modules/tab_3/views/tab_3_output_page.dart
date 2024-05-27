@@ -23,6 +23,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
     return provider.when(
         data: (models) {
           return Tab3OutputTemplate(
+            cannotBeMarkedComplete: ref.read(shouldFetchCompletedProvider),
             checkbox: Checkbox(
                 value: ref.watch(shouldFetchCompletedProvider),
                 onChanged: (value) {

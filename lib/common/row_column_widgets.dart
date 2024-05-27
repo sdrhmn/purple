@@ -40,11 +40,13 @@ class CancelSubmitRowMolecule extends StatelessWidget {
 class DismissibleEntryRowMolecule extends StatelessWidget {
   final Widget child;
   final Function(DismissDirection direction) onDismissed;
+  final bool? cannotBeMarkedComplete;
 
   const DismissibleEntryRowMolecule({
     Key? key,
     required this.child,
     required this.onDismissed,
+    this.cannotBeMarkedComplete,
   }) : super(key: key);
 
   @override

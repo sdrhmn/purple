@@ -12,6 +12,7 @@ class Tab3OutputTemplate extends StatelessWidget {
   final VoidCallback onPressedHome;
   final VoidCallback onPressedAdd;
   final Widget checkbox;
+  final bool? cannotBeMarkedComplete;
 
   const Tab3OutputTemplate({
     super.key,
@@ -21,6 +22,7 @@ class Tab3OutputTemplate extends StatelessWidget {
     required this.onPressedHome,
     required this.onPressedAdd,
     required this.checkbox,
+    this.cannotBeMarkedComplete,
   });
 
   @override
@@ -89,6 +91,7 @@ class Tab3OutputTemplate extends StatelessWidget {
                           child: DismissibleEntryRowMolecule(
                             onDismissed: (direction) =>
                                 onDismissed(direction, tab3Models[index]),
+                            cannotBeMarkedComplete: cannotBeMarkedComplete,
                             child: TextRowMolecule(
                               minHeight: 60,
                               rowColor: date.isBefore(
@@ -150,6 +153,7 @@ class Tab3OutputTemplate extends StatelessWidget {
                   child: DismissibleEntryRowMolecule(
                     onDismissed: (direction) =>
                         onDismissed(direction, tab3Models[index]),
+                    cannotBeMarkedComplete: cannotBeMarkedComplete,
                     child: TextRowMolecule(
                       minHeight: 60,
                       rowColor: Tab3OutputColors

@@ -108,6 +108,7 @@ class NavigationRowMolecule extends StatelessWidget {
       children: [
         FloatingActionButton(
           heroTag: null,
+          backgroundColor: Colors.black12,
           onPressed: onPressedHome,
           child: const Icon(Icons.home),
         ),
@@ -115,6 +116,7 @@ class NavigationRowMolecule extends StatelessWidget {
             ? Container()
             : FloatingActionButton(
                 heroTag: null,
+                backgroundColor: Colors.black12,
                 onPressed: onPressedAdd,
                 child: const Icon(Icons.add),
               ),

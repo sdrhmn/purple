@@ -3,15 +3,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_theme.dart';
+import 'package:timely/modules/completed_tasks/completed_tasks_repository.dart';
 import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/common/splash.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 // import 'package:timely/modules/settings/view.dart';
 import 'package:timely/modules/tab_1_new/incrementor.dart';
 import 'package:timely/modules/tab_1_new/repository.dart';
 import 'package:timely/reusables.dart';
 
-void main() {
+// ---------------------------------------------
+import 'package:timezone/data/latest.dart' as tz;
+
+Future<void> main() async {
+  tz.initializeTimeZones();
+  await NotifService().init();
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -70,6 +78,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
             // Once generated, start the incrementor timer
             ref.read(incrementorProvider.future);
+
+            ref.read(completedTasksRepositoryProvider.notifier).build();
 
             // Generate all tasks due today
             await ref

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/modules/completed_tasks/completed_tasks_repository.dart';
+import 'package:timely/modules/completed_tasks/task_model.dart';
 import 'package:timely/modules/home/models/task_today.dart';
 import 'package:timely/modules/home/providers/todays_model_maps_provider.dart';
 import 'package:timely/reusables.dart';
@@ -121,6 +123,18 @@ class TasksTodayRepositoryNotifier extends Notifier<void> {
 
     // Persist
     await tasksTodayFile.writeAsString(jsonEncode(content));
+
+    // ------ Mark globally complete -------
+    await ref
+        .read(completedTasksRepositoryProvider.notifier)
+        .markGloballyComplete(
+          Task(
+            name: model.name,
+            tabNumber: model.tabNumber,
+            model: model.model,
+            timestamp: DateTime.now(),
+          ),
+        );
   }
 }
 

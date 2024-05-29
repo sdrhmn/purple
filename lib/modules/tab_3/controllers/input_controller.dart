@@ -45,7 +45,7 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
 
     ref.invalidate(tab3OutputProvider);
 
-    ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
+    await ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
     ref.invalidate(tasksTodayOutputProvider);
   }
 

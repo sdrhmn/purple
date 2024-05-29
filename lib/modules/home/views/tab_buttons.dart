@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_theme.dart';
+import 'package:timely/modules/completed_tasks/completed_tasks_page.dart';
 import 'package:timely/modules/home/views/launch_screen.dart';
 import 'package:timely/modules/home/views/work_in_progress.dart';
 import 'package:timely/modules/tab_1_new/history_view.dart';
@@ -17,7 +18,7 @@ final List tabs = [
   const Tab3OutputPage(),
   const Tab5OutputPage(),
   const Tab6OutputPage(),
-  const WorkInProgressPage(),
+  const CompletedTasksPage(),
   const WorkInProgressPage(),
   const WorkInProgressPage(),
   const WorkInProgressPage(),
@@ -56,7 +57,7 @@ class _TabButtonsState extends ConsumerState<TabButtons> {
       width: 50,
       child: Column(
         children: [
-          for (int i in Iterable.generate(5))
+          for (int i in Iterable.generate(6))
             SizedBox(
               height: 50,
               width: double.infinity,

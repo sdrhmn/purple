@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/modules/completed_tasks/completed_tasks_repository.dart';
 import 'package:timely/modules/tab_3/models/tab_3_model.dart';
 import 'package:timely/reusables.dart';
+import 'package:timely/modules/completed_tasks/task_model.dart';
 import "dart:collection";
 
 // This is the repository for tab 3.
@@ -191,6 +193,17 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     }
 
     await completedFile.writeAsString(jsonEncode(content));
+
+    // ------ Mark globally complete -------
+    Task task = Task(
+      name: model.text_1,
+      tabNumber: 3,
+      model: model,
+      timestamp: DateTime.now(),
+    );
+    await ref
+        .read(completedTasksRepositoryProvider.notifier)
+        .markGloballyComplete(task);
   }
 }
 

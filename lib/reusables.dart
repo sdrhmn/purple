@@ -81,10 +81,11 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
         case 3:
           ref.read(tab3RepositoryProvider.notifier).writeModel(
                 Tab3Model(
-                  text_1: "This is a sample entry.",
+                  name: "This is a sample entry.",
                   priority: 0,
                   time: TimeOfDay.now(),
                   date: DateTime.now(),
+                  notifOn: true,
                 ),
               );
 

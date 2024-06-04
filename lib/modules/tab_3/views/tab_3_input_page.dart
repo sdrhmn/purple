@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_template.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
 import 'package:timely/modules/tab_3/tokens/tab_3_constants.dart';
@@ -34,8 +35,8 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
       onTimeChanged: (time) => controller.setTime(time),
       onPriorityChanged: (index) => controller.setPriority(index),
       onCancelPressed: () => Navigator.pop(context),
-      onSubmitPressed: () {
-        if (model.text_1.isEmpty) {
+      onSubmitPressed: (model) {
+        if (model.name.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -44,6 +45,14 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
               duration: Duration(seconds: 1),
             ),
           );
+
+          // ------ Schedule Notification --------
+          if (model.date != null && model.time != null) {
+            NotifService().scheduleNotif(
+                model,
+                DateTime(model.date!.year, model.date!.month, model.date!.day,
+                    model.time!.hour, model.time!.minute));
+          }
         } else {
           controller.syncToDB();
           Navigator.pop(context);

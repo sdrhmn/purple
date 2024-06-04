@@ -9,6 +9,8 @@ class Tab3OutputTemplate extends StatelessWidget {
   final Map<String, dynamic> models;
   final Function(DismissDirection direction, Tab3Model model) onDismissed;
   final Function(Tab3Model model) onTap;
+  final Function(bool value, Tab3Model model, String date, int index)
+      onNotifIconPressed;
   final VoidCallback onPressedHome;
   final VoidCallback onPressedAdd;
   final Widget checkbox;
@@ -19,6 +21,7 @@ class Tab3OutputTemplate extends StatelessWidget {
     required this.models,
     required this.onDismissed,
     required this.onTap,
+    required this.onNotifIconPressed,
     required this.onPressedHome,
     required this.onPressedAdd,
     required this.checkbox,
@@ -28,7 +31,6 @@ class Tab3OutputTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> dates = models["scheduled"]!.keys.toList().cast<String>();
-    print(models);
     return Stack(
       children: [
         ListView(
@@ -43,9 +45,9 @@ class Tab3OutputTemplate extends StatelessWidget {
               ],
             ),
             (models["scheduled"].keys.isEmpty && models["nonScheduled"].isEmpty)
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text(
+                ? const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
                         "No tasks here. Start creating using the + buttton."),
                   )
                 : Container(
@@ -92,23 +94,47 @@ class Tab3OutputTemplate extends StatelessWidget {
                             onDismissed: (direction) =>
                                 onDismissed(direction, tab3Models[index]),
                             cannotBeMarkedComplete: cannotBeMarkedComplete,
-                            child: TextRowMolecule(
-                              minHeight: 60,
-                              rowColor: date.isBefore(
+                            child: Container(
+                              color: date.isBefore(
                                 DateTime(dateToday.year, dateToday.month,
                                     dateToday.day),
                               )
                                   ? Tab3Colors.bgDatePassed
                                   : Tab3OutputColors.priorityColors[
                                       tab3Models[index].priority],
-                              customWidths: const {1: 70},
-                              texts: [
-                                tab3Models[index].text_1,
-                                tab3Models[index].time != null
-                                    ? tab3Models[index].time!.format(context)
-                                    : "",
-                              ],
-                              defaultAligned: const [0],
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextRowMolecule(
+                                      minHeight: 60,
+                                      customWidths: const {1: 70},
+                                      texts: [
+                                        tab3Models[index].name,
+                                        tab3Models[index].time != null
+                                            ? tab3Models[index]
+                                                .time!
+                                                .format(context)
+                                            : "",
+                                      ],
+                                      defaultAligned: const [0],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(tab3Models[index].notifOn
+                                        ? Icons.notifications_active
+                                        : Icons.notifications_off),
+                                    onPressed: () {
+                                      onNotifIconPressed(
+                                        !(tab3Models[index].notifOn),
+                                        tab3Models[index],
+                                        date.toString(),
+                                        index,
+                                      );
+                                    },
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -160,7 +186,7 @@ class Tab3OutputTemplate extends StatelessWidget {
                           .priorityColors[tab3Models[index].priority],
                       customWidths: const {1: 70},
                       texts: [
-                        tab3Models[index].text_1,
+                        tab3Models[index].name,
                       ],
                       defaultAligned: const [0],
                     ),

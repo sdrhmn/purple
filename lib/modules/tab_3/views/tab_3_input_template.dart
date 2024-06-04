@@ -12,7 +12,7 @@ class Tab3InputTemplate extends StatelessWidget {
   final Function(DateTime date) onDateChanged;
   final Function(TimeOfDay time) onTimeChanged;
   final Function(int index) onPriorityChanged;
-  final VoidCallback onSubmitPressed;
+  final Function(Tab3Model model) onSubmitPressed;
   final VoidCallback onCancelPressed;
   final Function(bool value) onScheduleChanged;
 
@@ -39,7 +39,7 @@ class Tab3InputTemplate extends StatelessWidget {
 
       // Activity Text Field
       TextFormFieldAtom(
-        initialValue: model.text_1,
+        initialValue: model.name,
         onChanged: onActivityChanged,
         hintText: Tab3Headings.activity,
       ),
@@ -104,7 +104,7 @@ class Tab3InputTemplate extends StatelessWidget {
 
       // Cancel & Submit Row
       CancelSubmitRowMolecule(
-        onSubmitPressed: onSubmitPressed,
+        onSubmitPressed: () => onSubmitPressed(model),
         onCancelPressed: onCancelPressed,
       ),
 

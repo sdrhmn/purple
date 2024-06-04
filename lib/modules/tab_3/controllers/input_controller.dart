@@ -10,15 +10,16 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
   @override
   Tab3Model build() {
     return Tab3Model(
-      text_1: "",
+      name: "",
       priority: 1,
       time: TimeOfDay.now(),
       date: DateTime.now(),
+      notifOn: true,
     );
   }
 
   setActivity(String activity) {
-    state.text_1 = activity;
+    state.name = activity;
   }
 
   setDate(DateTime date) {

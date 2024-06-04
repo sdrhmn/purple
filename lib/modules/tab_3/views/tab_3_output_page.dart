@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tab_3/controllers/show_completed_controller.dart';
+import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_3/views/tab_3_output_template.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
@@ -34,8 +37,10 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onDismissed: (direction, model) {
               if (direction == DismissDirection.startToEnd) {
                 controller.deleteModel(model);
+                NotifService().cancelNotif(int.parse(model.uuid!));
               } else {
                 controller.markComplete(model);
+                NotifService().cancelNotif(int.parse(model.uuid!));
               }
             },
             onTap: (model) {
@@ -67,6 +72,25 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
                   },
                 ),
               );
+            },
+            onNotifIconPressed:
+                (bool value, Tab3Model model, String date, int index) async {
+              if (value == true) {
+                NotifService().scheduleNotif(
+                    model,
+                    DateTime(model.date!.year, model.date!.month,
+                        model.date!.day, model.time!.hour, model.time!.minute));
+              } else {
+                NotifService().cancelNotif(int.parse(model.uuid!));
+              }
+
+              await ref
+                  .read(tab3RepositoryProvider.notifier)
+                  .editModel(model.copyWith(notifOn: value));
+
+              ref.invalidate(tab3OutputProvider);
+
+              setState(() {});
             },
           );
         },

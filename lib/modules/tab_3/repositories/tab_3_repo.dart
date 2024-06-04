@@ -118,6 +118,8 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     final nonScheduledContent =
         jsonDecode(await nonScheduledFile.readAsString());
 
+    var jsonifiedModel = model.toJson();
+
     if (model.date != null && model.time != null) {
       String date = model.date.toString().substring(0, 10);
 
@@ -128,12 +130,12 @@ class Tab3RepositoryNotifier extends Notifier<void> {
       scheduledContent[date] = [
         ...scheduledContent[date], // -> Existing data
         // New data:
-        model.toJson(),
+        jsonifiedModel,
       ];
       await scheduledFile.writeAsString(jsonEncode(scheduledContent));
     } else {
       nonScheduledContent.add(
-        model.toJson(),
+        jsonifiedModel,
       );
       await nonScheduledFile.writeAsString(jsonEncode(nonScheduledContent));
     }
@@ -148,8 +150,8 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     final nonScheduledContent = jsonDecode(await nonScheduled.readAsString());
 
     // TODO Inshaa Allah :: Implement Delete for Completed Tasks
-    File completedFile = ref.read(dbFilesProvider).requireValue[3]!.last;
-    Map completedContent = jsonDecode(await completedFile.readAsString());
+    // File completedFile = ref.read(dbFilesProvider).requireValue[3]!.last;
+    // Map completedContent = jsonDecode(await completedFile.readAsString());
 
     // Loop through the dates
     // Delete the model from the data if model.uuid == $model.uuid
@@ -196,7 +198,7 @@ class Tab3RepositoryNotifier extends Notifier<void> {
 
     // ------ Mark globally complete -------
     Task task = Task(
-      name: model.text_1,
+      name: model.name,
       tabNumber: 3,
       model: model,
       timestamp: DateTime.now(),

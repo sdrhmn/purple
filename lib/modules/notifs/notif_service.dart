@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timely/modules/completed_tasks/task_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // NOTE: This class is a singleton.
@@ -23,7 +22,7 @@ class NotifService {
   Future<void> init() async {
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('purple_time_app_icon');
 
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
@@ -42,29 +41,37 @@ class NotifService {
       linux: initializationSettingsLinux,
     );
 
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
+
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
     );
   }
 
-  Future<void> scheduleNotif(Task task, DateTime notifDateTime) async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'scheduled title',
-        'scheduled body',
-        tz.TZDateTime.from(
-          notifDateTime.subtract(
-            const Duration(minutes: 5),
-          ),
-          tz.local,
+  Future<void> scheduleNotif(dynamic model, DateTime notifDateTime) async {
+    await FlutterLocalNotificationsPlugin().zonedSchedule(
+      0,
+      model.name,
+      "You have a task to work on!",
+      tz.TZDateTime.from(
+        notifDateTime.subtract(
+          const Duration(minutes: 0),
         ),
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-                'your channel id', 'your channel name',
-                channelDescription: 'your channel description')),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+        tz.local,
+      ),
+      const NotificationDetails(
+          linux: LinuxNotificationDetails(),
+          iOS: DarwinNotificationDetails(),
+          android: AndroidNotificationDetails('', 'Purple Time',
+              channelDescription: '',
+              priority: Priority.high,
+              importance: Importance.high)),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 
   Future<void> cancelNotif(id) async {

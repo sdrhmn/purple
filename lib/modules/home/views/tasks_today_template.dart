@@ -193,7 +193,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                       );
                     },
                     itemBuilder: (context, index) {
-                      String name = nonScheduledTasks[index].text_1;
+                      String name = nonScheduledTasks[index].name;
 
                       return DismissibleEntryRowMolecule(
                         onDismissed: (direction) => widget.onDismissed(

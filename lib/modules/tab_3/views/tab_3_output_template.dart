@@ -131,7 +131,9 @@ class Tab3OutputTemplate extends StatelessWidget {
                                         index,
                                       );
                                     },
-                                    color: Colors.white,
+                                    color: tab3Models[index].notifOn
+                                        ? Colors.white
+                                        : Colors.black,
                                   )
                                 ],
                               ),

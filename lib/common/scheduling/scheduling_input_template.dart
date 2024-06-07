@@ -16,7 +16,7 @@ class SchedulingInputTemplate extends StatelessWidget {
   final Function(int hours) onHoursChanged;
   final Function(int minutes) onMinutesChanged;
   final VoidCallback onRepeatsButtonPressed;
-  final VoidCallback onSubmitButtonPressed;
+  final Function(SchedulingModel model) onSubmitButtonPressed;
 
   const SchedulingInputTemplate({
     super.key,
@@ -123,7 +123,7 @@ class SchedulingInputTemplate extends StatelessWidget {
 
             CancelSubmitRowMolecule(
               onCancelPressed: () => Navigator.pop(context),
-              onSubmitPressed: () => onSubmitButtonPressed(),
+              onSubmitPressed: () => onSubmitButtonPressed(model),
             ),
 
             const SizedBox(

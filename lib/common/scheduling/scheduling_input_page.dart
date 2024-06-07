@@ -5,6 +5,7 @@ import 'package:timely/common/scheduling/scheduling_input_template.dart';
 import 'package:timely/common/scheduling/input_controller.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/app_theme.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 
 class SchedulingInputPage extends ConsumerWidget {
   final bool? showDurationSelector;
@@ -78,7 +79,7 @@ class SchedulingInputPage extends ConsumerWidget {
         );
       },
       model: providerOfTab2Model,
-      onSubmitButtonPressed: () {
+      onSubmitButtonPressed: (model) {
         if (providerOfTab2Model.name!.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Do not leave activity text blank!")));
@@ -89,6 +90,14 @@ class SchedulingInputPage extends ConsumerWidget {
             controller.syncEditedModel(tabNumber);
           }
           Navigator.pop(context);
+        }
+
+        // ------ Schedule a Notif -------
+        DateTime nextDate = model.getNextOccurenceDateTime();
+        if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
+            DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day)) {
+          NotifService().scheduleNotif(model, nextDate);
         }
       },
     );

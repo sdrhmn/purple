@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -41,10 +42,12 @@ class NotifService {
       linux: initializationSettingsLinux,
     );
 
-    await flutterLocalNotificationsPlugin
+   if (Platform.isAndroid) {
+	 await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()!
         .requestNotificationsPermission();
+	}
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,

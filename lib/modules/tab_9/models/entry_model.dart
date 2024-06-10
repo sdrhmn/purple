@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:uuid/uuid.dart';
 part 'entry_model.freezed.dart';
 part 'entry_model.g.dart';
 

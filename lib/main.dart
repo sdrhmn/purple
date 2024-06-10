@@ -8,6 +8,7 @@ import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
+import 'package:timely/modules/notifs/repeating_notifs_scheduler.dart';
 // import 'package:timely/modules/settings/view.dart';
 import 'package:timely/modules/tab_1_new/incrementor.dart';
 import 'package:timely/modules/tab_1_new/repository.dart';
@@ -16,27 +17,10 @@ import 'package:timely/reusables.dart';
 // ---------------------------------------------
 import 'package:timezone/data/latest.dart' as tz;
 
-// import 'package:workmanager/workmanager.dart';
-// @pragma(
-//     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-// void callbackDispatcher() {
-//   Workmanager().executeTask((task, inputData) {
-//     print(
-//         "Native called background task: $task"); //simpleTask will be emitted here.
-//     return Future.value(true);
-//   });
-// }
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   await NotifService().init();
-
-  // await Workmanager().initialize(
-  //     callbackDispatcher, // The top level function, aka callbackDispatcher
-  //     isInDebugMode:
-  //         true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-  //     );
 
   runApp(
     const ProviderScope(
@@ -103,6 +87,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             await ref
                 .read(tasksTodayRepositoryProvider.notifier)
                 .generateTodaysTasks();
+
+            await ref.read(repeatingNotifsProvider.future);
           }),
         ]),
         builder: (context, snapshot) {

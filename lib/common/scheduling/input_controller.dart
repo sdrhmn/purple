@@ -202,6 +202,6 @@ class SchedulingInputNotifier extends Notifier<SchedulingModel> {
   }
 }
 
-final tab2InputProvider =
+final schedulingInputProvider =
     NotifierProvider<SchedulingInputNotifier, SchedulingModel>(
         SchedulingInputNotifier.new);

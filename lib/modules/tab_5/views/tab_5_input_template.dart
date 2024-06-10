@@ -77,7 +77,7 @@ class Tab5InputTemplate extends StatelessWidget {
         // Weight Text Field
         Column(
           children: [
-            Row(
+            const Row(
               children: [
                 SizedBox(
                   width: 20,
@@ -85,7 +85,7 @@ class Tab5InputTemplate extends StatelessWidget {
                 Text("Weight in kg/lbs"),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(

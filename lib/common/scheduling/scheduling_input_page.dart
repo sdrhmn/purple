@@ -18,8 +18,8 @@ class SchedulingInputPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final providerOfTab2Model = ref.watch(tab2InputProvider);
-    final controller = ref.read(tab2InputProvider.notifier);
+    final providerOfTab2Model = ref.watch(schedulingInputProvider);
+    final controller = ref.read(schedulingInputProvider.notifier);
 
     return SchedulingInputTemplate(
       showDurationSelector: showDurationSelector,
@@ -37,7 +37,7 @@ class SchedulingInputPage extends ConsumerWidget {
           builder: (context) {
             return Consumer(
               builder: (context, ref, child) {
-                final localProv = ref.watch(tab2InputProvider);
+                final localProv = ref.watch(schedulingInputProvider);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: AppSizes.p_24),
@@ -92,12 +92,21 @@ class SchedulingInputPage extends ConsumerWidget {
           Navigator.pop(context);
         }
 
-        // ------ Schedule a Notif -------
+        // ------ Schedule Notifs for today and tomorrow? -------
         DateTime nextDate = model.getNextOccurenceDateTime();
         if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
             DateTime(DateTime.now().year, DateTime.now().month,
                 DateTime.now().day)) {
           NotifService().scheduleNotif(model, nextDate);
+        }
+
+        if (model.getNextOccurenceDateTime(
+                st: DateTime(DateTime.now().year, DateTime.now().month,
+                    DateTime.now().day, 11, 59)) ==
+            DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day + 1)) {
+          NotifService().scheduleNotif(
+              model.copyWith(notifId: model.notifId! + 1), nextDate);
         }
       },
     );

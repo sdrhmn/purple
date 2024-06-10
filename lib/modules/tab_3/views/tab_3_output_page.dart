@@ -37,10 +37,10 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onDismissed: (direction, model) {
               if (direction == DismissDirection.startToEnd) {
                 controller.deleteModel(model);
-                NotifService().cancelNotif(int.parse(model.uuid!));
+                NotifService().cancelNotif((model.notifId));
               } else {
                 controller.markComplete(model);
-                NotifService().cancelNotif(int.parse(model.uuid!));
+                NotifService().cancelNotif(model.notifId);
               }
             },
             onTap: (model) {
@@ -81,7 +81,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
                     DateTime(model.date!.year, model.date!.month,
                         model.date!.day, model.time!.hour, model.time!.minute));
               } else {
-                NotifService().cancelNotif(int.parse(model.uuid!));
+                NotifService().cancelNotif(model.notifId);
               }
 
               await ref

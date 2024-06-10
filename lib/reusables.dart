@@ -50,9 +50,9 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
           ref.read(schedulingRepositoryServiceProvider.notifier).writeModel(
                 SchedulingModel(
                   name: "Sleep",
-                  startTime: TimeOfDay(hour: 22, minute: 0),
+                  startTime: const TimeOfDay(hour: 22, minute: 0),
                   startDate: DateTime.now(),
-                  dur: Duration(hours: 8),
+                  dur: const Duration(hours: 8),
                   every: 1,
                   basis: Basis.day,
                   frequency: Frequency.daily,

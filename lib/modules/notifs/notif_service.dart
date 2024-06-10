@@ -42,12 +42,12 @@ class NotifService {
       linux: initializationSettingsLinux,
     );
 
-   if (Platform.isAndroid) {
-	 await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!
-        .requestNotificationsPermission();
-	}
+    if (Platform.isAndroid) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!
+          .requestNotificationsPermission();
+    }
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -55,26 +55,31 @@ class NotifService {
   }
 
   Future<void> scheduleNotif(dynamic model, DateTime notifDateTime) async {
-    await FlutterLocalNotificationsPlugin().zonedSchedule(
-      0,
-      model.name,
-      "You have a task to work on!",
-      tz.TZDateTime.from(
-        notifDateTime.subtract(
-          const Duration(minutes: 0),
+    try {
+      await FlutterLocalNotificationsPlugin().zonedSchedule(
+        model.notifId,
+        model.name,
+        "You have a task to work on!",
+        tz.TZDateTime.from(
+          notifDateTime.subtract(
+            const Duration(minutes: 0),
+          ),
+          tz.local,
         ),
-        tz.local,
-      ),
-      const NotificationDetails(
-          linux: LinuxNotificationDetails(),
-          iOS: DarwinNotificationDetails(),
-          android: AndroidNotificationDetails('', 'Purple Time',
-              channelDescription: '',
-              priority: Priority.high,
-              importance: Importance.high)),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
+        const NotificationDetails(
+            linux: LinuxNotificationDetails(),
+            iOS: DarwinNotificationDetails(),
+            android: AndroidNotificationDetails('', 'Purple Time',
+                channelDescription: '',
+                priority: Priority.high,
+                importance: Importance.high)),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print(e.toString());
+    }
   }
 
   Future<void> cancelNotif(id) async {

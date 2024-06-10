@@ -45,14 +45,6 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
               duration: Duration(seconds: 1),
             ),
           );
-
-          // ------ Schedule Notification --------
-          if (model.date != null && model.time != null) {
-            NotifService().scheduleNotif(
-                model,
-                DateTime(model.date!.year, model.date!.month, model.date!.day,
-                    model.time!.hour, model.time!.minute));
-          }
         } else {
           controller.syncToDB();
           Navigator.pop(context);
@@ -64,6 +56,13 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
               duration: const Duration(seconds: 1),
             ),
           );
+        }
+        //----- Schedule Notification --------
+        if (model.date != null && model.time != null) {
+          NotifService().scheduleNotif(
+              model,
+              DateTime(model.date!.year, model.date!.month, model.date!.day,
+                  model.time!.hour, model.time!.minute));
         }
       },
     );

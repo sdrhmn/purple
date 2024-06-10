@@ -7,7 +7,5 @@ final externalModelsProvider = FutureProvider.autoDispose<List>((ref) async {
   var nonScheduledTasks =
       await ref.read(tab3RepositoryProvider.notifier).fetchNonScheduledModels();
 
-  print("Non Scheduled Tasks: $nonScheduledTasks");
-
   return [tasksToday, nonScheduledTasks];
 });

@@ -4,6 +4,7 @@ import 'package:timely/common/scheduling/scheduling_output_template.dart';
 import 'package:timely/common/scheduling/input_controller.dart';
 import 'package:timely/common/scheduling/scheduling_output_controller.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/reusables.dart';
 
 class SchedulingOutputPage extends ConsumerStatefulWidget {
@@ -40,19 +41,21 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
                   controller.deleteModel(model);
                   models[type]!
                       .removeWhere((element) => element.uuid == model.uuid);
+                  NotifService().cancelNotif(model.notifId);
+
                   setState(() {});
                 } else {
                   showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content: Text("This item cannot be deleted."),
+                        content: const Text("This item cannot be deleted."),
                         actions: [
                           FilledButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("Okay"))
+                              child: const Text("Okay"))
                         ],
                       );
                     },
@@ -67,7 +70,7 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
               }
             },
             onTap: (SchedulingModel model) {
-              ref.read(tab2InputProvider.notifier).setModel(model);
+              ref.read(schedulingInputProvider.notifier).setModel(model);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
@@ -83,9 +86,9 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
               ref.read(tabIndexProvider.notifier).setIndex(12);
             },
             onPressedAdd: () {
-              ref.invalidate(tab2InputProvider);
+              ref.invalidate(schedulingInputProvider);
               ref
-                  .read(tab2InputProvider.notifier)
+                  .read(schedulingInputProvider.notifier)
                   .setDuration(const Duration(hours: 0, minutes: 30));
 
               Navigator.of(context).push(

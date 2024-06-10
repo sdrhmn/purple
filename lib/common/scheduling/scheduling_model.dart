@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class SchedulingModel {
   String? uuid;
+  late int? notifId;
   String? name;
   TimeOfDay startTime = const TimeOfDay(hour: 0, minute: 0);
   Duration dur = const Duration();
@@ -24,8 +27,11 @@ class SchedulingModel {
     this.endDate,
     required this.every,
     this.startDate,
+    notifId,
     required this.repetitions,
-  });
+  }) {
+    this.notifId = notifId ?? Random().nextInt(9000);
+  }
 
   SchedulingModel.fromJson(Map json) {
     if (json.containsKey("Start Date") || json.containsKey("Name")) {
@@ -33,6 +39,7 @@ class SchedulingModel {
       name = json["Name"];
     }
     uuid = json["ID"];
+    notifId = json["Notification ID"];
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()
@@ -62,6 +69,7 @@ class SchedulingModel {
 
     Map json = {
       "ID": uuid ?? const Uuid().v4(),
+      "Notification ID": notifId,
       "Start": [startTime.hour, startTime.minute].join(":"),
       "Duration": [dur.inHours, dur.inMinutes % 60].join(":"),
       "Frequency": frequency,
@@ -105,6 +113,7 @@ class SchedulingModel {
     String? uuid,
     TimeOfDay? startTime,
     Duration? dur,
+    int? notifId,
     String? frequency,
     Map? repetitions,
     int? every,
@@ -115,6 +124,7 @@ class SchedulingModel {
     return SchedulingModel(
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
+      notifId: notifId ?? this.notifId,
       startDate: startDate ?? this.startDate,
       startTime: startTime ?? this.startTime,
       dur: dur ?? this.dur,
@@ -153,13 +163,14 @@ class SchedulingModel {
     return [firstOccurence, ...occurences];
   }
 
-  DateTime getNextOccurenceDateTime() {
+  DateTime getNextOccurenceDateTime({DateTime? st}) {
     TimeOfDay endTime = getEndTime();
     DateTime today = DateTime.now();
-    DateTime start = startDate!.copyWith(
-      hour: 23,
-      minute: 59,
-    );
+    DateTime start = st ??
+        startDate!.copyWith(
+          hour: 23,
+          minute: 59,
+        );
     DateTime nextDate = DateTime(0);
 
     // Assuming endDate is a DateTime object

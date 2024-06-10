@@ -8,7 +8,7 @@ import 'package:timely/modules/home/views/tasks_today_template.dart';
 import 'package:timely/modules/home/providers/external_models_provider.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/modules/tab_1_new/model_provider.dart';
-import 'package:timely/modules/tab_1_new/view.dart';
+import 'package:timely/modules/tab_1_new/progress_view.dart';
 import 'package:timely/modules/tab_2/controllers/output_controller.dart';
 import 'package:timely/modules/tab_2/pages/tab_2_input_page.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
@@ -184,7 +184,7 @@ class LaunchScreen extends ConsumerWidget {
                             );
                           } else if (model is SchedulingModel) {
                             ref
-                                .read(tab2InputProvider.notifier)
+                                .read(schedulingInputProvider.notifier)
                                 .setModel(model);
                             Navigator.of(context).push(
                               MaterialPageRoute(

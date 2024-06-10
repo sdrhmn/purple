@@ -132,7 +132,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                                         child: Column(
                                           children: [
                                             SizedBox(
-                                              width: 70,
+                                              width: 100,
                                               child: Center(
                                                 child: Text(
                                                     tasksToday[index]

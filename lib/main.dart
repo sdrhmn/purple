@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
+import 'package:timely/common/splash.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/reusables.dart';
 import 'package:timely/values.dart';
@@ -84,7 +85,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
         return Text("Error: $_");
       },
       loading: () {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: SplashScreen());
       },
     );
   }

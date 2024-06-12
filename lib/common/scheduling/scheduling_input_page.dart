@@ -106,7 +106,9 @@ class SchedulingInputPage extends ConsumerWidget {
             DateTime(DateTime.now().year, DateTime.now().month,
                 DateTime.now().day + 1)) {
           NotifService().scheduleNotif(
-              model.copyWith(notifId: model.notifId! + 1), nextDate);
+              model.copyWith(notifId: model.notifId! + 1), model.getNextOccurenceDateTime(
+                st: DateTime(DateTime.now().year, DateTime.now().month,
+                    DateTime.now().day, 11, 59)));
         }
       },
     );

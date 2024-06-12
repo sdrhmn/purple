@@ -25,18 +25,17 @@ class NotifService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('purple_time_app_icon');
 
-    const DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
-    );
+            requestSoundPermission: false,
+            requestBadgePermission: false,
+            requestAlertPermission: false,
+            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
     const LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(defaultActionName: '');
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
+    InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
       linux: initializationSettingsLinux,
@@ -77,7 +76,13 @@ class NotifService {
         ),
         const NotificationDetails(
             linux: LinuxNotificationDetails(),
-            iOS: DarwinNotificationDetails(),
+            iOS: DarwinNotificationDetails(
+              presentSound: true,
+              presentList: true,
+              presentAlert: true,
+              presentBadge: true,
+              presentBanner: true,
+            ),
             android: AndroidNotificationDetails('', 'Purple Time',
                 channelDescription: '',
                 priority: Priority.high,
@@ -98,4 +103,7 @@ class NotifService {
   Future<void> cancelAllNotifs() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
+
+  void onDidReceiveLocalNotification(
+      int id, String? title, String? body, String? payload) {}
 }

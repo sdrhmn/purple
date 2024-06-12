@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+Map<int, String> appBarHeadings = {
+  12: "Purple",
+  0: "Controls",
+  1: "Repeat Activities",
+  2: "Ad hoc Activities",
+  3: "Health",
+  4: "Exercises",
+};
+
 class Tab1Headings {
   static String items = "Items";
   static String time = "Time";

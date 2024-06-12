@@ -30,7 +30,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
   await ref.read(tasksTodayRepositoryProvider.notifier).generateTodaysTasks();
 
   // Schedule notifications for the next day for repeat tasks
-  await ref.read(repeatingNotifsProvider.future);
+  await ref.read(repeatingNotifsSchedulerProvider.future);
 
   return;
 });

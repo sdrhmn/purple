@@ -6,7 +6,7 @@ import 'package:timely/common/scheduling/scheduling_repository.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/reusables.dart';
 
-final repeatingNotifsProvider = FutureProvider<void>((ref) async {
+final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
   File file = (await ref.read(dbFilesProvider.future))[2]![0];
   DateTime now = DateTime.now();
   DateTime nextDay = DateTime(now.year, now.month, now.day + 1);
@@ -20,7 +20,7 @@ final repeatingNotifsProvider = FutureProvider<void>((ref) async {
   // Schedule notifications for them
   for (SchedulingModel model in models) {
     NotifService().scheduleNotif(model.copyWith(notifId: (model.notifId! + 1)),
-        model.getNextOccurenceDateTime());
+        model.getNextOccurenceDateTime(st: DateTime(now.year, now.month, now.day, 11, 59)));
   }
 
   return;

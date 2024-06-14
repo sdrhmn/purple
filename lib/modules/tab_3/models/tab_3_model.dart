@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class Tab3Model {
   String name = "";
   int priority = 0;
   bool notifOn = true;
+  Map<int, Duration> reminders = {};
 
   Tab3Model({
     required this.name,
@@ -19,8 +21,10 @@ class Tab3Model {
     this.date,
     this.time,
     notifId,
+    reminders,
     required this.notifOn,
   }) {
+    this.reminders = reminders ?? {};
     this.notifId = notifId ?? Random().nextInt(9000);
   }
 
@@ -28,6 +32,9 @@ class Tab3Model {
     if (time != null && date != null) {
       return {
         "ID": uuid ?? const Uuid().v4(),
+        "Reminders": jsonEncode((reminders).map(
+          (key, value) => MapEntry(key.toString(), value.inMinutes),
+        )),
         "Notification ID": notifId,
         "Activity": name,
         "Time": "${time!.hour}: ${time!.minute}",
@@ -46,6 +53,12 @@ class Tab3Model {
   Tab3Model.fromJson(this.date, Map json) {
     uuid = json["ID"].toString();
     if (json["Time"] != null) {
+      var rems = jsonDecode(json["Reminders"]) != {}
+          ? jsonDecode(json["Reminders"]).map((key, value) =>
+              MapEntry(int.parse(key), Duration(minutes: value)))
+          : {};
+      reminders = Map<int, Duration>.from(rems);
+
       notifId = json["Notification ID"];
       List timeParts = json["Time"].split(":");
 
@@ -76,6 +89,7 @@ class Tab3Model {
     int? priority,
     TimeOfDay? time,
     bool? notifOn,
+    Map<int, Duration>? reminders,
   }) {
     return Tab3Model(
       uuid: uuid ?? this.uuid,
@@ -85,6 +99,7 @@ class Tab3Model {
       time: time ?? this.time,
       priority: priority ?? this.priority,
       notifOn: notifOn ?? this.notifOn,
+      reminders: reminders ?? this.reminders,
     );
   }
 }

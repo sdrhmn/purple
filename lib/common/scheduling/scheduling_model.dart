@@ -42,7 +42,7 @@ class SchedulingModel {
         ? jsonDecode(json["Reminders"]).map(
             (key, value) => MapEntry(int.parse(key), Duration(minutes: value)))
         : {};
-
+    reminders = Map<int, Duration>.from(rems);
 
     if (json.containsKey("Start Date") || json.containsKey("Name")) {
       startDate = DateTime.parse(json["Start Date"]);
@@ -50,7 +50,6 @@ class SchedulingModel {
     }
     uuid = json["ID"];
     notifId = json["Notification ID"];
-    reminders =  Map<int, Duration>.from(rems);
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()

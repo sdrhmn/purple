@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/tab_3/models/tab_3_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // NOTE: This class is a singleton.
@@ -115,6 +116,21 @@ class NotifService {
     scheduleReminders(model);
   }
 
+  Future<void> scheduleAdHocTaskNotifs(Tab3Model model) async {
+    //----- Schedule Notification --------
+    if (model.date != null && model.time != null) {
+      NotifService().scheduleNotif(
+          model,
+          DateTime(model.date!.year, model.date!.month, model.date!.day,
+              model.time!.hour, model.time!.minute));
+
+      // Reminders
+      NotifService().scheduleReminders(model,
+          dateTime: model.date!
+              .copyWith(hour: model.time!.hour, minute: model.time!.minute));
+    }
+  }
+
   Future<void> scheduleNotifForNextDay(SchedulingModel model) async {
     // '''If applicable, schedules a notif for the next day'''
     if (model.getNextOccurrenceDateTime(
@@ -131,8 +147,7 @@ class NotifService {
     print("Scheduled for next day");
   }
 
-  Future<void> scheduleReminders(SchedulingModel model,
-      {DateTime? dateTime}) async {
+  Future<void> scheduleReminders(dynamic model, {DateTime? dateTime}) async {
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {
         try {
@@ -173,10 +188,24 @@ class NotifService {
 
   Future<void> cancelNotif(id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
+    print("Cancelled notif");
   }
 
   Future<void> cancelAllNotifs() async {
     await flutterLocalNotificationsPlugin.cancelAll();
+    print("Cancelled notifs");
+  }
+
+  Future<void> cancelReminders(dynamic model) async {
+    // Cancel reminders
+    if (model.reminders != null) {
+      await Future.wait([
+        for (int id in model.reminders!.keys)
+          flutterLocalNotificationsPlugin.cancel(id)
+      ]);
+    }
+
+    print("Cancelled reminders");
   }
 
   Future<void> cancelRepeatTaskNotifs(SchedulingModel model) async {
@@ -186,13 +215,9 @@ class NotifService {
         flutterLocalNotificationsPlugin.cancel(id)
     ]);
 
-    // Cancel reminders
-    if (model.reminders != null) {
-      await Future.wait([
-        for (int id in model.reminders!.keys)
-          flutterLocalNotificationsPlugin.cancel(id)
-      ]);
-    }
+    await cancelReminders(model);
+
+    print("Cancelled all repeat task notifs");
   }
 
   void onDidReceiveLocalNotification(

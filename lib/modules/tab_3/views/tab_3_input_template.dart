@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timely/app_theme.dart';
+import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/reusables.dart';
 
 import 'package:timely/common/row_column_widgets.dart';
@@ -15,6 +16,9 @@ class Tab3InputTemplate extends StatelessWidget {
   final Function(Tab3Model model) onSubmitPressed;
   final VoidCallback onCancelPressed;
   final Function(bool value) onScheduleChanged;
+  final Function(dynamic model) onAddReminder;
+  final Function(dynamic model) onDeleteReminder;
+  final Function(dynamic model) onSliderChanged;
 
   const Tab3InputTemplate({
     super.key,
@@ -26,6 +30,9 @@ class Tab3InputTemplate extends StatelessWidget {
     required this.onSubmitPressed,
     required this.onCancelPressed,
     required this.onScheduleChanged,
+    required this.onAddReminder,
+    required this.onSliderChanged,
+    required this.onDeleteReminder,
   });
 
   @override
@@ -101,6 +108,13 @@ class Tab3InputTemplate extends StatelessWidget {
           size: const Size(150, 120),
         ),
       ),
+
+      // ------ Reminders ------
+      ReminderSliders(
+          model: model,
+          onAddReminder: (model) => onAddReminder(model),
+          onSliderChanged: (model) => onSliderChanged(model),
+          onDeleteReminder: (model) => onDeleteReminder(model)),
 
       // Cancel & Submit Row
       CancelSubmitRowMolecule(

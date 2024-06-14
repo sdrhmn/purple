@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/values.dart';
@@ -130,19 +129,13 @@ class SchedulingInputTemplate extends StatelessWidget {
             ),
 
             // ------ Reminders ------
-            ..._renderReminderSliders(),
-
-            TextButton.icon(
-              onPressed: () => onAddReminder(
-                model.copyWith(
-                  reminders: {
-                    ...model.reminders ?? {},
-                    Random().nextInt(50000): const Duration(minutes: 30),
-                  },
-                ),
-              ),
-              icon: const Icon(Icons.add),
-              label: const Text("Add"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ReminderSliders(
+                  model: model,
+                  onAddReminder: (model) => onAddReminder(model),
+                  onSliderChanged: (model) => onSliderChanged(model),
+                  onDeleteReminder: (model) => onDeleteReminder(model)),
             ),
 
             const Divider(
@@ -160,56 +153,5 @@ class SchedulingInputTemplate extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  List<Widget> _renderReminderSliders() {
-    List<Widget> sliders = [];
-    if (model.reminders != null) {
-      for (var entry in model.reminders!.entries) {
-        sliders.add(
-          Row(
-            children: [
-              SizedBox(width: 20),
-              Text("${entry.value.inHours} h, ${entry.value.inMinutes % 60} m"),
-              Expanded(
-                child: Slider(
-                  max: 120,
-                  min: 1,
-                  divisions: 24,
-                  label:
-                      "${entry.value.inHours} hours and ${entry.value.inMinutes % 60} minutes",
-                  value: entry.value.inMinutes.toDouble(),
-                  onChanged: (newValue) {
-                    onSliderChanged(
-                      model.copyWith(
-                        reminders: model.reminders!
-                          ..update(
-                            entry.key,
-                            (value) => Duration(minutes: newValue.toInt()),
-                          ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              IconButton.filledTonal(
-                  onPressed: () {
-                    onDeleteReminder(
-                      model.copyWith(
-                        reminders: model.reminders!
-                          ..removeWhere((key, value) => key == entry.key),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.remove)),
-              const SizedBox(width: 20),
-            ],
-          ),
-        );
-      }
-    } else {
-      sliders = [Container()];
-    }
-    return sliders;
   }
 }

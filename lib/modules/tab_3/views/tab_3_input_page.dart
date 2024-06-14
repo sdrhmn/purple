@@ -58,12 +58,16 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
           );
         }
         //----- Schedule Notification --------
-        if (model.date != null && model.time != null) {
-          NotifService().scheduleNotif(
-              model,
-              DateTime(model.date!.year, model.date!.month, model.date!.day,
-                  model.time!.hour, model.time!.minute));
-        }
+        NotifService().scheduleAdHocTaskNotifs(model);
+      },
+      onAddReminder: (model) {
+        controller.setModel(model);
+      },
+      onSliderChanged: (model) {
+        controller.setModel(model);
+      },
+      onDeleteReminder: (model) {
+        controller.setModel(model);
       },
     );
   }

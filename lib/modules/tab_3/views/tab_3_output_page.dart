@@ -38,9 +38,11 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
               if (direction == DismissDirection.startToEnd) {
                 controller.deleteModel(model);
                 NotifService().cancelNotif((model.notifId));
+                NotifService().cancelReminders(model);
               } else {
                 controller.markComplete(model);
                 NotifService().cancelNotif(model.notifId);
+                NotifService().cancelReminders(model);
               }
             },
             onTap: (model) {
@@ -76,12 +78,10 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onNotifIconPressed:
                 (bool value, Tab3Model model, String date, int index) async {
               if (value == true) {
-                NotifService().scheduleNotif(
-                    model,
-                    DateTime(model.date!.year, model.date!.month,
-                        model.date!.day, model.time!.hour, model.time!.minute));
+                NotifService().scheduleAdHocTaskNotifs(model);
               } else {
                 NotifService().cancelNotif(model.notifId);
+                NotifService().cancelReminders(model);
               }
 
               await ref

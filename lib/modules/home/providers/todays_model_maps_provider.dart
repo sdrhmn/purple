@@ -28,7 +28,7 @@ final todaysModelMapsProvider = FutureProvider.autoDispose<List>((ref) async {
 
   // Tabs 2, 6 and 7
   for (SchedulingModel model in datas[0]) {
-    var nextDateTime = model.getNextOccurenceDateTime();
+    var nextDateTime = model.getNextOccurrenceDateTime();
     var now = DateTime.now();
     if ("${now.year} ${now.month} ${now.day}" ==
             "${nextDateTime.year} ${nextDateTime.month} ${nextDateTime.day}" &&
@@ -41,7 +41,7 @@ final todaysModelMapsProvider = FutureProvider.autoDispose<List>((ref) async {
   }
 
   for (SchedulingModel model in datas.last) {
-    var nextDateTime = model.getNextOccurenceDateTime();
+    var nextDateTime = model.getNextOccurrenceDateTime();
     var now = DateTime.now();
     if ("${now.year} ${now.month} ${now.day}" ==
             "${nextDateTime.year} ${nextDateTime.month} ${nextDateTime.day}" &&

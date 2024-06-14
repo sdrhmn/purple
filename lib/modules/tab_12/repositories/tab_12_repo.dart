@@ -26,7 +26,7 @@ class Tab12RepositoryNotifier extends EntryStructPendingRepositoryNotifier<
 
     for (Tab12EntryModel entry in entriesAndSubEntries.keys) {
       SchedulingModel model = entry.tab2Model;
-      DateTime nextDate = model.getNextOccurenceDateTime();
+      DateTime nextDate = model.getNextOccurrenceDateTime();
 
       if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
           DateTime(

@@ -17,10 +17,14 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
       .getActivitiesByDate(SchedulingModel.fromJson, file, nextDay,
           startDate: DateTime(now.year, now.month, now.day, 11, 59));
 
-  // Schedule notifications for them
   for (SchedulingModel model in models) {
-    NotifService().scheduleNotif(model.copyWith(notifId: (model.notifId! + 1)),
-        model.getNextOccurenceDateTime(st: DateTime(now.year, now.month, now.day, 11, 59)));
+    // Schedule reminders for them
+    NotifService().scheduleReminders(model,
+        dateTime: model.getNextOccurrenceDateTime(
+            st: DateTime(now.year, now.month, now.day, 11, 59)));
+
+    // Schedule notifs for them
+    NotifService().scheduleNotifForNextDay(model);
   }
 
   return;

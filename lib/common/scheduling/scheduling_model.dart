@@ -38,16 +38,19 @@ class SchedulingModel {
   }
 
   SchedulingModel.fromJson(Map json) {
+    var rems = jsonDecode(json["Reminders"]) != {}
+        ? jsonDecode(json["Reminders"]).map(
+            (key, value) => MapEntry(int.parse(key), Duration(minutes: value)))
+        : {};
+
+
     if (json.containsKey("Start Date") || json.containsKey("Name")) {
       startDate = DateTime.parse(json["Start Date"]);
       name = json["Name"];
     }
     uuid = json["ID"];
     notifId = json["Notification ID"];
-    reminders = jsonDecode(json["Reminders"]) != {}
-        ? jsonDecode(json["Reminders"]).map(
-            (key, value) => MapEntry(int.parse(key), Duration(minutes: value)))
-        : {};
+    reminders =  Map<int, Duration>.from(rems);
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()
@@ -151,32 +154,32 @@ class SchedulingModel {
 
   // The following functions calculate the next closest date on which
   // the task is set to occur.
-  List<int> getOccurences(year, month) {
-    List<int> occurences = [];
+  List<int> getOccurrences(year, month) {
+    List<int> occurrences = [];
     int dayOfWeek = repetitions["DoW"][1];
-    // Get all occurences of $day
-    int firstOccurence = 0;
+    // Get all occurrences of $day
+    int firstOccurrence = 0;
     int num = 0;
     while (true) {
       num++;
       if (DateTime(year, month, num).weekday == (dayOfWeek + 1)) {
-        firstOccurence = num - 1; // As index.
+        firstOccurrence = num - 1; // As index.
         break;
       }
     }
     num = 0;
     while (true) {
       num++;
-      if ((firstOccurence + 1) + (7 * num) < 31) {
-        occurences.add((firstOccurence) + (7 * num));
+      if ((firstOccurrence + 1) + (7 * num) < 31) {
+        occurrences.add((firstOccurrence) + (7 * num));
       } else {
         break;
       }
     }
-    return [firstOccurence, ...occurences];
+    return [firstOccurrence, ...occurrences];
   }
 
-  DateTime getNextOccurenceDateTime({DateTime? st}) {
+  DateTime getNextOccurrenceDateTime({DateTime? st}) {
     TimeOfDay endTime = getEndTime();
     DateTime today = DateTime.now();
     DateTime start = st ??
@@ -281,11 +284,11 @@ class SchedulingModel {
               int ordinalPosition = repetitions["DoW"][0];
               if (ordinalPosition != 5) {
                 dates = [
-                  getOccurences(nextDate.year, nextDate.month)[ordinalPosition]
+                  getOccurrences(nextDate.year, nextDate.month)[ordinalPosition]
                 ];
               } else {
                 dates = [
-                  getOccurences(nextDate.year, nextDate.month).last
+                  getOccurrences(nextDate.year, nextDate.month).last
                 ]; // OP of 5 means the last one.
               }
             } catch (e) {
@@ -344,12 +347,12 @@ class SchedulingModel {
                 int ordinalPosition = repetitions["DoW"][0];
                 if (ordinalPosition != 5) {
                   dates = [
-                    getOccurences(
+                    getOccurrences(
                         nextDate.year, nextDate.month)[ordinalPosition]
                   ];
                 } else {
                   dates = [
-                    getOccurences(nextDate.year, nextDate.month).last
+                    getOccurrences(nextDate.year, nextDate.month).last
                   ]; // OP of 5 means the last one.
                 }
               } catch (e) {

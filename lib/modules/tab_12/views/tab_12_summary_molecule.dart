@@ -59,7 +59,7 @@ class Tab12SummaryMolecule extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(
-                  entry.tab2Model.getNextOccurenceDateTime(),
+                  entry.tab2Model.getNextOccurrenceDateTime(),
                 ),
               ),
             )

@@ -59,7 +59,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
               builder: (context, ref, child) {
                 final index = ref.watch(tabIndexProvider);
 
-                return Text(appBarHeadings[index] ?? "Purple");
+                return Text(appBarHeadings[index] ?? "PurpleTime");
               },
             ),
             // actions: [

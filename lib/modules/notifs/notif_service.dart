@@ -100,7 +100,7 @@ class NotifService {
   /// Schedules notifs for today, tomorrow and also schedules reminders if present.
   Future<void> scheduleRepeatTaskNotifs(SchedulingModel model) async {
     // ------ Schedule Notifs for today? -------
-    DateTime nextDate = model.getNextOccurenceDateTime();
+    DateTime nextDate = model.getNextOccurrenceDateTime();
     if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
         DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day)) {
@@ -117,21 +117,22 @@ class NotifService {
 
   Future<void> scheduleNotifForNextDay(SchedulingModel model) async {
     // '''If applicable, schedules a notif for the next day'''
-    if (model.getNextOccurenceDateTime(
+    if (model.getNextOccurrenceDateTime(
             st: DateTime(DateTime.now().year, DateTime.now().month,
                 DateTime.now().day, 11, 59)) ==
         DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day + 1)) {
       NotifService().scheduleNotif(
           model.copyWith(notifId: model.notifId! + 1),
-          model.getNextOccurenceDateTime(
+          model.getNextOccurrenceDateTime(
               st: DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day, 11, 59)));
     }
     print("Scheduled for next day");
   }
 
-  Future<void> scheduleReminders(SchedulingModel model) async {
+  Future<void> scheduleReminders(SchedulingModel model,
+      {DateTime? dateTime}) async {
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {
         try {
@@ -140,9 +141,9 @@ class NotifService {
             model.name,
             "Due in ${entry.value.inMinutes} minutes",
             tz.TZDateTime.from(
-              model.getNextOccurenceDateTime().subtract(
-                    entry.value, // yani, subtract the duration
-                  ),
+              (dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+                entry.value, // yani, subtract the duration
+              ),
               tz.local,
             ),
             const NotificationDetails(

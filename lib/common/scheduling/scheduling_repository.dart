@@ -21,7 +21,7 @@ class SchedulingRepostioryNotifier<T>
     List<SchedulingModel> upcomingActivities = [];
 
     for (final SchedulingModel model in models) {
-      DateTime nextDate = model.getNextOccurenceDateTime();
+      DateTime nextDate = model.getNextOccurrenceDateTime();
       if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
           DateTime(
               DateTime.now().year, DateTime.now().month, DateTime.now().day)) {
@@ -64,7 +64,7 @@ class SchedulingRepostioryNotifier<T>
 
     List<SchedulingModel> filteredModels = [];
     for (final SchedulingModel model in models) {
-      DateTime nextDate = model.getNextOccurenceDateTime(st: startDate);
+      DateTime nextDate = model.getNextOccurrenceDateTime(st: startDate);
       if (DateTime(nextDate.year, nextDate.month, nextDate.day) == date) {
         filteredModels.add(model);
       }
@@ -79,7 +79,7 @@ class SchedulingRepostioryNotifier<T>
 
     List<SchedulingModel> filteredModels = [];
     for (final SchedulingModel model in models) {
-      DateTime nextDate = model.getNextOccurenceDateTime();
+      DateTime nextDate = model.getNextOccurrenceDateTime();
       if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
           DateTime(
               DateTime.now().year, DateTime.now().month, DateTime.now().day)) {

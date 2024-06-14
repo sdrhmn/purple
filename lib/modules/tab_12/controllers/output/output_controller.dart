@@ -26,8 +26,8 @@ class Tab12OutputNotifier extends EntryStructOutputNotifier<Tab12EntryModel,
 
     return Map.fromEntries(res.entries.toList()
       ..sort((e1, e2) => e1.key.tab2Model
-          .getNextOccurenceDateTime()
-          .compareTo(e2.key.tab2Model.getNextOccurenceDateTime())));
+          .getNextOccurrenceDateTime()
+          .compareTo(e2.key.tab2Model.getNextOccurrenceDateTime())));
   }
 }
 

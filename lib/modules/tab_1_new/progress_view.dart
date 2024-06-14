@@ -204,9 +204,12 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                 width: 100,
                                 height: 100,
                                 child: CupertinoPicker(
+                                    scrollController:
+                                        FixedExtentScrollController(
+                                            initialItem: 4),
                                     itemExtent: 40,
                                     onSelectedItemChanged: (index) {
-                                      level = index + 1;
+                                      level = 5 - index;
                                     },
                                     children: List.generate(
                                         5,

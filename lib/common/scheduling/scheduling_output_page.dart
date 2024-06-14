@@ -41,7 +41,9 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
                   controller.deleteModel(model);
                   models[type]!
                       .removeWhere((element) => element.uuid == model.uuid);
-                  NotifService().cancelNotif(model.notifId);
+
+                  // Cancel notifs
+                  NotifService().cancelRepeatTaskNotifs(model);
 
                   setState(() {});
                 } else {
@@ -65,6 +67,9 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
               } else {
                 models[type]!.removeWhere((e) => e.uuid == model.uuid);
                 setState(() {});
+
+                // Cancel notifs
+                NotifService().cancelRepeatTaskNotifs(model);
 
                 // controller.markModelAsComplete(models[index]);
               }

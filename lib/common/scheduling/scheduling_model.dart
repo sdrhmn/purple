@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -16,7 +17,9 @@ class SchedulingModel {
   DateTime? endDate;
   Map repetitions = {};
   int every = 1;
+  Map<int, Duration>? reminders;
 
+  // ---- def __init__ ----
   SchedulingModel({
     this.uuid,
     required this.name,
@@ -28,18 +31,30 @@ class SchedulingModel {
     required this.every,
     this.startDate,
     notifId,
+    this.reminders,
     required this.repetitions,
   }) {
-    this.notifId = notifId ?? Random().nextInt(9000);
+    this.notifId = notifId ?? Random().nextInt(50000);
   }
 
   SchedulingModel.fromJson(Map json) {
+    Map<int, Duration> _reminders = {};
+    if (jsonDecode(json["Reminders"]) != {}) {
+      for (var entry in jsonDecode(json["Reminders"]).entries) {
+        _reminders = {
+          ..._reminders,
+          int.parse(entry.key): Duration(minutes: entry.value)
+        };
+      }
+    }
+
     if (json.containsKey("Start Date") || json.containsKey("Name")) {
       startDate = DateTime.parse(json["Start Date"]);
       name = json["Name"];
     }
     uuid = json["ID"];
     notifId = json["Notification ID"];
+    reminders = _reminders;
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()
@@ -67,9 +82,22 @@ class SchedulingModel {
       }
     }
 
+    // ignore: no_leading_underscores_for_local_identifiers
+    Map<String, int> _reminders = {};
+
+    if (reminders != null) {
+      for (var entry in reminders!.entries) {
+        _reminders = {
+          ..._reminders,
+          entry.key.toString(): entry.value.inMinutes
+        };
+      }
+    }
+
     Map json = {
       "ID": uuid ?? const Uuid().v4(),
       "Notification ID": notifId,
+      "Reminders": jsonEncode(_reminders),
       "Start": [startTime.hour, startTime.minute].join(":"),
       "Duration": [dur.inHours, dur.inMinutes % 60].join(":"),
       "Frequency": frequency,
@@ -81,7 +109,7 @@ class SchedulingModel {
       "Repeat": frequency != null ? repetitions : null,
       "Every": every,
       "Ends":
-          endDate == null ? "Never" : DateFormat("yyyy-MM-dd").format(endDate!)
+          endDate == null ? "Never" : DateFormat("yyyy-MM-dd").format(endDate!),
     };
 
     if (startDate != null) {
@@ -120,6 +148,7 @@ class SchedulingModel {
     Basis? basis,
     DateTime? endDate,
     DateTime? startDate,
+    Map<int, Duration>? reminders,
   }) {
     return SchedulingModel(
       uuid: uuid ?? this.uuid,
@@ -133,6 +162,7 @@ class SchedulingModel {
       endDate: endDate ?? this.endDate,
       repetitions: repetitions ?? this.repetitions,
       every: every ?? this.every,
+      reminders: reminders ?? this.reminders,
     );
   }
 

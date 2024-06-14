@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/app_theme.dart';
@@ -17,6 +19,9 @@ class SchedulingInputTemplate extends StatelessWidget {
   final Function(int minutes) onMinutesChanged;
   final VoidCallback onRepeatsButtonPressed;
   final Function(SchedulingModel model) onSubmitButtonPressed;
+  final Function(SchedulingModel model) onAddReminder;
+  final Function(SchedulingModel model) onDeleteReminder;
+  final Function(SchedulingModel model) onSliderChanged;
 
   const SchedulingInputTemplate({
     super.key,
@@ -28,6 +33,9 @@ class SchedulingInputTemplate extends StatelessWidget {
     required this.onRepeatsButtonPressed,
     required this.model,
     required this.onSubmitButtonPressed,
+    required this.onAddReminder,
+    required this.onSliderChanged,
+    required this.onDeleteReminder,
   });
 
   @override
@@ -121,6 +129,25 @@ class SchedulingInputTemplate extends StatelessWidget {
               height: 30,
             ),
 
+            // ------ Reminders ------
+            ..._renderReminderSliders(),
+
+            TextButton.icon(
+              onPressed: () => onAddReminder(
+                model.copyWith(
+                  reminders: {
+                    ...model.reminders ?? {},
+                    Random().nextInt(50000): const Duration(minutes: 30),
+                  },
+                ),
+              ),
+              icon: const Icon(Icons.add),
+              label: const Text("Add"),
+            ),
+
+            const Divider(
+              height: 30,
+            ),
             CancelSubmitRowMolecule(
               onCancelPressed: () => Navigator.pop(context),
               onSubmitPressed: () => onSubmitButtonPressed(model),
@@ -133,5 +160,56 @@ class SchedulingInputTemplate extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  List<Widget> _renderReminderSliders() {
+    List<Widget> sliders = [];
+    if (model.reminders != null) {
+      for (var entry in model.reminders!.entries) {
+        sliders.add(
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Text("${entry.value.inHours} h, ${entry.value.inMinutes % 60} m"),
+              Expanded(
+                child: Slider(
+                  max: 120,
+                  min: 1,
+                  divisions: 24,
+                  label:
+                      "${entry.value.inHours} hours and ${entry.value.inMinutes % 60} minutes",
+                  value: entry.value.inMinutes.toDouble(),
+                  onChanged: (newValue) {
+                    onSliderChanged(
+                      model.copyWith(
+                        reminders: model.reminders!
+                          ..update(
+                            entry.key,
+                            (value) => Duration(minutes: newValue.toInt()),
+                          ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              IconButton.filledTonal(
+                  onPressed: () {
+                    onDeleteReminder(
+                      model.copyWith(
+                        reminders: model.reminders!
+                          ..removeWhere((key, value) => key == entry.key),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.remove)),
+              const SizedBox(width: 20),
+            ],
+          ),
+        );
+      }
+    } else {
+      sliders = [Container()];
+    }
+    return sliders;
   }
 }

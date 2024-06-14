@@ -68,7 +68,7 @@ class NotifService {
       await FlutterLocalNotificationsPlugin().zonedSchedule(
         model.notifId,
         model.name,
-        "You have a task to work on!",
+        "Due now",
         tz.TZDateTime.from(
           notifDateTime.subtract(
             const Duration(minutes: 0),
@@ -138,7 +138,7 @@ class NotifService {
           await FlutterLocalNotificationsPlugin().zonedSchedule(
             entry.key,
             model.name,
-            "You have a task to work on!",
+            "Due in ${entry.value.inMinutes} minutes",
             tz.TZDateTime.from(
               model.getNextOccurenceDateTime().subtract(
                     entry.value, // yani, subtract the duration

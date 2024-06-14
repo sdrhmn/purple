@@ -38,23 +38,16 @@ class SchedulingModel {
   }
 
   SchedulingModel.fromJson(Map json) {
-    Map<int, Duration> _reminders = {};
-    if (jsonDecode(json["Reminders"]) != {}) {
-      for (var entry in jsonDecode(json["Reminders"]).entries) {
-        _reminders = {
-          ..._reminders,
-          int.parse(entry.key): Duration(minutes: entry.value)
-        };
-      }
-    }
-
     if (json.containsKey("Start Date") || json.containsKey("Name")) {
       startDate = DateTime.parse(json["Start Date"]);
       name = json["Name"];
     }
     uuid = json["ID"];
     notifId = json["Notification ID"];
-    reminders = _reminders;
+    reminders = jsonDecode(json["Reminders"]) != {}
+        ? jsonDecode(json["Reminders"]).map(
+            (key, value) => MapEntry(int.parse(key), Duration(minutes: value)))
+        : {};
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()
@@ -82,22 +75,12 @@ class SchedulingModel {
       }
     }
 
-    // ignore: no_leading_underscores_for_local_identifiers
-    Map<String, int> _reminders = {};
-
-    if (reminders != null) {
-      for (var entry in reminders!.entries) {
-        _reminders = {
-          ..._reminders,
-          entry.key.toString(): entry.value.inMinutes
-        };
-      }
-    }
-
     Map json = {
       "ID": uuid ?? const Uuid().v4(),
       "Notification ID": notifId,
-      "Reminders": jsonEncode(_reminders),
+      "Reminders": jsonEncode((reminders ?? {}).map(
+        (key, value) => MapEntry(key.toString(), value.inMinutes),
+      )),
       "Start": [startTime.hour, startTime.minute].join(":"),
       "Duration": [dur.inHours, dur.inMinutes % 60].join(":"),
       "Frequency": frequency,

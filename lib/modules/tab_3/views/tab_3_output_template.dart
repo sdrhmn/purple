@@ -110,9 +110,9 @@ class Tab3OutputTemplate extends StatelessWidget {
                                       customWidths: const {1: 70},
                                       texts: [
                                         tab3Models[index].name,
-                                        tab3Models[index].time != null
+                                        tab3Models[index].startTime != null
                                             ? tab3Models[index]
-                                                .time!
+                                                .startTime!
                                                 .format(context)
                                             : "",
                                       ],

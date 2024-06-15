@@ -8,7 +8,7 @@ class Tab3Model {
   String? uuid;
   late int? notifId;
   DateTime? date;
-  TimeOfDay? time;
+  TimeOfDay? startTime;
   String name = "";
   int priority = 0;
   bool notifOn = true;
@@ -19,7 +19,7 @@ class Tab3Model {
     required this.priority,
     this.uuid,
     this.date,
-    this.time,
+    this.startTime,
     notifId,
     reminders,
     required this.notifOn,
@@ -29,7 +29,7 @@ class Tab3Model {
   }
 
   Map toJson() {
-    if (time != null && date != null) {
+    if (startTime != null && date != null) {
       return {
         "ID": uuid ?? const Uuid().v4(),
         "Reminders": jsonEncode((reminders).map(
@@ -37,7 +37,7 @@ class Tab3Model {
         )),
         "Notification ID": notifId,
         "Activity": name,
-        "Time": "${time!.hour}: ${time!.minute}",
+        "Time": "${startTime!.hour}: ${startTime!.minute}",
         "Priority": priority,
         "Notification ON": notifOn,
       };
@@ -69,7 +69,7 @@ class Tab3Model {
       String name = json["Activity"];
       int priority = json["Priority"];
 
-      this.time = time;
+      this.startTime = time;
       this.name = name;
       this.priority = priority;
       notifOn = json["Notification ON"] ?? false;
@@ -96,7 +96,7 @@ class Tab3Model {
       date: date ?? this.date,
       name: name ?? this.name,
       notifId: notifId,
-      time: time ?? this.time,
+      startTime: time ?? this.startTime,
       priority: priority ?? this.priority,
       notifOn: notifOn ?? this.notifOn,
       reminders: reminders ?? this.reminders,

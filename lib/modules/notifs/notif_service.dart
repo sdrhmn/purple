@@ -119,16 +119,16 @@ class NotifService {
 
   Future<void> scheduleAdHocTaskNotifs(Tab3Model model) async {
     //----- Schedule Notification --------
-    if (model.date != null && model.time != null) {
+    if (model.date != null && model.startTime != null) {
       NotifService().scheduleNotif(
           model,
           DateTime(model.date!.year, model.date!.month, model.date!.day,
-              model.time!.hour, model.time!.minute));
+              model.startTime!.hour, model.startTime!.minute));
 
       // Reminders
       NotifService().scheduleReminders(model,
-          dateTime: model.date!
-              .copyWith(hour: model.time!.hour, minute: model.time!.minute));
+          dateTime: model.date!.copyWith(
+              hour: model.startTime!.hour, minute: model.startTime!.minute));
     }
   }
 

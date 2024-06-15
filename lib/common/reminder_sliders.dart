@@ -26,16 +26,49 @@ class ReminderSliders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Reminders",
+              style: Theme.of(context).textTheme.titleSmall,
+            )
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
         ..._renderReminderSliders(),
         TextButton.icon(
-          onPressed: () => onAddReminder(
-            model.copyWith(
-              reminders: <int, Duration>{
-                ...model.reminders ?? {},
-                Random().nextInt(50000): const Duration(minutes: 30),
-              },
-            ),
-          ),
+          onPressed: () {
+            if (DateTime.now()
+                    .copyWith(
+                        hour: model.startTime.hour,
+                        minute: model.startTime.minute)
+                    .difference(DateTime.now())
+                    .inMinutes <
+                1) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                      "Not enough time to set a reminder. Try increasing the start time of your task.")));
+            } else {
+              onAddReminder(
+                model.copyWith(
+                  reminders: <int, Duration>{
+                    ...model.reminders ?? {},
+                    Random().nextInt(50000): Duration(
+                        minutes: DateTime.now()
+                                .copyWith(
+                                    hour: model.startTime.hour,
+                                    minute: model.startTime.minute)
+                                .difference(DateTime.now())
+                                .inMinutes ~/
+                            2),
+                  },
+                ),
+              );
+            }
+          },
           icon: const Icon(Icons.add),
           label: const Text("Add"),
         ),
@@ -45,6 +78,12 @@ class ReminderSliders extends StatelessWidget {
 
   List<Widget> _renderReminderSliders() {
     List<Widget> sliders = [];
+    double max = DateTime.now()
+        .copyWith(hour: model.startTime.hour, minute: model.startTime.minute)
+        .difference(DateTime.now())
+        .inMinutes
+        .toDouble();
+
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {
         sliders.add(
@@ -53,9 +92,9 @@ class ReminderSliders extends StatelessWidget {
               Text("${entry.value.inHours} h, ${entry.value.inMinutes % 60} m"),
               Expanded(
                 child: Slider(
-                  max: 120,
-                  min: 1,
-                  divisions: 24,
+                  max: max,
+                  min: 0,
+                  divisions: max.toInt() - 1,
                   label:
                       "${entry.value.inHours} hours and ${entry.value.inMinutes % 60} minutes",
                   value: entry.value.inMinutes.toDouble(),

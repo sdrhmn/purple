@@ -42,7 +42,8 @@ class SchedulingInputNotifier extends Notifier<SchedulingModel> {
   }
 
   void setStartTime(startTime) {
-    state = state.copyWith(startTime: startTime);
+    state = state.copyWith(
+        startTime: startTime, reminders: {}); // Also, reset any reminders
   }
 
   void setDuration(Duration dur) {

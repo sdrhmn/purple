@@ -83,7 +83,7 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
                 Tab3Model(
                   name: "This is a sample entry.",
                   priority: 0,
-                  time: TimeOfDay.now(),
+                  startTime: TimeOfDay.now(),
                   date: DateTime.now(),
                   notifOn: true,
                 ),

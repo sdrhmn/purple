@@ -37,7 +37,8 @@ class Tab3InputTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool scheduled = (model.date == null && model.time == null) ? false : true;
+    bool scheduled =
+        (model.date == null && model.startTime == null) ? false : true;
 
     List<Widget> children = [
       const SizedBox(
@@ -89,7 +90,7 @@ class Tab3InputTemplate extends StatelessWidget {
                 TitleWidgetRowMolecule(
                   title: Tab3Headings.time,
                   widget: TimeButtonAtom.large(
-                    initialTime: model.time ?? TimeOfDay.now(),
+                    initialTime: model.startTime ?? TimeOfDay.now(),
                     onTimeChanged: onTimeChanged,
                   ),
                 ),

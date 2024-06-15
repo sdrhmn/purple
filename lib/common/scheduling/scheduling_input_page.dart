@@ -30,7 +30,9 @@ class _SchedulingInputPageState extends ConsumerState<SchedulingInputPage> {
     return SchedulingInputTemplate(
       showDurationSelector: widget.showDurationSelector,
       onActivityChanged: (activity) => controller.setName(activity),
-      onStartTimeChanged: (time) => controller.setStartTime(time),
+      onStartTimeChanged: (time) {
+        controller.setStartTime(time);
+      },
       onHoursChanged: (hours) => controller.setDuration(
         Duration(
             hours: hours,

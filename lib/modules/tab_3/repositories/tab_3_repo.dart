@@ -72,9 +72,11 @@ class Tab3RepositoryNotifier extends Notifier<void> {
       for (var date in tab3Models["scheduled"].keys) {
         List<Tab3Model> models =
             tab3Models["scheduled"][date].cast<Tab3Model>();
-        models.sort((a, b) => DateTime(0, 0, 0, a.time!.hour, a.time!.minute)
-            .difference(DateTime(0, 0, 0, b.time!.hour, b.time!.minute))
-            .inSeconds);
+        models.sort((a, b) =>
+            DateTime(0, 0, 0, a.startTime!.hour, a.startTime!.minute)
+                .difference(
+                    DateTime(0, 0, 0, b.startTime!.hour, b.startTime!.minute))
+                .inSeconds);
       }
     }
 
@@ -120,7 +122,7 @@ class Tab3RepositoryNotifier extends Notifier<void> {
 
     var jsonifiedModel = model.toJson();
 
-    if (model.date != null && model.time != null) {
+    if (model.date != null && model.startTime != null) {
       String date = model.date.toString().substring(0, 10);
 
       if (!scheduledContent.keys.contains(date)) {

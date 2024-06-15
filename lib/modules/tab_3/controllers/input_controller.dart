@@ -12,7 +12,7 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
     return Tab3Model(
       name: "",
       priority: 1,
-      time: TimeOfDay.now(),
+      startTime: TimeOfDay.now(),
       date: DateTime.now(),
       notifOn: true,
     );
@@ -27,7 +27,8 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
   }
 
   setTime(TimeOfDay time) {
-    state = state.copyWith(time: time);
+    state =
+        state.copyWith(time: time, reminders: {}); // Also, reset any reminders
   }
 
   void setPriority(int index) {
@@ -36,7 +37,7 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
 
   void removeDateAndTime() {
     state.date = null;
-    state.time = null;
+    state.startTime = null;
   }
 
   Future<void> syncToDB() async {

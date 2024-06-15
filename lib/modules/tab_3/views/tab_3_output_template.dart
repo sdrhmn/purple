@@ -119,21 +119,27 @@ class Tab3OutputTemplate extends StatelessWidget {
                                       defaultAligned: const [0],
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(tab3Models[index].notifOn
-                                        ? Icons.notifications_active
-                                        : Icons.notifications_off),
-                                    onPressed: () {
-                                      onNotifIconPressed(
-                                        !(tab3Models[index].notifOn),
-                                        tab3Models[index],
-                                        date.toString(),
-                                        index,
-                                      );
-                                    },
-                                    color: tab3Models[index].notifOn
-                                        ? Colors.white
-                                        : Colors.black,
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                      icon: Icon(tab3Models[index].notifOn
+                                          ? Icons.notifications_active
+                                          : Icons.notifications_off),
+                                      onPressed: () {
+                                        onNotifIconPressed(
+                                          !(tab3Models[index].notifOn),
+                                          tab3Models[index],
+                                          date.toString(),
+                                          index,
+                                        );
+                                      },
+                                      color: tab3Models[index].notifOn
+                                          ? Colors.blue
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
                                   )
                                 ],
                               ),

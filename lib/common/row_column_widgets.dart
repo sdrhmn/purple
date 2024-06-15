@@ -181,7 +181,8 @@ class TextRowMolecule extends StatelessWidget {
                                               .textTheme
                                               .titleMedium!
                                               .copyWith(
-                                                  fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                     ),
                                   ],
                                 )

@@ -37,7 +37,7 @@ class CompletedTasksRepositoryNotifier extends AsyncNotifier<void> {
     List dates = json.keys.toList();
     dates.sort();
 
-    for (String date in dates) {
+    for (String date in dates.reversed) {
       tasks[date] = [];
 
       for (Map taskJson in json[date]!) {

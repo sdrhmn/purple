@@ -48,7 +48,7 @@ class Tab3OutputTemplate extends StatelessWidget {
                 ? const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                        "No tasks here. Start creating using the + buttton."),
+                        "No tasks here. Start creating using the + button."),
                   )
                 : Container(
                     color: Tab3Colors.bgScheduledHeader,

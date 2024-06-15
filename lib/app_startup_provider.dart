@@ -5,14 +5,8 @@ import 'package:timely/modules/notifs/repeating_notifs_scheduler.dart';
 import 'package:timely/modules/tab_1_new/incrementor.dart';
 import 'package:timely/modules/tab_1_new/repository.dart';
 import 'package:timely/reusables.dart';
-import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timezone/data/latest.dart' as tz;
 
 final appStartupProvider = FutureProvider<void>((ref) async {
-  tz.initializeTimeZones();
-
-  await NotifService().init();
-
   // Initialize the files provider
   await ref.read(dbFilesProvider.future);
 

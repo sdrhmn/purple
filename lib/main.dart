@@ -8,10 +8,15 @@ import 'package:timely/common/splash.dart';
 import 'package:timely/modules/home/views/tab_buttons.dart';
 import 'package:timely/reusables.dart';
 import 'package:timely/values.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  tz.initializeTimeZones();
+  await NotifService().init();
+// ------------------------------
   runApp(
     const ProviderScope(
       child: MyApp(),

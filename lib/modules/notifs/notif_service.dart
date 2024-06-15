@@ -44,6 +44,7 @@ class NotifService {
     );
 
     if (Platform.isAndroid) {
+      print("IS ANDROID = TRUE");
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()!

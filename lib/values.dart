@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Map<int, String> appBarHeadings = {
-  12: "Purple",
+  12: "PurpleTime",
   0: "Controls",
   1: "Repeat Activities",
   2: "Ad hoc Activities",

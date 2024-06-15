@@ -109,6 +109,10 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
             },
             showEndTime: widget.showEndTime,
             models: models,
+            onNotifIconPressed:
+                (SchedulingModel model, String type, int index) {
+              models[type]![index] = model.copyWith(notifOn: !(model.notifOn!));
+            },
           );
         },
         error: (_, __) => const Text("ERROR"),

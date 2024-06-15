@@ -11,6 +11,8 @@ class SchedulingOutputTemplate extends StatelessWidget {
   final Function(SchedulingModel model) onTap;
   final VoidCallback onPressedHome;
   final VoidCallback onPressedAdd;
+  final Function(SchedulingModel model, String type, int index)
+      onNotifIconPressed;
 
   final bool? showEndTime;
 
@@ -22,6 +24,7 @@ class SchedulingOutputTemplate extends StatelessWidget {
     required this.onPressedHome,
     required this.onPressedAdd,
     required this.showEndTime,
+    required this.onNotifIconPressed,
   });
 
   @override
@@ -102,6 +105,25 @@ class SchedulingOutputTemplate extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(3.0),
+                                  //   child: CircleAvatar(
+                                  //     backgroundColor: Colors.white,
+                                  //     child: IconButton(
+                                  //       onPressed: () => onNotifIconPressed(
+                                  //           model, "today", index),
+                                  //       icon: Icon(
+                                  //         model.notifOn == true
+                                  //             ? Icons
+                                  //                 .notifications_active_rounded
+                                  //             : Icons.notifications_off_rounded,
+                                  //         color: model.notifOn == true
+                                  //             ? Colors.green
+                                  //             : Colors.red,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -183,6 +205,23 @@ class SchedulingOutputTemplate extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      // CircleAvatar(
+                                      //   backgroundColor: Colors.white,
+                                      //   child: IconButton(
+                                      //     onPressed: () => onNotifIconPressed(
+                                      //         model, "upcoming", index),
+                                      //     icon: Icon(
+                                      //       model.notifOn == true
+                                      //           ? Icons
+                                      //               .notifications_active_rounded
+                                      //           : Icons
+                                      //               .notifications_off_rounded,
+                                      //       color: model.notifOn == true
+                                      //           ? Colors.green
+                                      //           : Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),

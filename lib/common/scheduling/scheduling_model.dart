@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 class SchedulingModel {
   String? uuid;
   late int? notifId;
+  bool? notifOn = true;
   String? name;
   TimeOfDay startTime = const TimeOfDay(hour: 0, minute: 0);
   Duration dur = const Duration();
@@ -31,10 +32,12 @@ class SchedulingModel {
     required this.every,
     this.startDate,
     notifId,
+    notifOn,
     this.reminders,
     required this.repetitions,
   }) {
     this.notifId = notifId ?? Random().nextInt(50000);
+    this.notifOn = notifOn ?? this.notifOn;
   }
 
   SchedulingModel.fromJson(Map json) {
@@ -50,6 +53,7 @@ class SchedulingModel {
     }
     uuid = json["ID"];
     notifId = json["Notification ID"];
+    notifOn = json["Notification ON"];
     List times = [
       json["Start"].split(":").map((val) => int.parse(val)).toList(),
       json["Duration"].split(":").map((val) => int.parse(val)).toList()
@@ -80,6 +84,7 @@ class SchedulingModel {
     Map json = {
       "ID": uuid ?? const Uuid().v4(),
       "Notification ID": notifId,
+      "Notification ON": notifOn,
       "Reminders": jsonEncode((reminders ?? {}).map(
         (key, value) => MapEntry(key.toString(), value.inMinutes),
       )),
@@ -127,6 +132,7 @@ class SchedulingModel {
     TimeOfDay? startTime,
     Duration? dur,
     int? notifId,
+    bool? notifOn,
     String? frequency,
     Map? repetitions,
     int? every,
@@ -148,6 +154,7 @@ class SchedulingModel {
       repetitions: repetitions ?? this.repetitions,
       every: every ?? this.every,
       reminders: reminders ?? this.reminders,
+      notifOn: notifOn ?? this.notifOn,
     );
   }
 

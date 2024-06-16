@@ -219,8 +219,6 @@ class NotifService {
     ]);
 
     await cancelReminders(model);
-
-    // print("Cancelled all repeat task notifs");
   }
 
   void onDidReceiveLocalNotification(

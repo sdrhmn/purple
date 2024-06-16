@@ -62,6 +62,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onPressedHome: () =>
                 ref.read(tabIndexProvider.notifier).setIndex(12),
             onPressedAdd: () {
+              ref.invalidate(tab3InputProvider);
               Navigator.push(
                 context,
                 MaterialPageRoute(

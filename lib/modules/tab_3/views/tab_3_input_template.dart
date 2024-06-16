@@ -111,11 +111,13 @@ class Tab3InputTemplate extends StatelessWidget {
       ),
 
       // ------ Reminders ------
-      ReminderSliders(
-          model: model,
-          onAddReminder: (model) => onAddReminder(model),
-          onSliderChanged: (model) => onSliderChanged(model),
-          onDeleteReminder: (model) => onDeleteReminder(model)),
+      model.date != null
+          ? ReminderSliders(
+              model: model,
+              onAddReminder: (model) => onAddReminder(model),
+              onSliderChanged: (model) => onSliderChanged(model),
+              onDeleteReminder: (model) => onDeleteReminder(model))
+          : Container(),
 
       // Cancel & Submit Row
       CancelSubmitRowMolecule(

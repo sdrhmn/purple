@@ -50,14 +50,12 @@ class ReminderSliders extends StatelessWidget {
         ..._renderReminderSliders(),
         TextButton.icon(
           onPressed: () {
-            if (DateTime.now()
-                        .copyWith(
-                            hour: model.startTime.hour,
-                            minute: model.startTime.minute)
+            if (model is AdHocModel &&
+                DateTime(model.date!.year, model.date!.month, model.date!.day,
+                            model.startTime.hour, model.startTime.minute)
                         .difference(DateTime.now())
                         .inMinutes <
-                    1 &&
-                model is AdHocModel) {
+                    1) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text(
                       "Not enough time to set a reminder. Try increasing the start time of your task.")));
@@ -82,7 +80,8 @@ class ReminderSliders extends StatelessWidget {
 
   List<Widget> _renderReminderSliders() {
     List<Widget> sliders = [];
-    double max = DateTime.now()
+    double max = DateTime(model.date!.year, model.date!.month, model.date!.day,
+            model.startTime.hour, model.startTime.minute)
         .copyWith(hour: model.startTime.hour, minute: model.startTime.minute)
         .difference(DateTime.now())
         .inMinutes

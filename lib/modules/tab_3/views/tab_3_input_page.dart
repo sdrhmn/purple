@@ -34,7 +34,10 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
       onDateChanged: (date) => controller.setDate(date),
       onTimeChanged: (time) => controller.setTime(time),
       onPriorityChanged: (index) => controller.setPriority(index),
-      onCancelPressed: () => Navigator.pop(context),
+      onCancelPressed: () {
+        Navigator.pop(context);
+        ref.invalidate(tab3InputProvider);
+      },
       onSubmitPressed: (model) {
         if (model.name.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +48,7 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
               duration: Duration(seconds: 1),
             ),
           );
+          ref.invalidate(tab3InputProvider);
         } else {
           controller.syncToDB();
           Navigator.pop(context);

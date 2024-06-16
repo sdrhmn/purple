@@ -136,11 +136,11 @@ class ReminderSliders extends StatelessWidget {
                   },
                   // Formula: min(max - hours * 60, 59)
                   elements: Iterable.generate(model is AdHocModel
-                          ? min(max - entry.value.inHours * 60, 59).toInt() + 1
-                          : 59)
+                          ? min(max - entry.value.inHours * 60, 60).toInt()
+                          : 60)
                       .map((e) => e.toString())
                       .toList(),
-                  initialItemIndex: entry.value.inHours,
+                  initialItemIndex: (entry.value.inMinutes % 60).toInt(),
                   size: const Size(0, 70),
                 ),
               ),

@@ -44,7 +44,7 @@ class NotifService {
     );
 
     if (Platform.isAndroid) {
-      print("IS ANDROID = TRUE");
+      // print("IS ANDROID = TRUE");
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()!
@@ -95,7 +95,7 @@ class NotifService {
       );
     } catch (e) {
       // ignore: avoid_print
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -104,17 +104,19 @@ class NotifService {
     // ------ Schedule Notifs for today? -------
     DateTime nextDate = model.getNextOccurrenceDateTime();
     if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
-        DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day)) {
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))
+    // Yani, if the task is to occur today
+    {
       NotifService().scheduleNotif(model, nextDate);
-    }
-    print("Scheduled for today");
 
-    // Tomorrow?
+      // Schedule reminders for today
+      scheduleReminders(model);
+    }
+
+    //------ Schedule Notifs for tomorrow? ------
     scheduleNotifForNextDay(model);
 
-    // Reminders
-    scheduleReminders(model);
+    // print("Scheduled for today");
   }
 
   Future<void> scheduleAdHocTaskNotifs(Tab3Model model) async {
@@ -145,7 +147,7 @@ class NotifService {
               st: DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day, 11, 59)));
     }
-    print("Scheduled for next day");
+    // print("Scheduled for next day");
   }
 
   Future<void> scheduleReminders(dynamic model, {DateTime? dateTime}) async {
@@ -178,10 +180,10 @@ class NotifService {
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
           );
-          print("Scheduled reminder");
+          // print("Scheduled reminder");
         } catch (e) {
           // ignore: avoid_print
-          print(e.toString());
+          // print(e.toString());
         }
       }
     }
@@ -189,12 +191,12 @@ class NotifService {
 
   Future<void> cancelNotif(id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
-    print("Cancelled notif");
+    // print("Cancelled notif");
   }
 
   Future<void> cancelAllNotifs() async {
     await flutterLocalNotificationsPlugin.cancelAll();
-    print("Cancelled notifs");
+    // print("Cancelled notifs");
   }
 
   Future<void> cancelReminders(dynamic model) async {
@@ -206,7 +208,7 @@ class NotifService {
       ]);
     }
 
-    print("Cancelled reminders");
+    // print("Cancelled reminders");
   }
 
   Future<void> cancelRepeatTaskNotifs(SchedulingModel model) async {
@@ -218,7 +220,7 @@ class NotifService {
 
     await cancelReminders(model);
 
-    print("Cancelled all repeat task notifs");
+    // print("Cancelled all repeat task notifs");
   }
 
   void onDidReceiveLocalNotification(

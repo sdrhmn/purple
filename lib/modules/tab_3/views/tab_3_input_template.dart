@@ -4,16 +4,16 @@ import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/reusables.dart';
 
 import 'package:timely/common/row_column_widgets.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/values.dart';
 
 class Tab3InputTemplate extends StatelessWidget {
-  final Tab3Model model;
+  final AdHocModel model;
   final Function(String activity) onActivityChanged;
   final Function(DateTime date) onDateChanged;
   final Function(TimeOfDay time) onTimeChanged;
   final Function(int index) onPriorityChanged;
-  final Function(Tab3Model model) onSubmitPressed;
+  final Function(AdHocModel model) onSubmitPressed;
   final VoidCallback onCancelPressed;
   final Function(bool value) onScheduleChanged;
   final Function(dynamic model) onAddReminder;

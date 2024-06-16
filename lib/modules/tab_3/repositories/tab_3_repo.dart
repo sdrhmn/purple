@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/completed_tasks/completed_tasks_repository.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/reusables.dart';
 import 'package:timely/modules/completed_tasks/task_model.dart';
 import "dart:collection";
@@ -44,7 +44,7 @@ class Tab3RepositoryNotifier extends Notifier<void> {
         tab3Models["scheduled"]![date] = [];
         for (Map content in completedContent['scheduled'][date] ?? {}) {
           tab3Models["scheduled"]![date]!.add(
-            Tab3Model.fromJson(
+            AdHocModel.fromJson(
               DateTime.parse(date),
               content,
             ),
@@ -56,7 +56,7 @@ class Tab3RepositoryNotifier extends Notifier<void> {
         tab3Models["scheduled"]![date] = [];
         for (Map content in scheduledContent[date]) {
           tab3Models["scheduled"]![date]!.add(
-            Tab3Model.fromJson(
+            AdHocModel.fromJson(
               DateTime.parse(date),
               content,
             ),
@@ -70,8 +70,8 @@ class Tab3RepositoryNotifier extends Notifier<void> {
       });
 
       for (var date in tab3Models["scheduled"].keys) {
-        List<Tab3Model> models =
-            tab3Models["scheduled"][date].cast<Tab3Model>();
+        List<AdHocModel> models =
+            tab3Models["scheduled"][date].cast<AdHocModel>();
         models.sort((a, b) =>
             DateTime(0, 0, 0, a.startTime!.hour, a.startTime!.minute)
                 .difference(
@@ -84,14 +84,14 @@ class Tab3RepositoryNotifier extends Notifier<void> {
       for (Map modelMap in completedContent["unscheduled"]) {
         tab3Models["nonScheduled"] = [
           ...tab3Models["nonScheduled"],
-          Tab3Model.fromJson(null, modelMap)
+          AdHocModel.fromJson(null, modelMap)
         ];
       }
     } else {
       for (Map modelMap in nonScheduledContent) {
         tab3Models["nonScheduled"] = [
           ...tab3Models["nonScheduled"],
-          Tab3Model.fromJson(null, modelMap)
+          AdHocModel.fromJson(null, modelMap)
         ];
       }
     }
@@ -99,20 +99,20 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     return tab3Models;
   }
 
-  Future<List<Tab3Model>> fetchNonScheduledModels() async {
+  Future<List<AdHocModel>> fetchNonScheduledModels() async {
     final nonScheduled = (ref.read(dbFilesProvider)).requireValue[3]![1];
     final nonScheduledContent = jsonDecode(await nonScheduled.readAsString());
 
-    List<Tab3Model> models = [];
+    List<AdHocModel> models = [];
 
     for (Map modelMap in nonScheduledContent) {
-      models.add(Tab3Model.fromJson(null, modelMap));
+      models.add(AdHocModel.fromJson(null, modelMap));
     }
 
     return models;
   }
 
-  Future<void> writeModel(Tab3Model model) async {
+  Future<void> writeModel(AdHocModel model) async {
     final scheduledFile = (ref.read(dbFilesProvider)).requireValue[3]![0];
     final nonScheduledFile = (ref.read(dbFilesProvider)).requireValue[3]![1];
 
@@ -143,7 +143,7 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     }
   }
 
-  Future<void> deleteModel(Tab3Model model, {bool? completed}) async {
+  Future<void> deleteModel(AdHocModel model, {bool? completed}) async {
     // Fetch the data
     final scheduled = (ref.read(dbFilesProvider)).requireValue[3]![0];
     final nonScheduled = (ref.read(dbFilesProvider)).requireValue[3]![1];
@@ -173,12 +173,12 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     await nonScheduled.writeAsString(jsonEncode(nonScheduledContent));
   }
 
-  Future<void> editModel(Tab3Model model) async {
+  Future<void> editModel(AdHocModel model) async {
     await deleteModel(model);
     await writeModel(model);
   }
 
-  Future<void> markComplete(Tab3Model model) async {
+  Future<void> markComplete(AdHocModel model) async {
     // Delete from pending
     await deleteModel(model);
 

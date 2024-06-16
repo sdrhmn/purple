@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/home/controllers/tasks_today_controller.dart';
 import 'package:timely/modules/home/repositories/tasks_today_repo.dart';
 import 'package:timely/modules/tab_3/controllers/output_controller.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 
-class Tab3InputNotifier extends Notifier<Tab3Model> {
+class Tab3InputNotifier extends Notifier<AdHocModel> {
   @override
-  Tab3Model build() {
-    return Tab3Model(
+  AdHocModel build() {
+    return AdHocModel(
       name: "",
       priority: 1,
       startTime: TimeOfDay.now(),
@@ -51,10 +51,10 @@ class Tab3InputNotifier extends Notifier<Tab3Model> {
     ref.invalidate(tasksTodayOutputProvider);
   }
 
-  void setModel(Tab3Model model) async {
+  void setModel(AdHocModel model) async {
     state = model;
   }
 }
 
 final tab3InputProvider =
-    NotifierProvider<Tab3InputNotifier, Tab3Model>(Tab3InputNotifier.new);
+    NotifierProvider<Tab3InputNotifier, AdHocModel>(Tab3InputNotifier.new);

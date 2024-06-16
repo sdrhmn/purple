@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 
 class TaskToday {
   late final String name;
@@ -40,7 +40,7 @@ class TaskToday {
         break;
 
       case 3:
-        model = Tab3Model.fromJson(DateTime.now(), json["Data"]);
+        model = AdHocModel.fromJson(DateTime.now(), json["Data"]);
     }
   }
 

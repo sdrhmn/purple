@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tab_3/controllers/show_completed_controller.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_3/views/tab_3_output_template.dart';
@@ -76,7 +76,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
               );
             },
             onNotifIconPressed:
-                (bool value, Tab3Model model, String date, int index) async {
+                (bool value, AdHocModel model, String date, int index) async {
               if (value == true) {
                 NotifService().scheduleAdHocTaskNotifs(model);
               } else {

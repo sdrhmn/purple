@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // NOTE: This class is a singleton.
@@ -119,7 +119,7 @@ class NotifService {
     // print("Scheduled for today");
   }
 
-  Future<void> scheduleAdHocTaskNotifs(Tab3Model model) async {
+  Future<void> scheduleAdHocTaskNotifs(AdHocModel model) async {
     //----- Schedule Notification --------
     if (model.date != null && model.startTime != null) {
       NotifService().scheduleNotif(

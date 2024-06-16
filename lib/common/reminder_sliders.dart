@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 
 class ReminderSliders extends StatelessWidget {
   final dynamic model;
@@ -24,6 +25,13 @@ class ReminderSliders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int half = (DateTime.now()
+            .copyWith(
+                hour: model.startTime.hour, minute: model.startTime.minute)
+            .difference(DateTime.now())
+            .inMinutes ~/
+        2);
+
     return Column(
       children: [
         Row(
@@ -35,7 +43,7 @@ class ReminderSliders extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         ..._renderReminderSliders(),
@@ -56,14 +64,8 @@ class ReminderSliders extends StatelessWidget {
                 model.copyWith(
                   reminders: <int, Duration>{
                     ...model.reminders ?? {},
-                    Random().nextInt(50000): Duration(
-                        minutes: DateTime.now()
-                                .copyWith(
-                                    hour: model.startTime.hour,
-                                    minute: model.startTime.minute)
-                                .difference(DateTime.now())
-                                .inMinutes ~/
-                            2),
+                    Random().nextInt(50000):
+                        Duration(minutes: model is AdHocModel ? half : 30),
                   },
                 ),
               );
@@ -92,9 +94,9 @@ class ReminderSliders extends StatelessWidget {
               Text("${entry.value.inHours} h, ${entry.value.inMinutes % 60} m"),
               Expanded(
                 child: Slider(
-                  max: max,
+                  max: model is AdHocModel ? max : 120,
                   min: 0,
-                  divisions: max.toInt() - 1,
+                  divisions: model is AdHocModel ? max.toInt() - 1 : 24,
                   label:
                       "${entry.value.inHours} hours and ${entry.value.inMinutes % 60} minutes",
                   value: entry.value.inMinutes.toDouble(),

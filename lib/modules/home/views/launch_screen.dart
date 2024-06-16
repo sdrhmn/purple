@@ -15,7 +15,7 @@ import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
 import 'package:timely/modules/tab_3/controllers/output_controller.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_6/controllers/output_controller.dart';
 import 'package:timely/modules/tab_6/pages/tab_6_input_page.dart';
 import 'package:timely/modules/tab_7/controllers/output_controller.dart';
@@ -129,7 +129,7 @@ class LaunchScreen extends ConsumerWidget {
                       child: TasksTodayTemplate(
                         data: data,
                         onDismissed: (dir, model, tabNumber, task) async {
-                          if (model is Tab3Model) {
+                          if (model is AdHocModel) {
                             if (dir == DismissDirection.startToEnd) {
                               await ref
                                   .read(tab3OutputProvider.notifier)
@@ -167,7 +167,7 @@ class LaunchScreen extends ConsumerWidget {
                           }
                         },
                         onTap: (model, tabNumber) {
-                          if (model is Tab3Model) {
+                          if (model is AdHocModel) {
                             ref
                                 .read(tab3InputProvider.notifier)
                                 .setModel(model);

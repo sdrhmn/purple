@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/row_column_widgets.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/tokens/tab_3_colors.dart';
 
 class Tab3OutputTemplate extends StatelessWidget {
   final Map<String, dynamic> models;
-  final Function(DismissDirection direction, Tab3Model model) onDismissed;
-  final Function(Tab3Model model) onTap;
-  final Function(bool value, Tab3Model model, String date, int index)
+  final Function(DismissDirection direction, AdHocModel model) onDismissed;
+  final Function(AdHocModel model) onTap;
+  final Function(bool value, AdHocModel model, String date, int index)
       onNotifIconPressed;
   final VoidCallback onPressedHome;
   final VoidCallback onPressedAdd;
@@ -68,8 +68,8 @@ class Tab3OutputTemplate extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 DateTime date = DateTime.parse(dates[index]);
-                List<Tab3Model> tab3Models =
-                    models["scheduled"]![dates[index]]!.cast<Tab3Model>();
+                List<AdHocModel> tab3Models =
+                    models["scheduled"]![dates[index]]!.cast<AdHocModel>();
 
                 return Column(
                   children: [
@@ -179,8 +179,8 @@ class Tab3OutputTemplate extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                List<Tab3Model> tab3Models =
-                    models["nonScheduled"].cast<Tab3Model>();
+                List<AdHocModel> tab3Models =
+                    models["nonScheduled"].cast<AdHocModel>();
 
                 return InkWell(
                   onTap: () => onTap(tab3Models[index]),

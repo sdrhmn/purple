@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/home/models/task_today.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/tokens/tab_3_colors.dart';
 
 class TasksTodayTemplate extends StatefulWidget {
@@ -72,7 +72,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
   @override
   Widget build(BuildContext context) {
     List<TaskToday> tasksToday = widget.data.first;
-    List<Tab3Model> nonScheduledTasks = widget.data.last;
+    List<AdHocModel> nonScheduledTasks = widget.data.last;
 
     return Container(
       child: widget.data.isEmpty

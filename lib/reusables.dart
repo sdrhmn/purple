@@ -11,7 +11,7 @@ import 'package:timely/modules/tab_11/repositories/tab_11_repo.dart';
 import 'package:timely/modules/tab_12/models/entry_model.dart';
 import 'package:timely/modules/tab_12/models/sub_entry_model.dart';
 import 'package:timely/modules/tab_12/repositories/tab_12_repo.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
 import 'package:timely/modules/tab_5/models/spw.dart';
 import 'package:timely/modules/tab_5/repositories/tab_5_repo.dart';
@@ -80,7 +80,7 @@ final dbFilesProvider = FutureProvider<Map<int, List<File>>>(
 
         case 3:
           ref.read(tab3RepositoryProvider.notifier).writeModel(
-                Tab3Model(
+                AdHocModel(
                   name: "This is a sample entry.",
                   priority: 0,
                   startTime: TimeOfDay.now(),

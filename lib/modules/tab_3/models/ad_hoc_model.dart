@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-class Tab3Model {
+class AdHocModel {
   String? uuid;
   late int? notifId;
   DateTime? date;
@@ -14,7 +14,7 @@ class Tab3Model {
   bool notifOn = true;
   Map<int, Duration> reminders = {};
 
-  Tab3Model({
+  AdHocModel({
     required this.name,
     required this.priority,
     this.uuid,
@@ -50,7 +50,7 @@ class Tab3Model {
     }
   }
 
-  Tab3Model.fromJson(this.date, Map json) {
+  AdHocModel.fromJson(this.date, Map json) {
     uuid = json["ID"].toString();
     if (json["Time"] != null) {
       var rems = jsonDecode(json["Reminders"]) != {}
@@ -82,7 +82,7 @@ class Tab3Model {
     }
   }
 
-  Tab3Model copyWith({
+  AdHocModel copyWith({
     DateTime? date,
     String? uuid,
     String? name,
@@ -91,7 +91,7 @@ class Tab3Model {
     bool? notifOn,
     Map<int, Duration>? reminders,
   }) {
-    return Tab3Model(
+    return AdHocModel(
       uuid: uuid ?? this.uuid,
       date: date ?? this.date,
       name: name ?? this.name,

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/common/scheduling/scheduling_repository.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
-import 'package:timely/modules/tab_3/models/tab_3_model.dart';
+import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/reusables.dart';
 
 // Get all entries from all tabs
@@ -61,7 +61,7 @@ final todaysModelMapsProvider = FutureProvider.autoDispose<List>((ref) async {
 
   for (String date in tab3Data["scheduled"].keys) {
     if (date == dateToday) {
-      for (Tab3Model model in tab3Data["scheduled"][date]) {
+      for (AdHocModel model in tab3Data["scheduled"][date]) {
         if (!model.name.contains("This is a sample entry.")) {
           modelMaps.add({
             "Tab Number": 3,

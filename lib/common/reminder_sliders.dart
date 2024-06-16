@@ -80,12 +80,12 @@ class ReminderSliders extends StatelessWidget {
 
   List<Widget> _renderReminderSliders() {
     List<Widget> sliders = [];
-    double max = DateTime(model.date!.year, model.date!.month, model.date!.day,
+    double max = model is AdHocModel ?  DateTime(model.date!.year, model.date!.month, model.date!.day,
             model.startTime.hour, model.startTime.minute)
         .copyWith(hour: model.startTime.hour, minute: model.startTime.minute)
         .difference(DateTime.now())
         .inMinutes
-        .toDouble();
+        .toDouble(): 0.0;
 
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {

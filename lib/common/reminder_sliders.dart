@@ -109,7 +109,7 @@ class ReminderSliders extends StatelessWidget {
                     );
                   },
                   elements: Iterable.generate(
-                          model is AdHocModel ? (max / 60).round() : 24)
+                          model is AdHocModel ? (max / 60).ceil() : 24)
                       .map((e) => e.toString())
                       .toList(),
                   initialItemIndex: entry.value.inHours,

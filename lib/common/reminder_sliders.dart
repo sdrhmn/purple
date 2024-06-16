@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:timely/common/inputs.dart';
 import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 
 class ReminderSliders extends StatelessWidget {
@@ -50,12 +51,13 @@ class ReminderSliders extends StatelessWidget {
         TextButton.icon(
           onPressed: () {
             if (DateTime.now()
-                    .copyWith(
-                        hour: model.startTime.hour,
-                        minute: model.startTime.minute)
-                    .difference(DateTime.now())
-                    .inMinutes <
-                1) {
+                        .copyWith(
+                            hour: model.startTime.hour,
+                            minute: model.startTime.minute)
+                        .difference(DateTime.now())
+                        .inMinutes <
+                    1 &&
+                model is AdHocModel) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text(
                       "Not enough time to set a reminder. Try increasing the start time of your task.")));
@@ -91,27 +93,58 @@ class ReminderSliders extends StatelessWidget {
         sliders.add(
           Row(
             children: [
-              Text("${entry.value.inHours} h, ${entry.value.inMinutes % 60} m"),
               Expanded(
-                child: Slider(
-                  max: model is AdHocModel ? max : 120,
-                  min: 0,
-                  divisions: model is AdHocModel ? max.toInt() - 1 : 24,
-                  label:
-                      "${entry.value.inHours} hours and ${entry.value.inMinutes % 60} minutes",
-                  value: entry.value.inMinutes.toDouble(),
-                  onChanged: (newValue) {
+                child: CupertinoPickerAtom(
+                  itemExtent: 32,
+                  onSelectedItemChanged: (index) {
                     onSliderChanged(
                       model.copyWith(
                         reminders: model.reminders!
                           ..update(
                             entry.key,
-                            (value) => Duration(minutes: newValue.toInt()),
+                            (Duration current) => Duration(
+                                hours: index, minutes: current.inMinutes % 60),
                           ),
                       ),
                     );
                   },
+                  elements: Iterable.generate(
+                          model is AdHocModel ? (max / 60).round() : 24)
+                      .map((e) => e.toString())
+                      .toList(),
+                  initialItemIndex: entry.value.inHours,
+                  size: const Size(0, 70),
                 ),
+              ),
+              const Text("hrs"),
+              Expanded(
+                child: CupertinoPickerAtom(
+                  itemExtent: 32,
+                  onSelectedItemChanged: (index) {
+                    onSliderChanged(
+                      model.copyWith(
+                        reminders: model.reminders!
+                          ..update(
+                            entry.key,
+                            (Duration current) => Duration(
+                              hours: current.inHours,
+                              minutes: index,
+                            ),
+                          ),
+                      ),
+                    );
+                  },
+                  elements: Iterable.generate(
+                          model is AdHocModel ? (max % 60).round() + 1 : 59)
+                      .map((e) => e.toString())
+                      .toList(),
+                  initialItemIndex: entry.value.inHours,
+                  size: const Size(0, 70),
+                ),
+              ),
+              const Text("min"),
+              const SizedBox(
+                width: 10,
               ),
               IconButton.filledTonal(
                   onPressed: () {

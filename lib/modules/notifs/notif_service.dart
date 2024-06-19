@@ -114,7 +114,7 @@ class NotifService {
     }
 
     //------ Schedule Notifs for tomorrow? ------
-    scheduleNotifForNextDay(model);
+    scheduleRepeatTaskNotifForNextDay(model);
 
     // print("Scheduled for today");
   }
@@ -134,7 +134,7 @@ class NotifService {
     }
   }
 
-  Future<void> scheduleNotifForNextDay(SchedulingModel model) async {
+  Future<void> scheduleRepeatTaskNotifForNextDay(SchedulingModel model) async {
     // '''If applicable, schedules a notif for the next day'''
     if (model.getNextOccurrenceDateTime(
             st: DateTime(DateTime.now().year, DateTime.now().month,

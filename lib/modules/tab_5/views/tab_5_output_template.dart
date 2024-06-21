@@ -36,7 +36,7 @@ class Tab5OutputTemplate extends StatelessWidget {
                 child: Row(children: [
                   const SizedBox(
                       width: 120, child: Center(child: Text("Date"))),
-                  Expanded(child: Container()),
+                  Expanded(child: CircleAvatar(child: activityIcon)),
                   Expanded(child: CircleAvatar(child: sleepIcon)),
                   Expanded(child: CircleAvatar(child: bowelIcon)),
                   SizedBox(

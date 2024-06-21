@@ -84,3 +84,4 @@ final timeIcon = Image.asset("assets/icons/time.png");
 final weightIcon = Image.asset("assets/icons/weight.png");
 final sleepIcon = Image.asset("assets/icons/sleep.png");
 final bowelIcon = Image.asset("assets/icons/bowel.png");
+final activityIcon = Image.asset("assets/icons/activity.png");

@@ -107,6 +107,8 @@ class _SchedulingInputPageState extends ConsumerState<SchedulingInputPage> {
           if (providerOfSchedulingModel.uuid == null) {
             controller.syncToDB(widget.tabNumber);
           } else {
+            // Cancel previous notifs
+            NotifService().cancelRepeatTaskNotifs(model);
             controller.syncEditedModel(widget.tabNumber);
           }
           Navigator.pop(context);

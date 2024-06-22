@@ -30,7 +30,7 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
     NotifService().scheduleNotif(model, model.getNextOccurrenceDateTime());
   }
 
-  // Schedule notifs and rems for tomorrow incase the user does not open the app
+  // Schedule notifs and rems for tomorrow in case the user does not open the app
   // tomorrow
   // |- Fetch all tasks due tomorrow
   models = await ref
@@ -39,9 +39,15 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
           startDate: DateTime(now.year, now.month, now.day, 11, 59));
 
   for (SchedulingModel model in models) {
+    print(model.reminders);
     model = model.copyWith(
       reminders: model.reminders!.map((i, d) => MapEntry(i + 1, d)),
     );
+    print(model.reminders);
+
+    print(
+        "Next OCCURENCE: ${model.getNextOccurrenceDateTime(st: DateTime(now.year, now.month, now.day, 11, 59))}");
+
     // Schedule reminders for it
     NotifService().scheduleReminders(model,
         dateTime: model.getNextOccurrenceDateTime(

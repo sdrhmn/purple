@@ -99,6 +99,8 @@ class NotifService {
     }
   }
 
+  // [-][-][-][-][-] Repeating Notifs [-][-][-][-][-]
+
   /// Schedules notifs for today, tomorrow and also schedules reminders if present.
   Future<void> scheduleRepeatTaskNotifs(SchedulingModel model) async {
     // ------ Schedule Notifs for today? -------
@@ -110,28 +112,13 @@ class NotifService {
       NotifService().scheduleNotif(model, nextDate);
 
       // Schedule reminders for today
-      scheduleReminders(model);
+      scheduleReminders(model, dateTime: nextDate);
     }
 
     //------ Schedule Notifs for tomorrow? ------
     scheduleRepeatTaskNotifForNextDay(model);
 
     // print("Scheduled for today");
-  }
-
-  Future<void> scheduleAdHocTaskNotifs(AdHocModel model) async {
-    //----- Schedule Notification --------
-    if (model.date != null && model.startTime != null) {
-      NotifService().scheduleNotif(
-          model,
-          DateTime(model.date!.year, model.date!.month, model.date!.day,
-              model.startTime!.hour, model.startTime!.minute));
-
-      // Reminders
-      NotifService().scheduleReminders(model,
-          dateTime: model.date!.copyWith(
-              hour: model.startTime!.hour, minute: model.startTime!.minute));
-    }
   }
 
   Future<void> scheduleRepeatTaskNotifForNextDay(SchedulingModel model) async {
@@ -180,12 +167,36 @@ class NotifService {
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
           );
-          // print("Scheduled reminder");
+          print(
+              "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+            entry.value, // yani, subtract the duration
+          )}");
         } catch (e) {
+          print(
+              "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+            entry.value, // yani, subtract the duration
+          )}");
           // ignore: avoid_print
           // print(e.toString());
         }
       }
+    }
+  }
+
+  // [-][-][-][-][-] Ad Hoc Notifs [-][-][-][-][-]
+
+  Future<void> scheduleAdHocTaskNotifs(AdHocModel model) async {
+    //----- Schedule Notification --------
+    if (model.date != null && model.startTime != null) {
+      NotifService().scheduleNotif(
+          model,
+          DateTime(model.date!.year, model.date!.month, model.date!.day,
+              model.startTime!.hour, model.startTime!.minute));
+
+      // Reminders
+      NotifService().scheduleReminders(model,
+          dateTime: model.date!.copyWith(
+              hour: model.startTime!.hour, minute: model.startTime!.minute));
     }
   }
 
@@ -204,7 +215,9 @@ class NotifService {
     if (model.reminders != null) {
       await Future.wait([
         for (int id in model.reminders!.keys)
-          flutterLocalNotificationsPlugin.cancel(id)
+          flutterLocalNotificationsPlugin.cancel(id),
+        for (int id in model.reminders!.keys)
+          flutterLocalNotificationsPlugin.cancel(id + 1)
       ]);
     }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/home/models/task_today.dart';
-import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
+// import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/tokens/tab_3_colors.dart';
 
 class TasksTodayTemplate extends StatefulWidget {
@@ -72,7 +72,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
   @override
   Widget build(BuildContext context) {
     List<TaskToday> tasksToday = widget.data.first;
-    List<AdHocModel> nonScheduledTasks = widget.data.last;
+    // List<AdHocModel> nonScheduledTasks = widget.data.last;
 
     return Container(
       child: widget.data.isEmpty
@@ -182,49 +182,49 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                     itemCount: tasksToday.length,
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        height: 1,
-                        color: LaunchScreenColors.bgSeparator,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      String name = nonScheduledTasks[index].name;
+                //   Expanded(
+                //     flex: 1,
+                //     child: ListView.separated(
+                //       shrinkWrap: true,
+                //       separatorBuilder: (context, index) {
+                //         return const Divider(
+                //           height: 1,
+                //           color: LaunchScreenColors.bgSeparator,
+                //         );
+                //       },
+                //       itemBuilder: (context, index) {
+                //         String name = nonScheduledTasks[index].name;
 
-                      return DismissibleEntryRowMolecule(
-                        onDismissed: (direction) => widget.onDismissed(
-                            direction, nonScheduledTasks[index], null, null),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 30),
-                          child: Container(
-                            color: Tab3OutputColors.priorityColors[
-                                nonScheduledTasks[index].priority],
-                            child: Padding(
-                              padding: const EdgeInsets.all(AppSizes.p_8),
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: nonScheduledTasks.length,
-                  ),
-                )
+                //         return DismissibleEntryRowMolecule(
+                //           onDismissed: (direction) => widget.onDismissed(
+                //               direction, nonScheduledTasks[index], null, null),
+                //           child: ConstrainedBox(
+                //             constraints: const BoxConstraints(minHeight: 30),
+                //             child: Container(
+                //               color: Tab3OutputColors.priorityColors[
+                //                   nonScheduledTasks[index].priority],
+                //               child: Padding(
+                //                 padding: const EdgeInsets.all(AppSizes.p_8),
+                //                 child: Row(
+                //                   children: [
+                //                     Flexible(
+                //                       child: Text(
+                //                         name,
+                //                         style: Theme.of(context)
+                //                             .textTheme
+                //                             .bodyMedium,
+                //                       ),
+                //                     ),
+                //                   ],
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         );
+                //       },
+                //       itemCount: nonScheduledTasks.length,
+                //     ),
+                //   )
               ],
             ),
     );

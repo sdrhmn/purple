@@ -62,7 +62,8 @@ final todaysModelMapsProvider = FutureProvider.autoDispose<List>((ref) async {
   for (String date in tab3Data["scheduled"].keys) {
     if (date == dateToday) {
       for (AdHocModel model in tab3Data["scheduled"][date]) {
-        if (!model.name.contains("This is a sample entry.")) {
+        if (!model.name.contains("This is a sample entry.") &&
+            model.startTime != null) {
           modelMaps.add({
             "Tab Number": 3,
             "Data": {

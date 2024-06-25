@@ -73,6 +73,18 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
       onDeleteReminder: (model) {
         controller.setModel(model);
       },
+      onDateSwitchPressed: (bool value) {
+        print(value);
+        controller.setModel(value == true
+            ? model.copyWith(date: DateTime.now())
+            : model.nullify(date: true));
+      },
+      onTimeSwitchPressed: (bool value) {
+        print(value);
+        controller.setModel(value == true
+            ? model.copyWith(time: TimeOfDay.now())
+            : model.nullify(time: true));
+      },
     );
   }
 }

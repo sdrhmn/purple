@@ -46,6 +46,11 @@ class AdHocModel {
         "ID": uuid ?? const Uuid().v4(),
         "Activity": name,
         "Priority": priority,
+        "Time": startTime != null
+            ? "${startTime!.hour}: ${startTime!.minute}"
+            : null,
+        "Notification ID": date != null ? notifId : null,
+        "Notification ON": date != null ? notifOn : null,
       };
     }
   }
@@ -69,11 +74,14 @@ class AdHocModel {
       String name = json["Activity"];
       int priority = json["Priority"];
 
-      this.startTime = time;
+      startTime = time;
       this.name = name;
       this.priority = priority;
       notifOn = json["Notification ON"] ?? false;
     } else {
+      notifId = json["Notification ID"];
+      notifOn = json["Notification ON"] ?? false;
+
       String name = json["Activity"];
       int priority = json["Priority"];
 
@@ -100,6 +108,27 @@ class AdHocModel {
       priority: priority ?? this.priority,
       notifOn: notifOn ?? this.notifOn,
       reminders: reminders ?? this.reminders,
+    );
+  }
+
+  AdHocModel nullify({
+    bool? date,
+    bool? uuid,
+    bool? name,
+    bool? priority,
+    bool? time,
+    bool? notifOn,
+    bool? reminders,
+  }) {
+    return AdHocModel(
+      uuid: uuid == true ? null : this.uuid,
+      date: date == true ? null : this.date,
+      name: this.name,
+      notifId: notifId,
+      startTime: time == true ? null : startTime,
+      priority: this.priority,
+      notifOn: this.notifOn,
+      reminders: reminders == true ? null : this.reminders,
     );
   }
 }

@@ -19,6 +19,8 @@ class Tab3InputTemplate extends StatelessWidget {
   final Function(dynamic model) onAddReminder;
   final Function(dynamic model) onDeleteReminder;
   final Function(dynamic model) onSliderChanged;
+  final Function(bool value) onDateSwitchPressed;
+  final Function(bool value) onTimeSwitchPressed;
 
   const Tab3InputTemplate({
     super.key,
@@ -33,6 +35,8 @@ class Tab3InputTemplate extends StatelessWidget {
     required this.onAddReminder,
     required this.onSliderChanged,
     required this.onDeleteReminder,
+    required this.onDateSwitchPressed,
+    required this.onTimeSwitchPressed,
   });
 
   @override
@@ -74,6 +78,7 @@ class Tab3InputTemplate extends StatelessWidget {
       scheduled != false
           ? Column(
               children: [
+                // Date Button
                 TitleWidgetRowMolecule(
                   title: Tab3Headings.date,
                   widget: DateButtonAtom.large(
@@ -87,12 +92,24 @@ class Tab3InputTemplate extends StatelessWidget {
                 ),
 
                 // Time Button
-                TitleWidgetRowMolecule(
-                  title: Tab3Headings.time,
-                  widget: TimeButtonAtom.large(
-                    initialTime: model.startTime ?? TimeOfDay.now(),
-                    onTimeChanged: onTimeChanged,
-                  ),
+                Row(
+                  children: [
+                    Switch(
+                        value: model.startTime != null,
+                        onChanged: (value) => onTimeSwitchPressed(value)),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    model.startTime != null
+                        ? TitleWidgetRowMolecule(
+                            title: Tab3Headings.time,
+                            widget: TimeButtonAtom.large(
+                              initialTime: model.startTime ?? TimeOfDay.now(),
+                              onTimeChanged: onTimeChanged,
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               ],
             )
@@ -111,7 +128,7 @@ class Tab3InputTemplate extends StatelessWidget {
       ),
 
       // ------ Reminders ------
-      model.date != null
+      model.date != null && model.startTime != null
           ? ReminderSliders(
               model: model,
               onAddReminder: (model) => onAddReminder(model),
@@ -136,10 +153,16 @@ class Tab3InputTemplate extends StatelessWidget {
         ),
         child: children[index],
       ),
-      separatorBuilder: (context, index) =>
-          [0, 2, children.length - 2].contains(index)
-              ? Container()
-              : const Divider(height: 40),
+      separatorBuilder: (context, index) => [
+        0,
+        2,
+        children.length - 2,
+        model.date == null || model.startTime == null
+            ? children.length - 3
+            : null
+      ].contains(index)
+          ? Container()
+          : const Divider(height: 40),
       itemCount: children.length,
     );
   }

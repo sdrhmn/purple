@@ -92,24 +92,12 @@ class Tab3InputTemplate extends StatelessWidget {
                 ),
 
                 // Time Button
-                Row(
-                  children: [
-                    Switch(
-                        value: model.startTime != null,
-                        onChanged: (value) => onTimeSwitchPressed(value)),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    model.startTime != null
-                        ? TitleWidgetRowMolecule(
-                            title: Tab3Headings.time,
-                            widget: TimeButtonAtom.large(
-                              initialTime: model.startTime ?? TimeOfDay.now(),
-                              onTimeChanged: onTimeChanged,
-                            ),
-                          )
-                        : Container(),
-                  ],
+                TitleWidgetRowMolecule(
+                  title: Tab3Headings.time,
+                  widget: TimeButtonAtom.large(
+                    initialTime: model.startTime,
+                    onTimeChanged: onTimeChanged,
+                  ),
                 ),
               ],
             )

@@ -37,8 +37,10 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onDismissed: (direction, model) {
               if (direction == DismissDirection.startToEnd) {
                 controller.deleteModel(model);
-                NotifService().cancelNotif((model.notifId));
-                NotifService().cancelReminders(model);
+                if (model.date != null && model.startTime != null) {
+                  NotifService().cancelNotif((model.notifId));
+                  NotifService().cancelReminders(model);
+                }
               } else {
                 controller.markComplete(model);
                 NotifService().cancelNotif(model.notifId);

@@ -29,28 +29,25 @@ class AdHocModel {
   }
 
   Map toJson() {
-    if (startTime != null && date != null) {
+    if (startTime != null || date != null) {
       return {
         "ID": uuid ?? const Uuid().v4(),
         "Reminders": jsonEncode((reminders).map(
           (key, value) => MapEntry(key.toString(), value.inMinutes),
         )),
-        "Notification ID": notifId,
+        "Notification ID": date != null ? notifId : null,
         "Activity": name,
-        "Time": "${startTime!.hour}: ${startTime!.minute}",
+        "Time": startTime != null
+            ? "${startTime!.hour}: ${startTime!.minute}"
+            : null,
         "Priority": priority,
-        "Notification ON": notifOn,
+        "Notification ON": date != null ? notifOn : null,
       };
     } else {
       return {
         "ID": uuid ?? const Uuid().v4(),
         "Activity": name,
         "Priority": priority,
-        "Time": startTime != null
-            ? "${startTime!.hour}: ${startTime!.minute}"
-            : null,
-        "Notification ID": date != null ? notifId : null,
-        "Notification ON": date != null ? notifOn : null,
       };
     }
   }

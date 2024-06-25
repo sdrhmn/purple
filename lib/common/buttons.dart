@@ -114,13 +114,13 @@ class TextButtonAtom extends StatelessWidget {
 }
 
 class TimeButtonAtom extends StatelessWidget {
-  final TimeOfDay initialTime;
+  final TimeOfDay? initialTime;
   final Function(TimeOfDay time) onTimeChanged;
   final Size buttonSize;
 
   const TimeButtonAtom({
     super.key,
-    required this.initialTime,
+    this.initialTime,
     required this.onTimeChanged,
     this.buttonSize = const Size(120, 30),
   });
@@ -138,8 +138,8 @@ class TimeButtonAtom extends StatelessWidget {
       height: buttonSize.height,
       child: ElevatedButton(
         onPressed: () async {
-          TimeOfDay? timeSelected =
-              await showTimePicker(context: context, initialTime: initialTime);
+          TimeOfDay? timeSelected = await showTimePicker(
+              context: context, initialTime: initialTime ?? TimeOfDay.now());
           if (timeSelected != null) {
             onTimeChanged(timeSelected);
           }
@@ -156,7 +156,7 @@ class TimeButtonAtom extends StatelessWidget {
           ),
         ),
         child: Text(
-          initialTime.format(context),
+          initialTime != null ? initialTime!.format(context) : "Select",
           style: Theme.of(context).textTheme.titleSmall,
         ),
       ),

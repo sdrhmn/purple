@@ -12,7 +12,6 @@ class Tab3InputNotifier extends Notifier<AdHocModel> {
     return AdHocModel(
       name: "",
       priority: 1,
-      startTime: TimeOfDay.now(),
       date: DateTime.now(),
       notifOn: true,
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tab_3/views/tab_3_input_template.dart';
 import 'package:timely/modules/tab_3/controllers/input_controller.dart';
@@ -62,7 +63,20 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
           );
         }
         //----- Schedule Notification --------
-        NotifService().scheduleAdHocTaskNotifs(model);
+        if (model.startTime != null && model.date != null) {
+          NotifService().scheduleAdHocTaskNotifs(model);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "Scheduled${model.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${model.name} at ${model.startTime!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(model.date!)}"),
+          ));
+        } else if (model.date != null && model.startTime == null) {
+          NotifService()
+              .scheduleNotif(model, model.date!.copyWith(hour: 6, minute: 0));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "Scheduled a notification for ${model.name} at 6 AM in the morning on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(model.date!)}"),
+          ));
+        }
       },
       onAddReminder: (model) {
         controller.setModel(model);
@@ -73,14 +87,7 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
       onDeleteReminder: (model) {
         controller.setModel(model);
       },
-      onDateSwitchPressed: (bool value) {
-        print(value);
-        controller.setModel(value == true
-            ? model.copyWith(date: DateTime.now())
-            : model.nullify(date: true));
-      },
       onTimeSwitchPressed: (bool value) {
-        print(value);
         controller.setModel(value == true
             ? model.copyWith(time: TimeOfDay.now())
             : model.nullify(time: true));

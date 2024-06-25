@@ -19,7 +19,6 @@ class Tab3InputTemplate extends StatelessWidget {
   final Function(dynamic model) onAddReminder;
   final Function(dynamic model) onDeleteReminder;
   final Function(dynamic model) onSliderChanged;
-  final Function(bool value) onDateSwitchPressed;
   final Function(bool value) onTimeSwitchPressed;
 
   const Tab3InputTemplate({
@@ -35,7 +34,6 @@ class Tab3InputTemplate extends StatelessWidget {
     required this.onAddReminder,
     required this.onSliderChanged,
     required this.onDeleteReminder,
-    required this.onDateSwitchPressed,
     required this.onTimeSwitchPressed,
   });
 

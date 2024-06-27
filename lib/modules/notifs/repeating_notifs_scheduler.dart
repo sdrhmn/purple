@@ -36,7 +36,7 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
   models = await ref
       .read(schedulingRepositoryServiceProvider.notifier)
       .getActivitiesByDate(SchedulingModel.fromJson, file, nextDay,
-          startDate: DateTime(now.year, now.month, now.day, 11, 59));
+          startDate: DateTime(now.year, now.month, now.day, 23, 59));
 
   for (SchedulingModel model in models) {
     print(model.reminders);
@@ -46,12 +46,12 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
     print(model.reminders);
 
     print(
-        "Next OCCURENCE: ${model.getNextOccurrenceDateTime(st: DateTime(now.year, now.month, now.day, 11, 59))}");
+        "Next OCCURENCE: ${model.getNextOccurrenceDateTime(st: DateTime(now.year, now.month, now.day, 23, 59))}");
 
     // Schedule reminders for it
     NotifService().scheduleReminders(model,
         dateTime: model.getNextOccurrenceDateTime(
-            st: DateTime(now.year, now.month, now.day, 11, 59)));
+            st: DateTime(now.year, now.month, now.day, 23, 59)));
 
     // Schedule notifs for it
     NotifService().scheduleRepeatTaskNotifForNextDay(model);

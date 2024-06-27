@@ -125,14 +125,14 @@ class NotifService {
     // '''If applicable, schedules a notif for the next day'''
     if (model.getNextOccurrenceDateTime(
             st: DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day, 11, 59)) ==
+                DateTime.now().day, 23, 59)) ==
         DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day + 1)) {
       NotifService().scheduleNotif(
           model.copyWith(notifId: model.notifId! + 1),
           model.getNextOccurrenceDateTime(
               st: DateTime(DateTime.now().year, DateTime.now().month,
-                  DateTime.now().day, 11, 59)));
+                  DateTime.now().day, 23, 59)));
     }
     // print("Scheduled for next day");
   }

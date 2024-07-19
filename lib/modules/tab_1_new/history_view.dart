@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timely/common/row_column_widgets.dart';
+import 'package:timely/main.dart';
 import 'package:timely/modules/tab_1_new/history_provider.dart';
-import 'package:timely/reusables.dart';
 
 class Tab1HistoryView extends ConsumerWidget {
   const Tab1HistoryView({super.key});
@@ -46,8 +46,11 @@ class Tab1HistoryView extends ConsumerWidget {
             child: Container(),
           ),
           NavigationRowMolecule(
-            onPressedHome: () =>
-                ref.read(tabIndexProvider.notifier).setIndex(12),
+            onPressedHome: () => Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const PurpleTimeHomePage(),
+                ),
+                (Route<dynamic> route) => false),
             hideAddButton: true,
           ),
           const SizedBox(

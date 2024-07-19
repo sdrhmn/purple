@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/app_theme.dart';
@@ -53,14 +54,9 @@ class SchedulingOutputTemplate extends StatelessWidget {
                   models["today"]!.length,
                   (index) {
                     SchedulingModel model = models["today"]![index];
-                    return InkWell(
+                    return GestureDetector(
                       onTap: () => onTap(model),
                       child: Container(
-                        decoration: const BoxDecoration(
-                          border: Border.symmetric(
-                            horizontal: BorderSide(width: 1),
-                          ),
-                        ),
                         child: Column(
                           children: [
                             DismissibleEntryRowMolecule(
@@ -128,9 +124,9 @@ class SchedulingOutputTemplate extends StatelessWidget {
                               ),
                             ),
                           ],
-                        ),
+                        ).clipRRect(all: 10).padding(vertical: 5),
                       ),
-                    );
+                    ).padding(horizontal: 7);
                   },
                 ),
                 Container(
@@ -228,9 +224,9 @@ class SchedulingOutputTemplate extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
+                        ).clipRRect(all: 10).padding(vertical: 5)
                       ],
-                    );
+                    ).padding(horizontal: 7);
                   },
                 ),
               ],

@@ -4,8 +4,8 @@ import 'package:timely/common/scheduling/scheduling_output_template.dart';
 import 'package:timely/common/scheduling/input_controller.dart';
 import 'package:timely/common/scheduling/scheduling_output_controller.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/main.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/reusables.dart';
 
 class SchedulingOutputPage extends ConsumerStatefulWidget {
   final AutoDisposeAsyncNotifierProvider<SchedulingOutputNotifier,
@@ -88,7 +88,11 @@ class _Tab2OutputRepageState extends ConsumerState<SchedulingOutputPage> {
               );
             },
             onPressedHome: () {
-              ref.read(tabIndexProvider.notifier).setIndex(12);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const PurpleTimeHomePage(),
+                  ),
+                  (Route<dynamic> route) => false);
             },
             onPressedAdd: () {
               ref.invalidate(schedulingInputProvider);

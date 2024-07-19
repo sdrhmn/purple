@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timely/main.dart';
 import 'package:timely/modules/tab_5/views/tab_5_input_page.dart';
 import 'package:timely/modules/tab_5/views/tab_5_output_template.dart';
 import 'package:timely/modules/tab_5/controllers/input_controller.dart';
 import 'package:timely/modules/tab_5/controllers/output_controller.dart';
 import 'package:timely/modules/tab_5/repositories/tab_5_repo.dart';
-import 'package:timely/reusables.dart';
 
 class Tab5OutputPage extends ConsumerStatefulWidget {
   const Tab5OutputPage({super.key});
@@ -53,8 +53,13 @@ class _Tab5OutputPageState extends ConsumerState<Tab5OutputPage> {
                 ),
               );
             },
-            onPressedHome: () =>
-                ref.read(tabIndexProvider.notifier).setIndex(12),
+            onPressedHome: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const PurpleTimeHomePage(),
+                  ),
+                  (Route<dynamic> route) => false);
+            },
             onPressedAdd: () {
               ref.invalidate(tab5InputProvider);
               Navigator.of(context).push(

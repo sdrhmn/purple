@@ -1,6 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, duplicate_ignore
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'entry_model.dart';
@@ -12,7 +12,7 @@ part of 'entry_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Tab9EntryModel _$Tab9EntryModelFromJson(Map<String, dynamic> json) {
   return _Tab9EntryModel.fromJson(json);
@@ -20,6 +20,7 @@ Tab9EntryModel _$Tab9EntryModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Tab9EntryModel {
+// ignore: invalid_annotation_target
   @JsonKey(name: "ID")
   String? get uuid => throw _privateConstructorUsedError;
   String get condition => throw _privateConstructorUsedError;
@@ -162,6 +163,7 @@ class _$Tab9EntryModelImpl implements _Tab9EntryModel {
   factory _$Tab9EntryModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$Tab9EntryModelImplFromJson(json);
 
+// ignore: invalid_annotation_target
   @override
   @JsonKey(name: "ID")
   final String? uuid;
@@ -225,7 +227,7 @@ abstract class _Tab9EntryModel implements Tab9EntryModel {
   factory _Tab9EntryModel.fromJson(Map<String, dynamic> json) =
       _$Tab9EntryModelImpl.fromJson;
 
-  @override
+  @override // ignore: invalid_annotation_target
   @JsonKey(name: "ID")
   String? get uuid;
   @override

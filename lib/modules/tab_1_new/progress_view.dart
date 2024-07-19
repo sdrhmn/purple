@@ -134,7 +134,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                     children: [
                                       ChoiceChip(
                                         checkmarkColor: Colors.black,
-                                        color: const MaterialStatePropertyAll(
+                                        color: const WidgetStatePropertyAll(
                                             Colors.yellow),
                                         label: const SizedBox(
                                             width: 40,
@@ -163,7 +163,7 @@ class _ProgressViewState extends ConsumerState<ProgressView> {
                                         width: 5,
                                       ),
                                       ChoiceChip(
-                                        color: const MaterialStatePropertyAll(
+                                        color: const WidgetStatePropertyAll(
                                             Colors.red),
                                         label: const SizedBox(
                                             width: 40,

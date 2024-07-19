@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/common/row_column_widgets.dart';
-import 'package:timely/reusables.dart';
+import 'package:timely/main.dart';
 
 class WorkInProgressPage extends ConsumerWidget {
   const WorkInProgressPage({super.key});
@@ -19,8 +19,13 @@ class WorkInProgressPage extends ConsumerWidget {
           children: [
             const Spacer(),
             NavigationRowMolecule(
-              onPressedHome: () =>
-                  ref.read(tabIndexProvider.notifier).setIndex(12),
+              onPressedHome: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const PurpleTimeHomePage(),
+                    ),
+                    (Route<dynamic> route) => false);
+              },
               hideAddButton: true,
             ),
             const SizedBox(

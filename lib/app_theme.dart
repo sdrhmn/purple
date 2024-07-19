@@ -40,8 +40,8 @@ class Tab1Colors {
 }
 
 class LaunchScreenColors {
-  static Color bgTimer = Colors.pink[400]!;
-  static Color bgAlert = Colors.pink[400]!;
+  static Color bgTimer = Colors.purple[800]!;
+  static Color bgAlert = Colors.purple[800]!;
   static Color bgInternal = Colors.purple[700]!;
   static Color bgFMS = Colors.purple[900]!;
   static const List<Color> bgFMSRadioButtons = [

@@ -14,7 +14,7 @@ _$Tab12EntryModelImpl _$$Tab12EntryModelImplFromJson(
       objective: json['objective'] as String,
       tab2Model:
           SchedulingModel.fromJson(json['tab2Model'] as Map<String, dynamic>),
-      importance: json['importance'] as int,
+      importance: (json['importance'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$Tab12EntryModelImplToJson(

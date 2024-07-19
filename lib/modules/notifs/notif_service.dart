@@ -167,15 +167,15 @@ class NotifService {
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
           );
-          print(
-              "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
-            entry.value, // yani, subtract the duration
-          )}");
+          // print(
+          //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+          //   entry.value, // yani, subtract the duration
+          // )}");
         } catch (e) {
-          print(
-              "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
-            entry.value, // yani, subtract the duration
-          )}");
+          // print(
+          //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+          //   entry.value, // yani, subtract the duration
+          // )}");
           // ignore: avoid_print
           // print(e.toString());
         }

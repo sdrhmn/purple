@@ -10,7 +10,7 @@ _$Tab9EntryModelImpl _$$Tab9EntryModelImplFromJson(Map<String, dynamic> json) =>
     _$Tab9EntryModelImpl(
       uuid: json['ID'] as String?,
       condition: json['condition'] as String,
-      criticality: json['criticality'] as int,
+      criticality: (json['criticality'] as num).toInt(),
       care: json['care'] as String,
       lessonLearnt: json['lessonLearnt'] as String,
     );

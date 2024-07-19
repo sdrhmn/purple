@@ -39,14 +39,14 @@ final repeatingNotifsSchedulerProvider = FutureProvider<void>((ref) async {
           startDate: DateTime(now.year, now.month, now.day, 23, 59));
 
   for (SchedulingModel model in models) {
-    print(model.reminders);
+    // print(model.reminders);
     model = model.copyWith(
       reminders: model.reminders!.map((i, d) => MapEntry(i + 1, d)),
     );
-    print(model.reminders);
+    // print(model.reminders);
 
-    print(
-        "Next OCCURENCE: ${model.getNextOccurrenceDateTime(st: DateTime(now.year, now.month, now.day, 23, 59))}");
+    // print(
+    //     "Next OCCURENCE: ${model.getNextOccurrenceDateTime(st: DateTime(now.year, now.month, now.day, 23, 59))}");
 
     // Schedule reminders for it
     NotifService().scheduleReminders(model,

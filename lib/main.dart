@@ -1,21 +1,24 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
-import 'package:timely/modules/home/views/tab_buttons.dart';
-import 'package:timely/reusables.dart';
-import 'package:timely/values.dart';
+import 'package:timely/modules/home/views/launch_screen.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
+// ------ Firebase --------
+// import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   await NotifService().init();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
 // ------------------------------
   runApp(
     const ProviderScope(
@@ -59,31 +62,25 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
       data: (_) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Consumer(
-              builder: (context, ref, child) {
-                final index = ref.watch(tabIndexProvider);
-
-                return Text(appBarHeadings[index] ?? "PurpleTime");
-              },
-            ),
-            // actions: [
-            //   Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 10),
-            //     child: IconButton.outlined(
-            //       onPressed: () {
-            //         Navigator.push(context, MaterialPageRoute(
-            //           builder: (context) {
-            //             return const ReminderView();
-            //           },
-            //         ));
-            //       },
-            //       icon: const Icon(Icons.settings),
-            //     ),
-            //   )
-            // ],
-          ),
-          body: tabs[ref.watch(tabIndexProvider)],
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: const Text("PurpleTime")
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 10),
+              //     child: IconButton.outlined(
+              //       onPressed: () {
+              //         Navigator.push(context, MaterialPageRoute(
+              //           builder: (context) {
+              //             return const ReminderView();
+              //           },
+              //         ));
+              //       },
+              //       icon: const Icon(Icons.settings),
+              //     ),
+              //   )
+              // ],
+              ),
+          body: const LaunchScreen(),
         );
       },
       error: (_, __) {

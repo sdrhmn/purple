@@ -101,7 +101,7 @@ class AdHocModel {
       date: date ?? this.date,
       name: name ?? this.name,
       notifId: notifId,
-      startTime: time ?? this.startTime,
+      startTime: time ?? startTime,
       priority: priority ?? this.priority,
       notifOn: notifOn ?? this.notifOn,
       reminders: reminders ?? this.reminders,

@@ -12,13 +12,12 @@ part of 'entry_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Tab12EntryModel _$Tab12EntryModelFromJson(Map<String, dynamic> json) {
   return _Tab12EntryModel.fromJson(json);
 }
 
-// ignore: duplicate_ignore, duplicate_ignore
 /// @nodoc
 mixin _$Tab12EntryModel {
 // ignore: invalid_annotation_target

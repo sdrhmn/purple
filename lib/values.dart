@@ -4,7 +4,7 @@ Map<int, String> appBarHeadings = {
   12: "PurpleTime",
   0: "Controls",
   1: "Repeat Activities",
-  2: "Ad hoc Activities",
+  2: "Ad-hoc Activities",
   3: "Health",
   4: "Exercises",
 };

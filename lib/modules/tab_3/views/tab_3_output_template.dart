@@ -138,7 +138,7 @@ class Tab3OutputTemplate extends StatelessWidget {
                                           : Colors.red,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   )
                                 ],

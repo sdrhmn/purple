@@ -435,7 +435,7 @@ class SchedulingModel {
         break;
       case "Weekly":
         repetitionSummary =
-            "Repeats on ${repetitions["Weekdays"].map((val) => sliderNames[1][val]).toList().join(", ")} every ${every > 1 ? every : ''}${every == 1 ? "week" : "weeks"}";
+            "Repeats on ${repetitions["Weekdays"].map((val) => sliderNames[1][val]).toList().join(", ")} every ${every > 1 ? every : ''} ${every == 1 ? "week" : "weeks"}";
       case "Daily":
         repetitionSummary = "Repeats daily";
     }

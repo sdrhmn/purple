@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/home/models/task_today.dart';
@@ -88,12 +89,9 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                   flex: 1,
                   child: ListView.separated(
                     shrinkWrap: true,
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        height: 1,
-                        color: LaunchScreenColors.bgSeparator,
-                      );
-                    },
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
                     itemBuilder: (context, index) {
                       var model = tasksToday[index].model;
                       var tabNumber = tasksToday[index].tabNumber;
@@ -125,10 +123,10 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                                                 .bodyMedium,
                                           ),
                                         ),
-                                      ),
+                                      ).padding(vertical: 10),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 4),
+                                            vertical: 10),
                                         child: Column(
                                           children: [
                                             SizedBox(
@@ -177,7 +175,7 @@ class _TasksTodayTemplateState extends State<TasksTodayTemplate>
                             ],
                           ),
                         ),
-                      );
+                      ).clipRRect(all: 10).padding(horizontal: 10);
                     },
                     itemCount: tasksToday.length,
                   ),

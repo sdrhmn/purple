@@ -11,15 +11,28 @@ import 'package:timely/modules/tab_11/repositories/tab_11_repo.dart';
 import 'package:timely/modules/tab_12/models/entry_model.dart';
 import 'package:timely/modules/tab_12/models/sub_entry_model.dart';
 import 'package:timely/modules/tab_12/repositories/tab_12_repo.dart';
+import 'package:timely/modules/tab_2/pages/tab_2_input_page.dart';
 import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 import 'package:timely/modules/tab_3/repositories/tab_3_repo.dart';
+import 'package:timely/modules/tab_3/views/tab_3_input_page.dart';
 import 'package:timely/modules/tab_5/models/spw.dart';
 import 'package:timely/modules/tab_5/repositories/tab_5_repo.dart';
+import 'package:timely/modules/tab_5/views/tab_5_input_page.dart';
+import 'package:timely/modules/tab_6/pages/tab_6_input_page.dart';
 import 'package:timely/modules/tab_8/models/tab_8_model.dart';
 import 'package:timely/modules/tab_8/repositories/tab_8_repo.dart';
 import 'package:timely/modules/tab_9/models/entry_model.dart';
 import 'package:timely/modules/tab_9/models/sub_entry_model.dart';
 import 'package:timely/modules/tab_9/repositories/tab_9_repo.dart';
+import 'package:timely/modules/home/views/work_in_progress.dart';
+import 'package:timely/modules/tab_1_new/history_view.dart';
+import 'package:timely/modules/tab_2/pages/tab_2_output_page.dart';
+import 'package:timely/modules/tab_3/views/tab_3_output_page.dart';
+import 'package:timely/modules/tab_5/views/tab_5_output_page.dart';
+import 'package:timely/modules/tab_6/pages/tab_6_output_page.dart';
+import 'package:timely/modules/completed_tasks/completed_tasks_page.dart';
+import 'package:timely/modules/home/views/launch_screen.dart';
+import 'package:timely/values.dart';
 
 export 'package:timely/common/buttons.dart';
 export 'package:timely/common/inputs.dart';
@@ -292,3 +305,40 @@ class TabIndex extends StateNotifier<int> {
 
 final tabIndexProvider =
     StateNotifierProvider<TabIndex, int>((ref) => TabIndex());
+
+final tabIcons = [
+  tab1Icon,
+  tab2Icon,
+  tab3Icon,
+  tab4Icon,
+  tab5Icon,
+  tab6Icon,
+  tab7Icon,
+  tab8Icon,
+  tab9Icon,
+  tab10Icon,
+  tab11Icon,
+];
+
+final List tabs = [
+  const Tab1HistoryView(),
+  const Tab2OutputPage(),
+  const Tab3OutputPage(),
+  const Tab5OutputPage(),
+  const Tab6OutputPage(),
+  const CompletedTasksPage(),
+  const WorkInProgressPage(),
+  const WorkInProgressPage(),
+  const WorkInProgressPage(),
+  const WorkInProgressPage(),
+  const WorkInProgressPage(),
+  const WorkInProgressPage(),
+  const LaunchScreen(),
+];
+
+final List tabInputScreens = [
+  const Tab2InputPage(),
+  const Tab3InputPage(),
+  const Tab5InputPage(),
+  const Tab6InputPage(),
+];

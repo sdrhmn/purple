@@ -73,15 +73,15 @@ class _SchedulingInputPageState extends ConsumerState<SchedulingInputPage> {
                     onYearlySelectionsChanged: (selections) {
                       controller.setYearlyRepetitions(selections);
                     },
-                    onPressedCancel: () async {
-                      Navigator.pop(context);
-                      await Future.delayed(const Duration(milliseconds: 200));
-                      controller.setBasis(Basis.day);
-                      controller.setFrequency("Daily");
-                    },
-                    onPressedDone: () {
-                      Navigator.pop(context);
-                    },
+                    // onPressedCancel: () async {
+                    //   Navigator.pop(context);
+                    //   await Future.delayed(const Duration(milliseconds: 200));
+                    //   controller.setBasis(Basis.day);
+                    //   controller.setFrequency("Daily");
+                    // },
+                    // onPressedDone: () {
+                    //   Navigator.pop(context);
+                    // },
                   ),
                 );
               },

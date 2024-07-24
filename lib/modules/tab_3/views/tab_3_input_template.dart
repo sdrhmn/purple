@@ -80,7 +80,7 @@ class Tab3InputTemplate extends StatelessWidget {
                 TitleWidgetRowMolecule(
                   title: Tab3Headings.date,
                   widget: DateButtonAtom.large(
-                    initialDate: model.date ?? DateTime.now(),
+                    currentDate: model.date ?? DateTime.now(),
                     onDateChanged: onDateChanged,
                   ),
                 ),

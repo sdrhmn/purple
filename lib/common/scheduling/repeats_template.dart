@@ -19,8 +19,6 @@ class RepeatsTemplate extends StatelessWidget {
   final ValueChanged<List<int>> onWeekdaySelectionsChanged;
   final ValueChanged<List<int>> onMonthlySelectionsChanged;
   final ValueChanged<List<int>> onYearlySelectionsChanged;
-  final VoidCallback onPressedCancel;
-  final VoidCallback onPressedDone;
 
   const RepeatsTemplate({
     super.key,
@@ -34,8 +32,6 @@ class RepeatsTemplate extends StatelessWidget {
     required this.onWeekdayIndexChanged,
     required this.onYearlySelectionsChanged,
     required this.model,
-    required this.onPressedCancel,
-    required this.onPressedDone,
   });
 
   @override
@@ -81,7 +77,7 @@ class RepeatsTemplate extends StatelessWidget {
           widget: DateButtonAtom(
             defaultText: "Never",
             buttonSize: const Size(160, 50),
-            initialDate: model.endDate,
+            currentDate: model.endDate,
             onDateChanged: (date) => onEndDateChanged(date),
           ),
           inverted: true,
@@ -130,31 +126,10 @@ class RepeatsTemplate extends StatelessWidget {
                         model: model,
                       ),
                     ),
-
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.red,
-            child: IconButton(
-              color: Colors.black,
-              onPressed: onPressedCancel,
-              icon: const Icon(Icons.cancel_outlined),
-            ),
-          ),
-          CircleAvatar(
-            backgroundColor: Colors.indigo,
-            child: IconButton(
-              color: Colors.black,
-              onPressed: onPressedDone,
-              icon: const Icon(Icons.done),
-            ),
-          ),
-        ],
-      ),
     ];
 
     return ListView.separated(
+      shrinkWrap: true,
       itemBuilder: (context, index) {
         return children[index];
       },

@@ -80,15 +80,15 @@ class Tab12InputPage extends ConsumerWidget {
                     onYearlySelectionsChanged: (selections) =>
                         localCont.setYearlyRepetitions(selections),
                     onBasisChanged: (basis) => localCont.setBasis(basis),
-                    onPressedCancel: () async {
-                      Navigator.pop(context);
-                      await Future.delayed(const Duration(milliseconds: 200));
-                      localCont.setBasis(Basis.day);
-                      localCont.setFrequency("Daily");
-                    },
-                    onPressedDone: () {
-                      Navigator.pop(context);
-                    },
+                    // onPressedCancel: () async {
+                    //   Navigator.pop(context);
+                    //   await Future.delayed(const Duration(milliseconds: 200));
+                    //   localCont.setBasis(Basis.day);
+                    //   localCont.setFrequency("Daily");
+                    // },
+                    // onPressedDone: () {
+                    //   Navigator.pop(context);
+                    // },
                   ),
                 );
               },

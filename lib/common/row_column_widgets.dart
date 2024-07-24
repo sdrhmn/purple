@@ -18,7 +18,7 @@ class CancelSubmitRowMolecule extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButtonAtom(
               onPressed: onCancelPressed,
@@ -104,7 +104,7 @@ class NavigationRowMolecule extends StatelessWidget {
     return Row(
       mainAxisAlignment: hideAddButton == true
           ? MainAxisAlignment.center
-          : MainAxisAlignment.spaceAround,
+          : MainAxisAlignment.spaceBetween,
       children: [
         FloatingActionButton(
           heroTag: null,

@@ -27,8 +27,7 @@ class ReminderSliders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int half = (DateTime.now()
-            .copyWith(
-                hour: model.startTime.hour, minute: model.startTime.minute)
+            .copyWith(hour: model.time.hour, minute: model.time.minute)
             .difference(DateTime.now())
             .inMinutes ~/
         2);
@@ -40,7 +39,6 @@ class ReminderSliders extends StatelessWidget {
           children: [
             Text(
               "Reminders",
-              style: Theme.of(context).textTheme.titleSmall,
             )
           ],
         ),
@@ -52,7 +50,7 @@ class ReminderSliders extends StatelessWidget {
           onPressed: () {
             if (model is AdHocModel &&
                 DateTime(model.date!.year, model.date!.month, model.date!.day,
-                            model.startTime.hour, model.startTime.minute)
+                            model.time.hour, model.time.minute)
                         .difference(DateTime.now())
                         .inMinutes <
                     1) {
@@ -80,12 +78,14 @@ class ReminderSliders extends StatelessWidget {
 
   List<Widget> _renderReminderSliders() {
     List<Widget> sliders = [];
-    double max = model is AdHocModel ?  DateTime(model.date!.year, model.date!.month, model.date!.day,
-            model.startTime.hour, model.startTime.minute)
-        .copyWith(hour: model.startTime.hour, minute: model.startTime.minute)
-        .difference(DateTime.now())
-        .inMinutes
-        .toDouble(): 0.0;
+    double max = model is AdHocModel
+        ? DateTime(model.date!.year, model.date!.month, model.date!.day,
+                model.time.hour, model.time.minute)
+            .copyWith(hour: model.time.hour, minute: model.time.minute)
+            .difference(DateTime.now())
+            .inMinutes
+            .toDouble()
+        : 0.0;
 
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {

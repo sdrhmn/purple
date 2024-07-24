@@ -110,12 +110,12 @@ class Tab12InputTemplate extends StatelessWidget {
                 widgets: [
                   DateButtonAtom(
                     buttonSize: const Size(160, 60),
-                    initialDate: entry.tab2Model.startDate!,
+                    currentDate: entry.tab2Model.startDate!,
                     onDateChanged: onStartDateChanged,
                   ),
                   DateButtonAtom(
                     buttonSize: const Size(160, 60),
-                    initialDate: entry.tab2Model.endDate!,
+                    currentDate: entry.tab2Model.endDate!,
                     onDateChanged: onEndDateChanged,
                   ),
                 ],

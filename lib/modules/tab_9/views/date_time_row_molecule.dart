@@ -21,7 +21,7 @@ class DateTimeRowMolecule extends StatelessWidget {
       children: [
         Expanded(
           child: DateButtonAtom.large(
-            initialDate: initialDate,
+            currentDate: initialDate,
             onDateChanged: onDateChanged,
           ),
         ),

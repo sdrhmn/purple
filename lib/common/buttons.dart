@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateButtonAtom extends StatelessWidget {
-  final DateTime? initialDate;
+  final DateTime? currentDate;
   final Function(DateTime date) onDateChanged;
   final Size buttonSize;
   final String? defaultText;
 
   const DateButtonAtom({
     super.key,
-    required this.initialDate,
+    required this.currentDate,
     required this.onDateChanged,
     this.buttonSize = const Size(70, 20),
     this.defaultText,
   });
   const DateButtonAtom.large({
     super.key,
-    required this.initialDate,
+    required this.currentDate,
     required this.onDateChanged,
     this.buttonSize = const Size(170, 50),
     this.defaultText,
@@ -32,7 +32,7 @@ class DateButtonAtom extends StatelessWidget {
         onPressed: () async {
           var dateSelected = await showDatePicker(
             context: context,
-            initialDate: initialDate ?? DateTime.now(),
+            initialDate: currentDate ?? DateTime.now(),
             firstDate: DateTime(0),
             lastDate: DateTime(DateTime.now().year + 50),
           );
@@ -52,8 +52,8 @@ class DateButtonAtom extends StatelessWidget {
           ),
         ),
         child: Text(
-          initialDate != null
-              ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(initialDate!)
+          currentDate != null
+              ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(currentDate!)
               : defaultText ?? "",
           style: Theme.of(context).textTheme.titleSmall,
         ),

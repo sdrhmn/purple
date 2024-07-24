@@ -38,7 +38,7 @@ class Tab5InputTemplate extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DateButtonAtom.large(
-              initialDate: model.date,
+              currentDate: model.date,
               onDateChanged: onDateChanged,
             ),
           ],

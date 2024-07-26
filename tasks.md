@@ -600,3 +600,13 @@
 
 - Remove plus FAB from tab 1 -> invisible
 - Make the settings icon invisible
+
+---
+
+**Bismillahir-Rahmanir-Rahim** 
+
+- Add reminders
+- Add filters
+- Add notifs
+- Sophistify TaskScreen
+- Create repository

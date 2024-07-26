@@ -26,5 +26,8 @@ final appStartupProvider = FutureProvider<void>((ref) async {
   // Schedule notifications for the next day for repeat tasks
   await ref.read(repeatingNotifsSchedulerProvider.future);
 
+  // ObjectBox
+  await ref.read(storeProvider.future);
+
   return;
 });

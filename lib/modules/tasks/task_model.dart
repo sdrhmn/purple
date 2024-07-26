@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 
 class Task {
+  int id = 0;
+  late int notifId;
   String activity;
   DateTime date;
   TimeOfDay time;
@@ -14,13 +19,16 @@ class Task {
   Task({
     required this.activity,
     required this.date,
-    required this.time,
+    this.time = const TimeOfDay(hour: 0, minute: 0),
+    notifId,
     required this.type,
     required this.difficulty,
     this.duration,
     this.repeatRule,
-    required this.reminders,
-  });
+    this.reminders = const {},
+  }) {
+    this.notifId = notifId ?? Random().nextInt(50e3.toInt());
+  }
 
   factory Task.empty() {
     return Task(
@@ -36,9 +44,12 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       'activity': activity,
+      'notif_id': notifId,
       'date': date.toIso8601String(),
-      'time':
-          time, // You might need to define a method to convert TimeOfDay to a string
+      'time': [
+        time.hour,
+        time.minute
+      ], // You might need to define a method to convert TimeOfDay to a string
       'type': type,
       'difficulty': difficulty,
       'duration': duration?.inSeconds, // Or any other representation you prefer
@@ -51,8 +62,9 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       activity: json['activity'],
+      notifId: json['notif_id'],
       date: DateTime.parse(json['date']),
-      time: TimeOfDay(hour: json['time'].first, minute: json[['time'].last]),
+      time: TimeOfDay(hour: json['time'].first, minute: json['time'].last),
       type: json['type'],
       difficulty: json['difficulty'],
       duration:
@@ -104,4 +116,16 @@ class Task {
       repeatRule: repeatRule ? null : this.repeatRule,
     );
   }
+}
+
+@Entity()
+class DataTask {
+  @Id()
+  int id = 0;
+  String data;
+
+  DataTask({
+    this.id = 0,
+    required this.data,
+  });
 }

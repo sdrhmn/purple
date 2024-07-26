@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/common/scheduling/scheduling_repository.dart';
@@ -32,6 +33,7 @@ import 'package:timely/modules/tab_5/views/tab_5_output_page.dart';
 import 'package:timely/modules/tab_6/pages/tab_6_output_page.dart';
 import 'package:timely/modules/completed_tasks/completed_tasks_page.dart';
 import 'package:timely/modules/home/views/launch_screen.dart';
+import 'package:timely/objectbox.g.dart';
 import 'package:timely/values.dart';
 
 export 'package:timely/common/buttons.dart';
@@ -342,3 +344,10 @@ final List tabInputScreens = [
   const Tab5InputPage(),
   const Tab6InputPage(),
 ];
+
+final storeProvider = FutureProvider<Store>((ref) async {
+  final docsDir = await getApplicationDocumentsDirectory();
+  final store = await openStore(directory: join(docsDir.path, "purple-time"));
+
+  return store;
+});

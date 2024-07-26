@@ -1,23 +1,34 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/common/buttons.dart';
 import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/common/scheduling/duration_selection.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/tasks_provider.dart';
+import 'package:timely/reusables.dart';
 
-class TaskForm extends StatefulWidget {
-  const TaskForm({super.key});
+class TaskFormScreen extends ConsumerStatefulWidget {
+  final Task? task;
+  const TaskFormScreen({super.key, this.task});
 
   @override
-  State<TaskForm> createState() => _TaskFormState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TaskFormState();
 }
 
-class _TaskFormState extends State<TaskForm> {
-  final _formKey = GlobalKey<FormState>();
-  Task task = Task.empty();
+class _TaskFormState extends ConsumerState<TaskFormScreen> {
+  late Task task;
+  final _formKey = GlobalKey<_TaskFormState>();
+
+  @override
+  void initState() {
+    task = widget.task ?? Task.empty();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +38,7 @@ class _TaskFormState extends State<TaskForm> {
         children: [
           // Activity
           TextFormField(
+            initialValue: task.activity,
             decoration: InputDecoration(
               hintText: "Activity",
               border: const OutlineInputBorder(
@@ -35,13 +47,8 @@ class _TaskFormState extends State<TaskForm> {
               filled: true,
               fillColor: Colors.purple[800],
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              } else {
-                task.activity = value;
-              }
-              return null;
+            onChanged: (value) {
+              task.activity = value;
             },
           ).padding(vertical: 10),
 
@@ -207,7 +214,35 @@ class _TaskFormState extends State<TaskForm> {
           ).padding(vertical: 10),
 
           CancelSubmitRowMolecule(
-                  onSubmitPressed: () {}, onCancelPressed: () {})
+                  onSubmitPressed: () {
+                    // Access the store and box
+                    final store = ref.read(storeProvider).requireValue;
+                    final box = store.box<DataTask>();
+
+                    if (widget.task == null) {
+                      box.put(
+                        DataTask(
+                          data: jsonEncode(
+                            task.toJson(),
+                          ),
+                        ),
+                      );
+                    } else {
+                      box.put(
+                        DataTask(
+                          id: task.id,
+                          data: jsonEncode(
+                            task.toJson(),
+                          ),
+                        ),
+                      );
+                    }
+
+                    ref.invalidate(tasksProvider);
+
+                    Navigator.of(context).pop();
+                  },
+                  onCancelPressed: () {})
               .padding(vertical: 10),
         ],
       ),

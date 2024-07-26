@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
-import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/tab_12/views/tab_12_input_template.dart';
 import 'package:timely/modules/tab_12/controllers/input/entry_input_controller.dart';
 import 'package:timely/modules/tab_12/controllers/input/sub_entry_input_controller.dart';

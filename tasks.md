@@ -605,8 +605,8 @@
 
 **Bismillahir-Rahmanir-Rahim** 
 
-- Add reminders
+- Add reminders -D
 - Add filters -D
-- Add notifs
-- Sophistify TaskScreen
+- Add notifs -D
+- Sophistify TaskScreen -D
 - Create repository -D

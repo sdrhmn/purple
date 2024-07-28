@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/tasks/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/task_repository.dart';
 import 'package:timely/modules/tasks/tasks_provider.dart';
-import 'package:timely/reusables.dart';
 
 class TaskTile extends ConsumerWidget {
   final Task task;
@@ -36,11 +36,7 @@ class TaskTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(7),
       ),
       onLongPress: () {
-        // Delete task
-        final store = ref.read(storeProvider).requireValue;
-        final box = store.box<DataTask>();
-
-        box.remove(task.id);
+        ref.read(taskRepositoryProvider.notifier).deleteTask(task);
         ref.invalidate(tasksProvider);
       },
       onTap: () {

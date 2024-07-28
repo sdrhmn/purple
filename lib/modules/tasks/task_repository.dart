@@ -17,8 +17,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   // Methods
-  Future<void> writeTask(Task task) async {
-    await box.putAsync(
+  writeTask(Task task) {
+    box.put(
       DataTask(
         data: jsonEncode(
           task.toJson(),
@@ -27,8 +27,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     );
   }
 
-  Future<void> updateTask(Task task) async {
-    await box.putAsync(
+  updateTask(Task task) {
+    box.put(
       DataTask(
         id: task.id,
         data: jsonEncode(
@@ -36,6 +36,10 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         ),
       ),
     );
+  }
+
+  deleteTask(Task task) {
+    box.remove(task.id);
   }
 }
 

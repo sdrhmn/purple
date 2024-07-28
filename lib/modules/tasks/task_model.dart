@@ -35,8 +35,8 @@ class Task {
       activity: "",
       date: DateTime.now(),
       time: TimeOfDay.now(),
-      type: "",
-      difficulty: "",
+      type: "ad-hoc",
+      difficulty: "easy",
       reminders: {},
     );
   }

@@ -64,7 +64,7 @@ class _Tab3InputPageState extends ConsumerState<Tab3InputPage> {
         }
         //----- Schedule Notification --------
         if (model.startTime != null && model.date != null) {
-          NotifService().scheduleAdHocTaskNotifs(model);
+          // NotifService().scheduleAdHocTaskNotifs(model);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
                 "Scheduled${model.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${model.name} at ${model.startTime!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(model.date!)}"),

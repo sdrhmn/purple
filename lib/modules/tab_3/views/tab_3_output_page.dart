@@ -85,7 +85,7 @@ class _Tab3OutputPageState extends ConsumerState<Tab3OutputPage> {
             onNotifIconPressed:
                 (bool value, AdHocModel model, String date, int index) async {
               if (value == true) {
-                NotifService().scheduleAdHocTaskNotifs(model);
+                // NotifService().scheduleAdHocTaskNotifs(model);
               } else {
                 NotifService().cancelNotif(model.notifId);
                 NotifService().cancelReminders(model);

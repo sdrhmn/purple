@@ -47,10 +47,10 @@ class SchedulingModel {
         : {};
     reminders = Map<int, Duration>.from(rems);
 
-    if (json.containsKey("Start Date") || json.containsKey("Name")) {
-      startDate = DateTime.parse(json["Start Date"]);
-      name = json["Name"];
-    }
+    // if (json.containsKey("Start Date") || json.containsKey("Name")) {
+    //   startDate = DateTime.parse(json["Start Date"]);
+    //   name = json["Name"];
+    // }
     uuid = json["ID"];
     notifId = json["Notification ID"];
     notifOn = json["Notification ON"];

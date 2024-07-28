@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/tasks_provider.dart';
-import 'package:timely/reusables.dart';
 
-class TaskScreen extends ConsumerWidget {
+import 'components/task_tile.dart';
+
+class TaskScreen extends ConsumerStatefulWidget {
   const TaskScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends ConsumerState<TaskScreen> {
+  String selection = "all";
+
+  @override
+  Widget build(BuildContext context) {
     final providerOfTasks = ref.watch(tasksProvider);
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size(100, 100),
+        child: Container(
+          color: Colors.black45,
+          child: FilterBar(
+              selection: selection,
+              onSelectionChanged: (sel) {
+                selection = sel.first.toString();
+                setState(() {});
+              }),
+        ),
+      ),
       body: providerOfTasks.when(
         data: (List<Task> tasks) {
+          tasks = selection == "all"
+              ? tasks
+              : tasks.where((task) => task.type == selection).toList();
+
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: ListView.separated(
@@ -47,52 +71,6 @@ class TaskScreen extends ConsumerWidget {
         ),
         child: const Icon(Icons.add),
       ),
-    );
-  }
-}
-
-class TaskTile extends ConsumerWidget {
-  final Task task;
-  const TaskTile({
-    super.key,
-    required this.task,
-  });
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return ListTile(
-      onLongPress: () {
-        // Delete task
-        final store = ref.read(storeProvider).requireValue;
-        final box = store.box<DataTask>();
-
-        box.remove(task.id);
-        ref.invalidate(tasksProvider);
-      },
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: const Text("Edit Task"),
-              ),
-              body: TaskFormScreen(
-                task: task,
-              ),
-            ),
-          ),
-        );
-      },
-      title: Text(task.activity),
-      trailing: Text(task.time.format(context)).textStyle(
-        const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w300,
-        ),
-      ),
-    ).decorated(
-      color: Colors.purple[700],
-      borderRadius: BorderRadius.circular(7),
     );
   }
 }

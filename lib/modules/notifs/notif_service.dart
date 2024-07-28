@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
+import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // NOTE: This class is a singleton.
@@ -185,19 +185,17 @@ class NotifService {
 
   // [-][-][-][-][-] Ad Hoc Notifs [-][-][-][-][-]
 
-  Future<void> scheduleAdHocTaskNotifs(AdHocModel model) async {
+  Future<void> scheduleAdHocTaskNotifs(Task model) async {
     //----- Schedule Notification --------
-    if (model.date != null && model.startTime != null) {
-      NotifService().scheduleNotif(
-          model,
-          DateTime(model.date!.year, model.date!.month, model.date!.day,
-              model.startTime!.hour, model.startTime!.minute));
+    NotifService().scheduleNotif(
+        model,
+        DateTime(model.date.year, model.date.month, model.date.day,
+            model.time.hour, model.time.minute));
 
-      // Reminders
-      NotifService().scheduleReminders(model,
-          dateTime: model.date!.copyWith(
-              hour: model.startTime!.hour, minute: model.startTime!.minute));
-    }
+    // Reminders
+    NotifService().scheduleReminders(model,
+        dateTime: model.date
+            .copyWith(hour: model.time.hour, minute: model.time.minute));
   }
 
   Future<void> cancelNotif(id) async {

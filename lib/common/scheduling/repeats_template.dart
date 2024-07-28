@@ -129,6 +129,7 @@ class RepeatsTemplate extends StatelessWidget {
     ];
 
     return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return children[index];

@@ -20,6 +20,7 @@ Tab9SubEntryModel _$Tab9SubEntryModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Tab9SubEntryModel {
+// ignore: duplicate_ignore
 // ignore: invalid_annotation_target
   @JsonKey(name: "ID")
   String? get uuid => throw _privateConstructorUsedError;

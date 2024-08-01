@@ -124,10 +124,14 @@ class Task {
 class DataTask {
   @Id()
   int id = 0;
+
+  @Property(type: PropertyType.date)
+  DateTime date;
   String data;
 
   DataTask({
     this.id = 0,
+    required this.date,
     required this.data,
   });
 }

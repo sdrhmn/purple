@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/task_repository.dart';
 import 'package:timely/modules/tasks/tasks_provider.dart';
 
 import 'components/task_tile.dart';
@@ -42,12 +43,38 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                return TaskTile(task: tasks[index]);
+            child: RefreshIndicator(
+              onRefresh: () {
+                return Future.delayed(Duration.zero, () {
+                  ref.invalidate(tasksProvider);
+                });
               },
-              itemCount: tasks.length,
+              child: ListView.separated(
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  return TaskTile(
+                    task: tasks[index],
+                    onCheckboxChanged: (bool? value) {
+                      setState(() {
+                        tasks[index].isComplete = value!;
+                        ref
+                            .read(taskRepositoryProvider.notifier)
+                            .updateTask(tasks[index]);
+                      });
+                    },
+                    onLongPressed: () {
+                      setState(() {
+                        tasks.removeAt(index);
+                        ref
+                            .read(taskRepositoryProvider.notifier)
+                            .deleteTask(tasks[index]);
+                      });
+                    },
+                  );
+                },
+                itemCount: tasks.length,
+              ),
             ),
           );
         },

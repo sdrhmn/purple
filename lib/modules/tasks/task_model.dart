@@ -7,6 +7,7 @@ import 'package:timely/common/scheduling/scheduling_model.dart';
 class Task {
   int id = 0;
   late int notifId;
+  bool isComplete = false;
   String activity;
   DateTime? date;
   TimeOfDay? time;
@@ -19,6 +20,7 @@ class Task {
   Task({
     required this.activity,
     this.date,
+    isComplete,
     this.time,
     notifId,
     required this.type,
@@ -28,6 +30,7 @@ class Task {
     this.reminders = const {},
   }) {
     this.notifId = notifId ?? Random().nextInt(50e3.toInt());
+    this.isComplete = isComplete ?? this.isComplete;
   }
 
   factory Task.empty() {
@@ -43,6 +46,7 @@ class Task {
     return {
       'activity': activity,
       'notif_id': notifId,
+      'is_complete': isComplete,
       'date': date?.toIso8601String(),
       'time': time == null
           ? null
@@ -63,6 +67,7 @@ class Task {
     return Task(
       activity: json['activity'],
       notifId: json['notif_id'],
+      isComplete: json['is_complete'],
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)

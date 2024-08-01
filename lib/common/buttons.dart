@@ -54,7 +54,7 @@ class DateButtonAtom extends StatelessWidget {
         child: Text(
           currentDate != null
               ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(currentDate!)
-              : defaultText ?? "",
+              : defaultText ?? "Select Date",
           style: Theme.of(context).textTheme.titleSmall,
         ),
       ),
@@ -156,7 +156,7 @@ class TimeButtonAtom extends StatelessWidget {
           ),
         ),
         child: Text(
-          initialTime != null ? initialTime!.format(context) : "Select",
+          initialTime != null ? initialTime!.format(context) : "Select Time",
           style: Theme.of(context).textTheme.titleSmall,
         ),
       ),

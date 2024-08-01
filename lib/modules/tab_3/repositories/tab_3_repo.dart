@@ -157,7 +157,6 @@ class Tab3RepositoryNotifier extends Notifier<void> {
     final scheduledContent = jsonDecode(await scheduled.readAsString());
     final nonScheduledContent = jsonDecode(await nonScheduled.readAsString());
 
-    // TODO Inshaa Allah :: Implement Delete for Completed Tasks
     // File completedFile = ref.read(dbFilesProvider).requireValue[3]!.last;
     // Map completedContent = jsonDecode(await completedFile.readAsString());
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/common/row_column_widgets.dart';
@@ -53,24 +52,29 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             },
           ).padding(vertical: 10),
 
-          // Date
-          DateButtonAtom.large(
-            currentDate: task.date,
-            onDateChanged: (date) {
-              task.date = date;
-
-              setState(() {});
-            },
-          ).padding(vertical: 10),
-
-          // Time
-          TimeButtonAtom.large(
-              initialTime: task.time,
-              onTimeChanged: (time) {
-                task.time = time;
+          // Date and Time
+          [
+            // Date
+            DateButtonAtom.large(
+              currentDate: task.date,
+              onDateChanged: (date) {
+                task.date = date;
 
                 setState(() {});
-              }).padding(vertical: 10),
+              },
+            ).padding(vertical: 10).expanded(),
+
+            const SizedBox(width: 10),
+
+            // Time
+            TimeButtonAtom.large(
+                initialTime: task.time,
+                onTimeChanged: (time) {
+                  task.time = time;
+
+                  setState(() {});
+                }).padding(vertical: 10).expanded(),
+          ].toRow(),
 
           // Type
           [
@@ -99,13 +103,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
           // Difficulty
           [
-            const Text("Difficulty"),
+            const Text("Priority"),
             DropdownMenu(
-                initialSelection: task.difficulty,
-                onSelected: (value) => task.difficulty = value!,
+                initialSelection: task.priority,
+                onSelected: (value) => task.priority = value!,
                 width: 150,
                 dropdownMenuEntries: [
-                  for (String difficulty in 'Easy,Hard'.split(","))
+                  for (String difficulty in 'Low,Medium,High'.split(","))
                     DropdownMenuEntry(
                       label: difficulty,
                       value: difficulty.toLowerCase(),
@@ -283,30 +287,32 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               : Container(),
 
           // Reminders
-          ReminderSliders(
-            model: task,
-            onAddReminder: (tsk) {
-              task = tsk;
-              setState(() {});
-            },
-            onSliderChanged: (tsk) {
-              task = tsk;
-              setState(() {});
-            },
-            onDeleteReminder: (tsk) {
-              task = tsk;
-              setState(() {});
-            },
-          ).padding(vertical: 10),
+          task.time == null
+              ? Container()
+              : ReminderSliders(
+                  model: task,
+                  onAddReminder: (tsk) {
+                    task = tsk;
+                    setState(() {});
+                  },
+                  onSliderChanged: (tsk) {
+                    task = tsk;
+                    setState(() {});
+                  },
+                  onDeleteReminder: (tsk) {
+                    task = tsk;
+                    setState(() {});
+                  },
+                ).padding(vertical: 10),
 
           CancelSubmitRowMolecule(
                   onSubmitPressed: () {
                     if (task.type == "ad-hoc") {
-                      NotifService().scheduleAdHocTaskNotifs(task);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date)}"),
-                      ));
+                      // NotifService().scheduleAdHocTaskNotifs(task);
+                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //   content: Text(
+                      //       "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date)}"),
+                      // ));
                     } else if (task.repeatRule != null) {
                       NotifService().scheduleRepeatTaskNotifs(task.repeatRule!);
                     }

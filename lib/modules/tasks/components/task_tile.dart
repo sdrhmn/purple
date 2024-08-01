@@ -25,12 +25,14 @@ class TaskTile extends ConsumerWidget {
               ),
             )
           : null,
-      trailing: Text(task.time.format(context)).textStyle(
-        const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w300,
-        ),
-      ),
+      trailing: task.time == null
+          ? const Text("")
+          : Text(task.time!.format(context)).textStyle(
+              const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
       tileColor: Colors.purple[800],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(7),

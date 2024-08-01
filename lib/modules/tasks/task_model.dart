@@ -8,21 +8,21 @@ class Task {
   int id = 0;
   late int notifId;
   String activity;
-  DateTime date;
-  TimeOfDay time;
+  DateTime? date;
+  TimeOfDay? time;
   String type;
-  String difficulty;
+  String priority;
   Duration? duration;
   SchedulingModel? repeatRule;
   Map<int, Duration> reminders;
 
   Task({
     required this.activity,
-    required this.date,
-    this.time = const TimeOfDay(hour: 0, minute: 0),
+    this.date,
+    this.time,
     notifId,
     required this.type,
-    required this.difficulty,
+    required this.priority,
     this.duration,
     this.repeatRule,
     this.reminders = const {},
@@ -33,10 +33,8 @@ class Task {
   factory Task.empty() {
     return Task(
       activity: "",
-      date: DateTime.now(),
-      time: TimeOfDay.now(),
       type: "ad-hoc",
-      difficulty: "easy",
+      priority: "low",
       reminders: {},
     );
   }
@@ -45,13 +43,15 @@ class Task {
     return {
       'activity': activity,
       'notif_id': notifId,
-      'date': date.toIso8601String(),
-      'time': [
-        time.hour,
-        time.minute
-      ], // You might need to define a method to convert TimeOfDay to a string
+      'date': date?.toIso8601String(),
+      'time': time == null
+          ? null
+          : [
+              time!.hour,
+              time!.minute
+            ], // You might need to define a method to convert TimeOfDay to a string
       'type': type,
-      'difficulty': difficulty,
+      'priority': priority,
       'duration': duration?.inSeconds, // Or any other representation you prefer
       'repeatRule': repeatRule?.toJson(),
       'reminders': reminders
@@ -63,10 +63,12 @@ class Task {
     return Task(
       activity: json['activity'],
       notifId: json['notif_id'],
-      date: DateTime.parse(json['date']),
-      time: TimeOfDay(hour: json['time'].first, minute: json['time'].last),
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      time: json['time'] != null
+          ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
+          : null,
       type: json['type'],
-      difficulty: json['difficulty'],
+      priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
       repeatRule: json['repeatRule'] != null
@@ -83,7 +85,7 @@ class Task {
     DateTime? date,
     TimeOfDay? time,
     String? type,
-    String? difficulty,
+    String? priority,
     Duration? duration,
     SchedulingModel? repeatRule,
     Map<int, Duration>? reminders,
@@ -93,7 +95,7 @@ class Task {
       date: date ?? this.date,
       time: time ?? this.time,
       type: type ?? this.type,
-      difficulty: difficulty ?? this.difficulty,
+      priority: priority ?? this.priority,
       duration: duration ?? this.duration,
       repeatRule: repeatRule ?? this.repeatRule,
       reminders: reminders ?? this.reminders,
@@ -110,7 +112,7 @@ class Task {
       date: date,
       time: time,
       type: type,
-      difficulty: difficulty,
+      priority: priority,
       reminders: reminders,
       duration: duration ? null : this.duration,
       repeatRule: repeatRule ? null : this.repeatRule,

@@ -69,7 +69,7 @@ class NotifService {
     try {
       await FlutterLocalNotificationsPlugin().zonedSchedule(
         model.notifId,
-        model.name,
+        model.activity,
         "Due now",
         tz.TZDateTime.from(
           notifDateTime.subtract(
@@ -143,10 +143,11 @@ class NotifService {
         try {
           await FlutterLocalNotificationsPlugin().zonedSchedule(
             entry.key,
-            model.name,
+            model.activity,
             "Due in ${entry.value.inMinutes} minutes",
             tz.TZDateTime.from(
-              (dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+              (dateTime ?? model.repeatRule!.getNextOccurrenceDateTime())
+                  .subtract(
                 entry.value, // yani, subtract the duration
               ),
               tz.local,
@@ -189,13 +190,13 @@ class NotifService {
     //----- Schedule Notification --------
     NotifService().scheduleNotif(
         model,
-        DateTime(model.date.year, model.date.month, model.date.day,
-            model.time.hour, model.time.minute));
+        DateTime(model.date!.year, model.date!.month, model.date!.day,
+            model.time!.hour, model.time!.minute));
 
     // Reminders
     NotifService().scheduleReminders(model,
-        dateTime: model.date
-            .copyWith(hour: model.time.hour, minute: model.time.minute));
+        dateTime: model.date!
+            .copyWith(hour: model.time!.hour, minute: model.time!.minute));
   }
 
   Future<void> cancelNotif(id) async {

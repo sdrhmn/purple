@@ -65,10 +65,10 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                     },
                     onLongPressed: () {
                       setState(() {
-                        tasks.removeAt(index);
                         ref
                             .read(taskRepositoryProvider.notifier)
                             .deleteTask(tasks[index]);
+                        tasks.removeAt(index);
                       });
                     },
                   );

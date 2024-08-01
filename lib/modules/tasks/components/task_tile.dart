@@ -19,10 +19,16 @@ class TaskTile extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return [
       Checkbox(
+          activeColor: Colors.green,
           value: task.isComplete,
           onChanged: (value) => onCheckboxChanged(value)).padding(right: 10),
       ListTile(
-        title: Text(task.activity).padding(all: 10),
+        title: Text(
+          task.activity,
+          style: TextStyle(
+            decoration: task.isComplete ? TextDecoration.lineThrough : null,
+          ),
+        ).padding(all: 10),
         subtitle: task.repeatRule != null
             ? Text(
                 task.repeatRule!.getRepetitionSummary(),
@@ -34,12 +40,14 @@ class TaskTile extends ConsumerWidget {
         trailing: task.time == null
             ? const Text("")
             : Text(task.time!.format(context)).textStyle(
-                const TextStyle(
+                TextStyle(
                   fontSize: 18,
+                  decoration:
+                      task.isComplete ? TextDecoration.lineThrough : null,
                   fontWeight: FontWeight.w300,
                 ),
               ),
-        tileColor: Colors.purple[800],
+        tileColor: task.isComplete ? Colors.green[800] : Colors.purple[800],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7),
         ),

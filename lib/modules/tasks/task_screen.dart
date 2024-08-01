@@ -16,10 +16,24 @@ class TaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<TaskScreen> {
-  String selection = "all";
+  int pageIndex = 0;
+  late PageController _pageViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageViewController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageViewController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(tasksProvider);
 
     return Scaffold(
@@ -28,53 +42,67 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
         child: Container(
           color: Colors.black45,
           child: FilterBar(
-              selection: selection,
+              selection: filters[pageIndex],
               onSelectionChanged: (sel) {
-                selection = sel.first.toString();
-                setState(() {});
+                pageIndex = filters.indexOf(sel.first.toString());
+                _pageViewController.animateToPage(
+                  pageIndex,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
               }),
         ),
       ),
       body: providerOfTasks.when(
         data: (List<Task> tasks) {
-          tasks = selection == "all"
-              ? tasks
-              : tasks.where((task) => task.type == selection).toList();
-
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: RefreshIndicator(
-              onRefresh: () {
-                return Future.delayed(Duration.zero, () {
-                  ref.invalidate(tasksProvider);
+            child: PageView(
+              controller: _pageViewController,
+              onPageChanged: (value) {
+                setState(() {
+                  pageIndex = value;
                 });
               },
-              child: ListView.separated(
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
-                itemBuilder: (context, index) {
-                  return TaskTile(
-                    task: tasks[index],
-                    onCheckboxChanged: (bool? value) {
-                      setState(() {
-                        tasks[index].isComplete = value!;
-                        ref
-                            .read(taskRepositoryProvider.notifier)
-                            .updateTask(tasks[index]);
-                      });
+              children: List.generate(4, (i) {
+                List<Task> filteredTasks = filters[i] == "all"
+                    ? tasks
+                    : tasks.where((task) => task.type == filters[i]).toList();
+
+                return RefreshIndicator(
+                  onRefresh: () {
+                    return Future.delayed(Duration.zero, () {
+                      ref.invalidate(tasksProvider);
+                    });
+                  },
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      return TaskTile(
+                        task: filteredTasks[index],
+                        onCheckboxChanged: (bool? value) {
+                          setState(() {
+                            filteredTasks[index].isComplete = value!;
+                            ref
+                                .read(taskRepositoryProvider.notifier)
+                                .updateTask(filteredTasks[index]);
+                          });
+                        },
+                        onLongPressed: () {
+                          setState(() {
+                            ref
+                                .read(taskRepositoryProvider.notifier)
+                                .deleteTask(filteredTasks[index]);
+                            filteredTasks.removeAt(index);
+                          });
+                        },
+                      );
                     },
-                    onLongPressed: () {
-                      setState(() {
-                        ref
-                            .read(taskRepositoryProvider.notifier)
-                            .deleteTask(tasks[index]);
-                        tasks.removeAt(index);
-                      });
-                    },
-                  );
-                },
-                itemCount: tasks.length,
-              ),
+                    itemCount: filteredTasks.length,
+                  ),
+                );
+              }),
             ),
           );
         },

@@ -19,9 +19,14 @@ class TaskTile extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return [
       Checkbox(
-          activeColor: Colors.green,
-          value: task.isComplete,
-          onChanged: (value) => onCheckboxChanged(value)).padding(right: 10),
+              activeColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              value: task.isComplete,
+              onChanged: (value) => onCheckboxChanged(value))
+          .padding(right: 10)
+          .scale(all: 1.2),
       ListTile(
         title: Text(
           task.activity,

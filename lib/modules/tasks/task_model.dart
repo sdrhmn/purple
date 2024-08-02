@@ -127,7 +127,7 @@ class Task {
 
 @Entity()
 class DataTask {
-  @Id()
+  @Id(assignable: true)
   int id = 0;
 
   @Property(type: PropertyType.date)

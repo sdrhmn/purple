@@ -104,16 +104,32 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   completeTask(Task task) {
-    taskBox.remove(task.id);
-    taskHistoryBox.put(
-      DataTask(
-        id: task.id,
-        date: DateTime.now(),
-        data: jsonEncode(
-          task.toJson(),
+    if (task.isComplete) {
+      taskBox.remove(task.id);
+      taskHistoryBox.put(
+        DataTask(
+          id: task.id,
+          date: DateTime.now(),
+          data: jsonEncode(
+            task.toJson(),
+          ),
         ),
-      ),
-    );
+      );
+    } else
+    // If task is marked INCOMPLETE
+    {
+      // Reverse
+      taskHistoryBox.remove(task.id);
+      taskBox.put(
+        DataTask(
+          id: task.id,
+          date: DateTime.now(),
+          data: jsonEncode(
+            task.toJson(),
+          ),
+        ),
+      );
+    }
   }
 }
 

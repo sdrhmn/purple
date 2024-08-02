@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/task_repository.dart';
@@ -38,21 +37,30 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
     final providerOfTasks = ref.watch(tasksProvider);
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size(100, 100),
-        child: Container(
-          color: Colors.black45,
-          child: FilterBar(
-              selection: filters[pageIndex],
-              onSelectionChanged: (sel) {
-                pageIndex = filters.indexOf(sel.first.toString());
-                _pageViewController.animateToPage(
-                  pageIndex,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              }),
-        ),
+      appBar: AppBar(
+        actions: [
+          Container(
+            width: 150,
+            child: <Widget>[
+              Text("Filter"),
+              DropdownButton(
+                  value: "All",
+                  items: [
+                    for (String filter in [
+                      "All",
+                      "Ad-hoc",
+                      "Routine",
+                      "Exercise"
+                    ])
+                      DropdownMenuItem(
+                        child: Text(filter),
+                        value: filter,
+                      )
+                  ],
+                  onChanged: (something) {})
+            ].toRow(mainAxisAlignment: MainAxisAlignment.spaceAround),
+          ).clipRRect(all: 10).padding(all: 6),
+        ],
       ),
       body: providerOfTasks.when(
         data: (List<Task> tasks) {

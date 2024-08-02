@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/tasks/task_form_screen.dart';
+import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 
 class TaskTile extends ConsumerWidget {
@@ -17,6 +18,8 @@ class TaskTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    DateTime now = DateTime.now();
+
     return [
       Checkbox(
           activeColor: Colors.green,
@@ -33,14 +36,20 @@ class TaskTile extends ConsumerWidget {
             decoration: task.isComplete ? TextDecoration.lineThrough : null,
           ),
         ).padding(all: 10),
-        subtitle: task.repeatRule != null
+        subtitle: (task.date?.copyWith(
+                        hour: task.time?.hour, minute: task.time?.minute) ??
+                    now)
+                .isBefore(now)
             ? Text(
-                task.repeatRule!.getRepetitionSummary(),
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                ),
-              )
-            : null,
+                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}, ${task.time!.format(context)}")
+            : task.repeatRule != null
+                ? Text(
+                    task.repeatRule!.getRepetitionSummary(),
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
+                : null,
         trailing: task.time == null
             ? const Text("")
             : Text(task.time!.format(context)).textStyle(
@@ -51,7 +60,14 @@ class TaskTile extends ConsumerWidget {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-        tileColor: task.isComplete ? Colors.green[800] : Colors.purple[800],
+        tileColor: (task.date?.copyWith(
+                        hour: task.time?.hour, minute: task.time?.minute) ??
+                    now)
+                .isBefore(now)
+            ? Colors.orange[900]
+            : task.isComplete
+                ? Colors.green[800]
+                : Colors.purple[800],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7),
         ),

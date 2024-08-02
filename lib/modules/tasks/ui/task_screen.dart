@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/tasks/components/filter_bar.dart';
-import 'package:timely/modules/tasks/task_form_screen.dart';
+import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
-import 'package:timely/modules/tasks/task_repository.dart';
-import 'package:timely/modules/tasks/tasks_provider.dart';
+import 'package:timely/modules/tasks/sm/task_repository.dart';
+import 'package:timely/modules/tasks/sm/tasks_provider.dart';
 
-import 'components/task_tile.dart';
+import '../components/task_tile.dart';
 
 class TaskScreen extends ConsumerStatefulWidget {
   const TaskScreen({super.key});
@@ -85,7 +85,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                           filteredTasks[index].isComplete = value!;
                           ref
                               .read(taskRepositoryProvider.notifier)
-                              .updateTask(filteredTasks[index]);
+                              .completeTask(filteredTasks[index]);
                         });
                       },
                       onLongPressed: () {

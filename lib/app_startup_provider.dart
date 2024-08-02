@@ -3,7 +3,7 @@ import 'package:timely/reusables.dart';
 
 final appStartupProvider = FutureProvider<void>((ref) async {
   // ObjectBox
-  await ref.read(storeProvider.future);
+  await ref.read(storesProvider.future);
 
   return;
 });

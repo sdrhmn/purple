@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/tasks/task_model.dart';
-import 'package:timely/modules/tasks/task_repository.dart';
+import 'package:timely/modules/tasks/sm/task_repository.dart';
 
 final tasksProvider = FutureProvider<List<Task>>((ref) async {
   // Get all tasks

@@ -5,7 +5,7 @@ import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/tasks/task_screen.dart';
+import 'package:timely/modules/tasks/ui/task_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 // ------ Firebase --------

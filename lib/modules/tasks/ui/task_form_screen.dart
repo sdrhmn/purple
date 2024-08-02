@@ -8,8 +8,8 @@ import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/task_model.dart';
-import 'package:timely/modules/tasks/sm/task_repository.dart';
-import 'package:timely/modules/tasks/sm/tasks_provider.dart';
+import 'package:timely/modules/tasks/data/task_repository.dart';
+import 'package:timely/modules/tasks/data/tasks_provider.dart';
 import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {

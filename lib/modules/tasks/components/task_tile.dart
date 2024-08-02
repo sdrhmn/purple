@@ -37,11 +37,12 @@ class TaskTile extends ConsumerWidget {
           ),
         ).padding(all: 10),
         subtitle: (task.date?.copyWith(
-                        hour: task.time?.hour, minute: task.time?.minute) ??
-                    now)
-                .isBefore(now)
+                            hour: task.time?.hour, minute: task.time?.minute) ??
+                        now)
+                    .isBefore(now) &&
+                !task.isComplete
             ? Text(
-                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}, ${task.time!.format(context)}")
+                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)} ${task.time != null ? ',${task.time!.format(context)}' : ''}")
             : task.repeatRule != null
                 ? Text(
                     task.repeatRule!.getRepetitionSummary(),
@@ -61,9 +62,10 @@ class TaskTile extends ConsumerWidget {
                 ),
               ),
         tileColor: (task.date?.copyWith(
-                        hour: task.time?.hour, minute: task.time?.minute) ??
-                    now)
-                .isBefore(now)
+                            hour: task.time?.hour, minute: task.time?.minute) ??
+                        now)
+                    .isBefore(now) &&
+                !task.isComplete
             ? Colors.orange[900]
             : task.isComplete
                 ? Colors.green[800]

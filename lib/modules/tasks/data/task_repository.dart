@@ -25,16 +25,19 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   // Methods
   Future<List<Task>> getTasks() async {
     DateTime now = DateTime.now();
-    final query = (taskHistoryBox.query(DataTask_.date
+    final query0 = (taskHistoryBox.query(DataTask_.date
             .betweenDate(DateTime(now.year, now.month, now.day, 0, 0),
                 DateTime(now.year, now.month, now.day, 23, 59))
             .and(DataTask_.deleted.isNull())))
+        .build();
+    final query1 = (taskBox.query(DataTask_.date
+            .lessOrEqualDate(DateTime(now.year, now.month, now.day, 23, 59))))
         .build();
 
     List<DataTask> dataTasks = [];
 
     List results =
-        (await Future.wait([taskBox.getAllAsync(), query.findAsync()]));
+        (await Future.wait([query1.findAsync(), query0.findAsync()]));
 
     List.generate(results.length, (index) {
       dataTasks.addAll(results[index]);

@@ -90,7 +90,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     task.isComplete
         ? taskHistoryBox.put(
             DataTask(
-              date: task.date ?? DateTime.now(),
+              date: task.date
+                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
+            DateTime.now(),
               id: task.id,
               data: jsonEncode(
                 task.toJson(),
@@ -113,7 +115,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     taskHistoryBox.put(
       DataTask(
         id: task.id,
-        date: task.date ?? DateTime.now(),
+        date: task.date
+                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
+            DateTime.now(),
         data: jsonEncode(
           task.toJson(),
         ),
@@ -128,7 +132,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       taskHistoryBox.put(
         DataTask(
           id: task.id,
-          date: task.date ?? DateTime.now(),
+          date: task.date
+                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
+            DateTime.now(),
           data: jsonEncode(
             task.toJson(),
           ),
@@ -142,7 +148,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       taskBox.put(
         DataTask(
           id: task.id,
-          date: task.date ?? DateTime.now(),
+          date: task.date
+                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
+            DateTime.now(),
           data: jsonEncode(
             task.toJson(),
           ),

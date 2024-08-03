@@ -36,19 +36,42 @@ class TaskTile extends ConsumerWidget {
             decoration: task.isComplete ? TextDecoration.lineThrough : null,
           ),
         ).padding(all: 10),
-        subtitle: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
-                    .isBefore(now) &&
-                !task.isComplete
-            ? Text(
-                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
-            : task.repeatRule != null
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
+                    !task.isComplete
                 ? Text(
-                    task.repeatRule!.getRepetitionSummary(),
-                    style: const TextStyle(
-                      fontStyle: FontStyle.italic,
-                    ),
+                    "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
+                : task.repeatRule != null
+                    ? Row(
+                        children: [
+                          const Icon(Icons.repeat).padding(right: 5),
+                          Text(
+                            task.repeatRule!.getRepetitionSummary(),
+                            style: const TextStyle(
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+            const SizedBox(height: 10),
+            task.duration != null
+                ? Row(
+                    children: [
+                      const Icon(Icons.alarm).padding(right: 5),
+                      Text(
+                        "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? 'and ${task.duration!.inMinutes % 60} minutes' : ''}",
+                        style: const TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   )
-                : null,
+                : Container(),
+          ],
+        ),
         trailing: task.time == null
             ? const Text("")
             : Text(task.time!.format(context)).textStyle(

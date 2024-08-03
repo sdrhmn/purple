@@ -23,7 +23,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   // Methods
-  Future<List<Task>> getTasks() async {
+  Future<List<Task>> getTodaysTasks() async {
     DateTime now = DateTime.now();
     final query0 = (taskHistoryBox.query(DataTask_.date
             .betweenDate(DateTime(now.year, now.month, now.day, 0, 0),
@@ -50,6 +50,25 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     for (DataTask dataTask in dataTasks) {
       tasks.add(Task.fromJson(jsonDecode(dataTask.data))..id = dataTask.id);
     }
+
+    return tasks;
+  }
+
+  Future<List<Task>> getUpcomingTasks() async {
+    DateTime now = DateTime.now();
+    final query = (taskBox.query(DataTask_.date
+            .greaterThanDate(DateTime(now.year, now.month, now.day, 23, 59))))
+        .build();
+
+    List<DataTask> dataTasks = await query.findAsync();
+
+    List<Task> tasks = [];
+
+    for (DataTask dataTask in dataTasks) {
+      tasks.add(Task.fromJson(jsonDecode(dataTask.data))..id = dataTask.id);
+    }
+
+    tasks.sort((a, b) => a.date!.difference(b.date!).inSeconds);
 
     return tasks;
   }

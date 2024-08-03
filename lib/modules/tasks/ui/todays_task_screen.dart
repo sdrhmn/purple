@@ -5,18 +5,18 @@ import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
-import 'package:timely/modules/tasks/data/tasks_provider.dart';
+import 'package:timely/modules/tasks/data/todays_tasks_provider.dart';
 
 import '../components/task_tile.dart';
 
-class TaskScreen extends ConsumerStatefulWidget {
-  const TaskScreen({super.key});
+class TodaysTaskScreen extends ConsumerStatefulWidget {
+  const TodaysTaskScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends ConsumerState<TaskScreen> {
+class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
   int pageIndex = 0;
   late PageController _pageViewController;
 
@@ -35,7 +35,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
-    final providerOfTasks = ref.watch(tasksProvider);
+    final providerOfTasks = ref.watch(todaysTasksProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -71,7 +71,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
               return RefreshIndicator(
                 onRefresh: () {
                   return Future.delayed(Duration.zero, () {
-                    ref.invalidate(tasksProvider);
+                    ref.invalidate(todaysTasksProvider);
                   });
                 },
                 child: ListView.separated(

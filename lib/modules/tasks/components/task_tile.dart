@@ -47,10 +47,12 @@ class TaskTile extends ConsumerWidget {
                     ? Row(
                         children: [
                           const Icon(Icons.repeat).padding(right: 5),
-                          Text(
-                            task.repeatRule!.getRepetitionSummary(),
-                            style: const TextStyle(
-                              fontStyle: FontStyle.italic,
+                          Flexible(
+                            child: Text(
+                              task.repeatRule!.getRepetitionSummary(),
+                              style: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ),
                         ],
@@ -61,10 +63,12 @@ class TaskTile extends ConsumerWidget {
                 ? Row(
                     children: [
                       const Icon(Icons.alarm).padding(right: 5),
-                      Text(
-                        "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? 'and ${task.duration!.inMinutes % 60} minutes' : ''}",
-                        style: const TextStyle(
-                          fontStyle: FontStyle.italic,
+                      Flexible(
+                        child: Text(
+                          "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? ' and ${task.duration!.inMinutes % 60} minutes' : ''}",
+                          style: const TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ],

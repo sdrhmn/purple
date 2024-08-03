@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
@@ -73,27 +74,50 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
           drawer: Drawer(
             child: ListView(
               children: [
-                DrawerHeader(child: Text("PurpleTime")),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      pageIndex = 0;
-                    });
-                  },
-                  icon: Icon(Icons.today_rounded),
-                  label: Text("Today's Tasks"),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      pageIndex = 1;
-                    });
-                  },
-                  icon: Icon(Icons.upcoming_rounded),
-                  label: Text("Upcoming Tasks"),
-                )
+                Container().height(50),
+                SizedBox(
+                  height: 50,
+                  child: TextButton.icon(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                      backgroundColor:
+                          WidgetStatePropertyAll(Colors.purple[700]),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        pageIndex = 0;
+                      });
+                    },
+                    icon: const Icon(Icons.today_rounded),
+                    label: const Text("Today's Tasks"),
+                  ),
+                ).padding(horizontal: 10),
+                Container().height(10),
+                SizedBox(
+                  height: 50,
+                  child: TextButton.icon(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                      backgroundColor:
+                          WidgetStatePropertyAll(Colors.purple[700]),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        pageIndex = 1;
+                      });
+                    },
+                    icon: const Icon(Icons.upcoming_rounded),
+                    label: const Text("Upcoming Tasks"),
+                  ),
+                ).padding(horizontal: 10)
               ],
             ),
           ),

@@ -83,13 +83,13 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                         Text(DateFormat(DateFormat.ABBR_MONTH_DAY)
                                 .format(filteredTasks[index].date!))
                             .textStyle(
-                              TextStyle(
+                              const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             )
-                            .padding(all: 5)
+                            .padding(all: 5, horizontal: 20)
                             .decorated(
-                              color: Colors.indigo[700],
+                              color: Colors.purple[700],
                               borderRadius: BorderRadius.circular(5),
                             )
                             .padding(bottom: 10),

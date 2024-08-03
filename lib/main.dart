@@ -68,23 +68,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
         return Scaffold(
           appBar: AppBar(
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: const Text("PurpleTime")
-              // actions: [
-              //   Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 10),
-              //     child: IconButton.outlined(
-              //       onPressed: () {
-              //         Navigator.push(context, MaterialPageRoute(
-              //           builder: (context) {
-              //             return const ReminderView();
-              //           },
-              //         ));
-              //       },
-              //       icon: const Icon(Icons.settings),
-              //     ),
-              //   )
-              // ],
-              ),
+              title: const Text("PurpleTime")),
           body: const TaskScreen(),
         );
       },

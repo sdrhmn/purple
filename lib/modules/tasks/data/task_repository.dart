@@ -94,7 +94,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     taskHistoryBox.put(
       DataTask(
         id: task.id,
-        date: DateTime.now(),
+        date: task.date ?? DateTime.now(),
         data: jsonEncode(
           task.toJson(),
         ),
@@ -109,7 +109,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       taskHistoryBox.put(
         DataTask(
           id: task.id,
-          date: DateTime.now(),
+          date: task.date ?? DateTime.now(),
           data: jsonEncode(
             task.toJson(),
           ),
@@ -123,7 +123,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       taskBox.put(
         DataTask(
           id: task.id,
-          date: DateTime.now(),
+          date: task.date ?? DateTime.now(),
           data: jsonEncode(
             task.toJson(),
           ),

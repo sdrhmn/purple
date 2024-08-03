@@ -36,13 +36,11 @@ class TaskTile extends ConsumerWidget {
             decoration: task.isComplete ? TextDecoration.lineThrough : null,
           ),
         ).padding(all: 10),
-        subtitle: (task.date?.copyWith(
-                            hour: task.time?.hour, minute: task.time?.minute) ??
-                        now)
+        subtitle: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
                     .isBefore(now) &&
                 !task.isComplete
             ? Text(
-                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)} ${task.time != null ? ',${task.time!.format(context)}' : ''}")
+                "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
             : task.repeatRule != null
                 ? Text(
                     task.repeatRule!.getRepetitionSummary(),
@@ -61,15 +59,13 @@ class TaskTile extends ConsumerWidget {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-        tileColor: (task.date?.copyWith(
-                            hour: task.time?.hour, minute: task.time?.minute) ??
-                        now)
-                    .isBefore(now) &&
-                !task.isComplete
-            ? Colors.orange[900]
-            : task.isComplete
-                ? Colors.green[800]
-                : Colors.purple[800],
+        tileColor:
+            (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
+                    !task.isComplete
+                ? Colors.orange[900]
+                : task.isComplete
+                    ? Colors.green[800]
+                    : Colors.purple[800],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7),
         ),

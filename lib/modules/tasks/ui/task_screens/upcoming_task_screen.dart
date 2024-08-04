@@ -63,7 +63,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                 pageIndex = value;
               });
             },
-            children: List.generate(4, (i) {
+            children: List.generate(filters.length, (i) {
               return RefreshIndicator(
                   onRefresh: () {
                     return Future.delayed(Duration.zero, () {
@@ -80,35 +80,37 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        ...List.generate(
-                            tasks[date]!
-                                .where(
-                                  (task) => filters[i] != 'all'
-                                      ? task.type == filters[i]
-                                      : true,
-                                )
-                                .length, (index) {
-                          Task task = tasks[date]![index];
-                          return TaskTile(
-                            task: task,
-                            onCheckboxChanged: (bool? value) {
-                              setState(() {
-                                tasks[date]![index].isComplete = value!;
-                                ref
-                                    .read(taskRepositoryProvider.notifier)
-                                    .completeTask(task);
-                              });
-                            },
-                            onLongPressed: () {
-                              setState(() {
-                                ref
-                                    .read(taskRepositoryProvider.notifier)
-                                    .deleteTask(task);
-                                tasks[date]!.removeAt(index);
-                              });
-                            },
-                          ).padding(bottom: 10);
-                        })
+                        ...() {
+                          List<Task> filteredTasks = tasks[date]!
+                              .where(
+                                (task) => filters[i] != 'all'
+                                    ? task.type == filters[i]
+                                    : true,
+                              )
+                              .toList();
+                          return List.generate(filteredTasks.length, (index) {
+                            Task task = filteredTasks[index];
+                            return TaskTile(
+                              task: task,
+                              onCheckboxChanged: (bool? value) {
+                                setState(() {
+                                  tasks[date]![index].isComplete = value!;
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .completeTask(task);
+                                });
+                              },
+                              onLongPressed: () {
+                                setState(() {
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .deleteTask(task);
+                                  tasks[date]!.removeAt(index);
+                                });
+                              },
+                            ).padding(bottom: 10);
+                          });
+                        }()
                       }
                     ],
                   )).padding(all: 10);

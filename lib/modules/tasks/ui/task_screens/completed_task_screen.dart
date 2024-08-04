@@ -80,35 +80,37 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        ...List.generate(
-                            tasks[date]!
-                                .where(
-                                  (task) => filters[i] != 'all'
-                                      ? task.type == filters[i]
-                                      : true,
-                                )
-                                .length, (index) {
-                          Task task = tasks[date]![index];
-                          return TaskTile(
-                            task: task,
-                            onCheckboxChanged: (bool? value) {
-                              setState(() {
-                                tasks[date]![index].isComplete = value!;
-                                ref
-                                    .read(taskRepositoryProvider.notifier)
-                                    .completeTask(task);
-                              });
-                            },
-                            onLongPressed: () {
-                              setState(() {
-                                ref
-                                    .read(taskRepositoryProvider.notifier)
-                                    .deleteTask(task);
-                                tasks[date]!.removeAt(index);
-                              });
-                            },
-                          ).padding(bottom: 10);
-                        })
+                        ...() {
+                          List<Task> filteredTasks = tasks[date]!
+                              .where(
+                                (task) => filters[i] != 'all'
+                                    ? task.type == filters[i]
+                                    : true,
+                              )
+                              .toList();
+                          return List.generate(filteredTasks.length, (index) {
+                            Task task = filteredTasks[index];
+                            return TaskTile(
+                              task: task,
+                              onCheckboxChanged: (bool? value) {
+                                setState(() {
+                                  tasks[date]![index].isComplete = value!;
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .completeTask(task);
+                                });
+                              },
+                              onLongPressed: () {
+                                setState(() {
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .deleteTask(task);
+                                  tasks[date]!.removeAt(index);
+                                });
+                              },
+                            ).padding(bottom: 10);
+                          });
+                        }()
                       }
                     ],
                   )).padding(all: 10);
@@ -116,7 +118,6 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
           );
         },
         error: (_, __) {
-          print(_);
           return const Text("Error");
         },
         loading: () => const Center(

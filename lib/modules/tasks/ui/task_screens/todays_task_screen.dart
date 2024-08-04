@@ -88,27 +88,31 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 10),
                   itemBuilder: (context, index) {
-                    return TaskTile(
-                      task: filteredTasks[index],
-                      onCheckboxChanged: (bool? value) {
-                        setState(() {
-                          filteredTasks[index].isComplete = value!;
-                          ref
-                              .read(taskRepositoryProvider.notifier)
-                              .completeTask(filteredTasks[index]);
-                        });
-                      },
-                      onLongPressed: () {
-                        setState(() {
-                          ref
-                              .read(taskRepositoryProvider.notifier)
-                              .deleteTask(filteredTasks[index]);
-                          filteredTasks.removeAt(index);
-                        });
-                      },
-                    );
+                    if (index + 1 == filteredTasks.length + 1) {
+                      return SizedBox(height: 70);
+                    } else {
+                      return TaskTile(
+                        task: filteredTasks[index],
+                        onCheckboxChanged: (bool? value) {
+                          setState(() {
+                            filteredTasks[index].isComplete = value!;
+                            ref
+                                .read(taskRepositoryProvider.notifier)
+                                .completeTask(filteredTasks[index]);
+                          });
+                        },
+                        onLongPressed: () {
+                          setState(() {
+                            ref
+                                .read(taskRepositoryProvider.notifier)
+                                .deleteTask(filteredTasks[index]);
+                            filteredTasks.removeAt(index);
+                          });
+                        },
+                      );
+                    }
                   },
-                  itemCount: filteredTasks.length,
+                  itemCount: filteredTasks.length + 1,
                 ),
               ).padding(all: 10);
             }),

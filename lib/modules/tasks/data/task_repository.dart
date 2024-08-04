@@ -46,7 +46,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     return tasks;
   }
 
-  Future<List<Task>> getUpcomingTasks() async {
+  Future<Map<DateTime, List<Task>>> getUpcomingTasks() async {
     DateTime now = DateTime.now();
     final query = (taskBox.query(DataTask_.date
             .greaterThanDate(DateTime(now.year, now.month, now.day, 23, 59))))
@@ -57,12 +57,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     List<Task> tasks = [];
 
     for (DataTask dataTask in dataTasks) {
-      tasks.add(Task.fromJson(jsonDecode(dataTask.data))..id = dataTask.id);
+      tasks.add(Task.fromDataTask(dataTask));
     }
 
     tasks.sort((a, b) => a.date!.difference(b.date!).inSeconds);
 
-    return tasks;
+    return {
+      for (DateTime date in Set.from(
+          List.generate(tasks.length, (index) => tasks[index].date!)))
+        date: tasks.where((task) => task.date == date).toList()
+    };
   }
 
   writeTask(Task task) {

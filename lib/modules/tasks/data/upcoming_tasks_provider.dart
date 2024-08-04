@@ -3,9 +3,9 @@ import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 
 final upcomingTasksProvider =
-    FutureProvider.autoDispose<List<Task>>((ref) async {
+    FutureProvider.autoDispose<Map<DateTime, List<Task>>>((ref) async {
   // Get all tasks
-  List<Task> tasks =
+  Map<DateTime, List<Task>> tasks =
       await ref.read(taskRepositoryProvider.notifier).getUpcomingTasks();
 
   return tasks;

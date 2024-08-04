@@ -55,7 +55,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
         ),
       ),
       body: providerOfTasks.when(
-        data: (List<Task> tasks) {
+        data: (Map<DateTime, List<Task>> tasks) {
           return PageView(
             controller: _pageViewController,
             onPageChanged: (value) {
@@ -64,60 +64,54 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
               });
             },
             children: List.generate(4, (i) {
-              List<Task> filteredTasks = filters[i] == "all"
-                  ? tasks
-                  : tasks.where((task) => task.type == filters[i]).toList();
-
               return RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(Duration.zero, () {
-                    ref.invalidate(upcomingTasksProvider);
-                  });
-                },
-                child: ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Text(DateFormat(DateFormat.ABBR_MONTH_DAY)
-                                .format(filteredTasks[index].date!))
-                            .textStyle(
-                              const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                            .padding(all: 5, horizontal: 20)
-                            .decorated(
-                              color: Colors.purple[700],
-                              borderRadius: BorderRadius.circular(5),
-                            )
-                            .padding(bottom: 10),
-                        TaskTile(
-                          task: filteredTasks[index],
-                          onCheckboxChanged: (bool? value) {
-                            setState(() {
-                              filteredTasks[index].isComplete = value!;
-                              ref
-                                  .read(taskRepositoryProvider.notifier)
-                                  .completeTask(filteredTasks[index]);
-                            });
-                          },
-                          onLongPressed: () {
-                            setState(() {
-                              ref
-                                  .read(taskRepositoryProvider.notifier)
-                                  .deleteTask(filteredTasks[index]);
-                              filteredTasks.removeAt(index);
-                            });
-                          },
-                        ),
-                      ],
-                    );
+                  onRefresh: () {
+                    return Future.delayed(Duration.zero, () {
+                      ref.invalidate(upcomingTasksProvider);
+                    });
                   },
-                  itemCount: filteredTasks.length,
-                ),
-              ).padding(all: 10);
+                  child: ListView(
+                    children: [
+                      for (DateTime date in tasks.keys) ...{
+                        Text(DateFormat(DateFormat.ABBR_MONTH_DAY).format(date))
+                            .padding(all: 10)
+                            .card()
+                            .center(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ...List.generate(
+                            tasks[date]!
+                                .where(
+                                  (task) => filters[i] != 'all'
+                                      ? task.type == filters[i]
+                                      : true,
+                                )
+                                .length, (index) {
+                          Task task = tasks[date]![index];
+                          return TaskTile(
+                            task: task,
+                            onCheckboxChanged: (bool? value) {
+                              setState(() {
+                                tasks[date]![index].isComplete = value!;
+                                ref
+                                    .read(taskRepositoryProvider.notifier)
+                                    .completeTask(task);
+                              });
+                            },
+                            onLongPressed: () {
+                              setState(() {
+                                ref
+                                    .read(taskRepositoryProvider.notifier)
+                                    .deleteTask(task);
+                                tasks[date]!.removeAt(index);
+                              });
+                            },
+                          ).padding(bottom: 10);
+                        })
+                      }
+                    ],
+                  )).padding(all: 10);
             }),
           );
         },

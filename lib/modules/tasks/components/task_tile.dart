@@ -21,8 +21,8 @@ class TaskTile extends ConsumerWidget {
     DateTime now = DateTime.now();
     TimeOfDay? endTime = task.duration != null && task.time != null
         ? TimeOfDay(
-            hour: task.time!.hour + task.duration!.inHours,
-            minute: task.time!.minute + task.duration!.inMinutes % 60)
+            hour: task.time!.hour,
+            minute: task.time!.minute + task.duration!.inMinutes)
         : null;
     String durationText = task.duration != null
         ? "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? ' and ${task.duration!.inMinutes % 60} minutes' : ''}${task.time != null ? '\nUp till ${DateFormat('MMM dd, HH:MM').format((task.date ?? DateTime.now()).copyWith(hour: endTime!.hour, minute: endTime.minute))}' : ''}"

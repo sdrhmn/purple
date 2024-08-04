@@ -11,6 +11,7 @@ import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
+import 'package:timely/modules/tasks/data/task_providers/completed_tasks_provider.dart';
 import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -328,6 +329,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
                     ref.invalidate(todaysTasksProvider);
                     ref.invalidate(upcomingTasksProvider);
+                    ref.invalidate(completetdTasksProvider);
 
                     Navigator.of(context).pop();
                   },

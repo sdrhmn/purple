@@ -122,6 +122,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         data: jsonEncode(
           task.toJson(),
         ),
+        completed: task.isComplete,
       ),
     );
   }

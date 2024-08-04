@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
@@ -42,16 +41,30 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
         preferredSize: const Size(100, 100),
         child: Container(
           color: Colors.black45,
-          child: FilterBar(
-              selection: filters[pageIndex],
-              onSelectionChanged: (sel) {
-                pageIndex = filters.indexOf(sel.first.toString());
-                _pageViewController.animateToPage(
-                  pageIndex,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              }),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text("Filter"),
+              DropdownButton(
+                  borderRadius: BorderRadius.circular(5),
+                  underline: Container(),
+                  value: filters[pageIndex],
+                  items: [
+                    for (String filter in filters)
+                      DropdownMenuItem(
+                          value: filter,
+                          child: Text(filter.toUpperCase()).padding(all: 5))
+                  ],
+                  onChanged: (filter) {
+                    setState(() {
+                      pageIndex = filters.indexOf(filter!);
+                      _pageViewController.animateToPage(pageIndex,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
+                    });
+                  }).decorated().padding(all: 5)
+            ],
+          ),
         ),
       ),
       body: providerOfTasks.when(

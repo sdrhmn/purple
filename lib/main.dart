@@ -76,15 +76,21 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
           drawer: Drawer(
             child: ListView(
               children: [
-                Container().height(50),
+                const Text("Purple Time")
+                    .letterSpacing(10)
+                    .fontWeight(FontWeight.w300)
+                    .fontSize(20)
+                    .center()
+                    .padding(vertical: 20),
                 SizedBox(
                   height: 50,
                   child: TextButton.icon(
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.purple[700]),
+                      backgroundColor: WidgetStatePropertyAll(pageIndex == 0
+                          ? Colors.purple[500]
+                          : Colors.purple[700]),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                     ),
@@ -105,8 +111,9 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.purple[700]),
+                      backgroundColor: WidgetStatePropertyAll(pageIndex == 1
+                          ? Colors.purple[500]
+                          : Colors.purple[700]),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                     ),
@@ -127,8 +134,9 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.purple[700]),
+                      backgroundColor: WidgetStatePropertyAll(pageIndex == 2
+                          ? Colors.purple[500]
+                          : Colors.purple[700]),
                       foregroundColor:
                           const WidgetStatePropertyAll(Colors.white),
                     ),

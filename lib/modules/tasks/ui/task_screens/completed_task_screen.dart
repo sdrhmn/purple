@@ -62,7 +62,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                   });
                 }).decorated().padding(all: 5)
           ],
-        ),
+        ).card().padding(all: 10),
       ),
       body: providerOfTasks.when(
         data: (Map<DateTime, List<Task>> tasks) {
@@ -121,7 +121,8 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                             ).padding(bottom: 10);
                           });
                         }()
-                      }
+                      },
+                      const SizedBox(height: 70),
                     ],
                   )).padding(all: 10);
             }),
@@ -134,7 +135,8 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
           child: CircularProgressIndicator(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -145,7 +147,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
             ),
           ),
         ),
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.purple[700]),
       ),
     );
   }

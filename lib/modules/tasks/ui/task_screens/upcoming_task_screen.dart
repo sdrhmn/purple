@@ -39,33 +39,30 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size(100, 100),
-        child: Container(
-          color: Colors.black45,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text("Filter"),
-              DropdownButton(
-                  borderRadius: BorderRadius.circular(5),
-                  underline: Container(),
-                  value: filters[pageIndex],
-                  items: [
-                    for (String filter in filters)
-                      DropdownMenuItem(
-                          value: filter,
-                          child: Text(filter.toUpperCase()).padding(all: 5))
-                  ],
-                  onChanged: (filter) {
-                    setState(() {
-                      pageIndex = filters.indexOf(filter!);
-                      _pageViewController.animateToPage(pageIndex,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut);
-                    });
-                  }).decorated().padding(all: 5)
-            ],
-          ),
-        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Text("Filter"),
+            DropdownButton(
+                borderRadius: BorderRadius.circular(5),
+                underline: Container(),
+                value: filters[pageIndex],
+                items: [
+                  for (String filter in filters)
+                    DropdownMenuItem(
+                        value: filter,
+                        child: Text(filter.toUpperCase()).padding(all: 5))
+                ],
+                onChanged: (filter) {
+                  setState(() {
+                    pageIndex = filters.indexOf(filter!);
+                    _pageViewController.animateToPage(pageIndex,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  });
+                }).decorated().padding(all: 5)
+          ],
+        ).card().padding(all: 10),
       ),
       body: providerOfTasks.when(
         data: (Map<DateTime, List<Task>> tasks) {
@@ -124,7 +121,8 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                             ).padding(bottom: 10);
                           });
                         }()
-                      }
+                      },
+                      const SizedBox(height: 70),
                     ],
                   )).padding(all: 10);
             }),
@@ -137,7 +135,8 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
           child: CircularProgressIndicator(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -148,7 +147,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
             ),
           ),
         ),
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.purple[700]),
       ),
     );
   }

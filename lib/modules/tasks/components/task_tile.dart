@@ -19,6 +19,14 @@ class TaskTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     DateTime now = DateTime.now();
+    TimeOfDay? endTime = task.duration != null && task.time != null
+        ? TimeOfDay(
+            hour: task.time!.hour + task.duration!.inHours,
+            minute: task.time!.minute + task.duration!.inMinutes % 60)
+        : null;
+    String durationText = task.duration != null
+        ? "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? ' and ${task.duration!.inMinutes % 60} minutes' : ''}${task.time != null ? '\nUp till ${DateFormat('MMM dd, HH:MM').format((task.date ?? DateTime.now()).copyWith(hour: endTime!.hour, minute: endTime.minute))}' : ''}"
+        : "";
 
     return [
       Checkbox(
@@ -65,7 +73,7 @@ class TaskTile extends ConsumerWidget {
                       const Icon(Icons.alarm).padding(right: 5),
                       Flexible(
                         child: Text(
-                          "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? ' and ${task.duration!.inMinutes % 60} minutes' : ''}",
+                          durationText,
                           style: const TextStyle(
                             fontStyle: FontStyle.italic,
                           ),
@@ -83,7 +91,7 @@ class TaskTile extends ConsumerWidget {
                   fontSize: 18,
                   decoration:
                       task.isComplete ? TextDecoration.lineThrough : null,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
         tileColor:

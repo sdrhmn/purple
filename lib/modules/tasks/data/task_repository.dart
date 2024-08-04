@@ -40,7 +40,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     List<Task> tasks = [];
 
     for (DataTask dataTask in dataTasks) {
-      tasks.add(Task.fromJson(jsonDecode(dataTask.data))..id = dataTask.id);
+      tasks.add(Task.fromDataTask(dataTask));
     }
 
     return tasks;
@@ -70,7 +70,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       DataTask(
         date: task.date
                 ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now(),
+            DateTime.now()
+                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
         data: jsonEncode(
           task.toJson(),
         ),
@@ -83,7 +84,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       DataTask(
         date: task.date
                 ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now(),
+            DateTime.now()
+                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
         id: task.id,
         data: jsonEncode(
           task.toJson(),
@@ -99,14 +101,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   completeTask(Task task) {
     taskBox.put(
       DataTask(
-          date: task.date?.copyWith(
-                  hour: task.time?.hour, minute: task.time?.minute) ??
-              DateTime.now(),
-          id: task.id,
-          data: jsonEncode(
-            task.toJson(),
-          ),
-          completed: true),
+        date: task.date
+                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
+            DateTime.now()
+                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
+        id: task.id,
+        data: jsonEncode(
+          task.toJson(),
+        ),
+        completed: task.isComplete,
+      ),
     );
   }
 }

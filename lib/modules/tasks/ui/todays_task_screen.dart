@@ -111,7 +111,8 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
           child: CircularProgressIndicator(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -122,7 +123,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
             ),
           ),
         ),
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.purple[700]),
       ),
     );
   }

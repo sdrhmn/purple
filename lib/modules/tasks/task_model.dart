@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -42,11 +43,33 @@ class Task {
     );
   }
 
+  factory Task.fromDataTask(DataTask dataTask) {
+    Map json = jsonDecode(dataTask.data);
+
+    return Task(
+      activity: json['activity'],
+      notifId: json['notif_id'],
+      isComplete: dataTask.completed,
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      time: json['time'] != null
+          ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
+          : null,
+      type: json['type'],
+      priority: json['priority'],
+      duration:
+          json['duration'] != null ? Duration(seconds: json['duration']) : null,
+      repeatRule: json['repeatRule'] != null
+          ? SchedulingModel.fromJson(json['repeatRule'])
+          : null,
+      reminders: (json['reminders'] as Map<String, dynamic>).map(
+          (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
+    )..id = dataTask.id;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'activity': activity,
       'notif_id': notifId,
-      'is_complete': isComplete,
       'date': date?.toIso8601String(),
       'time': time == null
           ? null

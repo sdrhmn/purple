@@ -348,8 +348,6 @@ final List tabInputScreens = [
 final storesProvider = FutureProvider<List<Store>>((ref) async {
   final docsDir = await getApplicationDocumentsDirectory();
 
-  // 'tasks' contains tasks that are current or upcoming and are due or overdue.
-  // 'task-history' contains tasks that were either completed or deleted.
   final taskStore = await openStore(directory: join(docsDir.path, "tasks"));
   final taskHistoryStore = await openStore(
     directory: join(docsDir.path, "task-history"),

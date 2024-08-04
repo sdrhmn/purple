@@ -8,40 +8,32 @@ import 'package:timely/reusables.dart';
 
 class TaskRepositoryNotifier extends AsyncNotifier<void> {
   late final Store taskStore;
-  late final Store taskHistoryStore;
-
   late final Box<DataTask> taskBox;
-  late final Box<DataTask> taskHistoryBox;
+
+  // late final Store taskHistoryStore;
+  // late final Box<DataTask> taskBox;
 
   @override
   FutureOr<void> build() {
     taskStore = ref.read(storesProvider).requireValue.first;
-    taskHistoryStore = ref.read(storesProvider).requireValue.last;
-
     taskBox = taskStore.box<DataTask>();
-    taskHistoryBox = taskHistoryStore.box<DataTask>();
+
+    // taskHistoryStore = ref.read(storesProvider).requireValue.last;
+    // taskBox = taskHistoryStore.box<DataTask>();
   }
 
   // Methods
   Future<List<Task>> getTodaysTasks() async {
     DateTime now = DateTime.now();
-    final query0 = (taskHistoryBox.query(DataTask_.date
-            .betweenDate(DateTime(now.year, now.month, now.day, 0, 0),
-                DateTime(now.year, now.month, now.day, 23, 59))
-            .and(DataTask_.deleted.isNull())))
+    final query = (taskBox.query(DataTask_.date
+            .lessOrEqualDate(DateTime(now.year, now.month, now.day, 23, 59))
+            .and(DataTask_.completed.equals(false))
+            .or(DataTask_.date.betweenDate(
+                DateTime(now.year, now.month, now.day, 0, 0),
+                DateTime(now.year, now.month, now.day, 23, 59)))))
         .build();
-    final query1 = (taskBox.query(DataTask_.date
-            .lessOrEqualDate(DateTime(now.year, now.month, now.day, 23, 59))))
-        .build();
 
-    List<DataTask> dataTasks = [];
-
-    List results =
-        (await Future.wait([query1.findAsync(), query0.findAsync()]));
-
-    List.generate(results.length, (index) {
-      dataTasks.addAll(results[index]);
-    });
+    List<DataTask> dataTasks = await query.findAsync();
 
     dataTasks.sort((a, b) => a.date.difference(b.date).inSeconds);
 
@@ -87,76 +79,35 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   updateTask(Task task) {
-    task.isComplete
-        ? taskHistoryBox.put(
-            DataTask(
-              date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now(),
-              id: task.id,
-              data: jsonEncode(
-                task.toJson(),
-              ),
-            ),
-          )
-        : taskBox.put(
-            DataTask(
-              date: task.date ?? DateTime.now(),
-              id: task.id,
-              data: jsonEncode(
-                task.toJson(),
-              ),
-            ),
-          );
-  }
-
-  deleteTask(Task task) {
-    taskBox.remove(task.id);
-    taskHistoryBox.put(
+    taskBox.put(
       DataTask(
-        id: task.id,
         date: task.date
                 ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
             DateTime.now(),
+        id: task.id,
         data: jsonEncode(
           task.toJson(),
         ),
-        deleted: true,
       ),
     );
   }
 
+  deleteTask(Task task) {
+    taskBox.remove(task.id);
+  }
+
   completeTask(Task task) {
-    if (task.isComplete) {
-      taskBox.remove(task.id);
-      taskHistoryBox.put(
-        DataTask(
+    taskBox.put(
+      DataTask(
+          date: task.date?.copyWith(
+                  hour: task.time?.hour, minute: task.time?.minute) ??
+              DateTime.now(),
           id: task.id,
-          date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now(),
           data: jsonEncode(
             task.toJson(),
           ),
-        ),
-      );
-    } else
-    // If task is marked INCOMPLETE
-    {
-      // Reverse
-      taskHistoryBox.remove(task.id);
-      taskBox.put(
-        DataTask(
-          id: task.id,
-          date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now(),
-          data: jsonEncode(
-            task.toJson(),
-          ),
-        ),
-      );
-    }
+          completed: true),
+    );
   }
 }
 

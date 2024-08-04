@@ -132,13 +132,13 @@ class DataTask {
 
   @Property(type: PropertyType.date)
   DateTime date;
-  bool? deleted;
+  bool completed;
   String data;
 
   DataTask({
     this.id = 0,
     required this.date,
     required this.data,
-    this.deleted,
+    this.completed = false,
   });
 }

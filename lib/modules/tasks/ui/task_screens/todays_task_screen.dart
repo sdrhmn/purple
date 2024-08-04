@@ -5,9 +5,9 @@ import 'package:timely/modules/tasks/components/filter_bar.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
-import 'package:timely/modules/tasks/data/todays_tasks_provider.dart';
+import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
 
-import '../components/task_tile.dart';
+import '../../components/task_tile.dart';
 
 class TodaysTaskScreen extends ConsumerStatefulWidget {
   const TodaysTaskScreen({super.key});

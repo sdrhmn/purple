@@ -7,10 +7,10 @@ import 'package:timely/common/scheduling/duration_selection.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/tasks/data/upcoming_tasks_provider.dart';
+import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
-import 'package:timely/modules/tasks/data/todays_tasks_provider.dart';
+import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
 import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {

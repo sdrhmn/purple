@@ -69,6 +69,34 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     };
   }
 
+  Future<Map<DateTime, List<Task>>> getCompletedTasks() async {
+    final query = (taskBox.query(DataTask_.completed.equals(true))).build();
+
+    List<DataTask> dataTasks = await query.findAsync();
+
+    List<Task> tasks = [];
+
+    for (DataTask dataTask in dataTasks) {
+      Task task = Task.fromDataTask(dataTask);
+      task.date ??= dataTask.date;
+      tasks.add(task);
+    }
+
+    tasks.sort((a, b) => a.date!.difference(b.date!).inSeconds);
+
+    return {
+      for (DateTime date in Set.from(List.generate(
+          tasks.length,
+          (index) => DateTime(tasks[index].date!.year, tasks[index].date!.month,
+              tasks[index].date!.day))))
+        date: tasks
+            .where((task) =>
+                DateTime(task.date!.year, task.date!.month, task.date!.day) ==
+                date)
+            .toList()
+    };
+  }
+
   writeTask(Task task) {
     taskBox.put(
       DataTask(

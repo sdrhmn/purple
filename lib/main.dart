@@ -6,8 +6,9 @@ import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/tasks/ui/todays_task_screen.dart';
-import 'package:timely/modules/tasks/ui/upcoming_task_screen.dart';
+import 'package:timely/modules/tasks/ui/task_screens/completed_task_screen.dart';
+import 'package:timely/modules/tasks/ui/task_screens/todays_task_screen.dart';
+import 'package:timely/modules/tasks/ui/task_screens/upcoming_task_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 // ------ Firebase --------
@@ -64,6 +65,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
     List pages = [
       const TodaysTaskScreen(),
       const UpcomingTaskScreen(),
+      const CompletedTaskScreen(),
     ];
 
     final appStartup = ref.watch(appStartupProvider);
@@ -117,7 +119,29 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     icon: const Icon(Icons.upcoming_rounded),
                     label: const Text("Upcoming Tasks"),
                   ),
-                ).padding(horizontal: 10)
+                ).padding(horizontal: 10),
+                Container().height(10),
+                SizedBox(
+                  height: 50,
+                  child: TextButton.icon(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                      backgroundColor:
+                          WidgetStatePropertyAll(Colors.purple[700]),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        pageIndex = 2;
+                      });
+                    },
+                    icon: const Icon(Icons.done_outline_rounded),
+                    label: const Text("Completed Tasks"),
+                  ),
+                ).padding(horizontal: 10),
               ],
             ),
           ),

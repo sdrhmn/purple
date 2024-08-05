@@ -60,7 +60,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       tasks.add(Task.fromDataTask(dataTask));
     }
 
-    tasks.sort((a, b) => a.date!.difference(b.date!).inSeconds);
+    tasks.sort((a, b) => b.date!.difference(a.date!).inSeconds);
 
     return {
       for (DateTime date in Set.from(
@@ -82,7 +82,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       tasks.add(task);
     }
 
-    tasks.sort((a, b) => a.date!.difference(b.date!).inSeconds);
+    tasks.sort((a, b) => b.date!.difference(a.date!).inSeconds);
 
     return {
       for (DateTime date in Set.from(List.generate(

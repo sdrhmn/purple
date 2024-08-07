@@ -9,7 +9,6 @@ import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
-import 'package:timely/modules/tasks/models/repeat_task_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
@@ -26,12 +25,13 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 
 class _TaskFormState extends ConsumerState<TaskFormScreen> {
   late Task task;
-  RepeatTask? repeatTask;
+  SchedulingModel? repeatRule;
   final _formKey = GlobalKey<_TaskFormState>();
 
   @override
   void initState() {
     task = widget.task ?? Task.empty();
+    repeatRule = task.repeatRule;
     super.initState();
   }
 
@@ -157,42 +157,37 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             Switch(
               onChanged: (value) {
                 value
-                    ? repeatTask = RepeatTask(
-                        repeatRule: SchedulingModel(
-                          name: '',
-                          startTime: TimeOfDay.now(),
-                          dur: Duration.zero,
-                          basis: Basis.day,
-                          frequency: "Daily",
-                          every: 1,
-                          repetitions: {},
-                        ),
+                    ? repeatRule = SchedulingModel(
+                        name: '',
+                        startTime: TimeOfDay.now(),
+                        dur: Duration.zero,
+                        basis: Basis.day,
+                        frequency: "Daily",
+                        every: 1,
+                        repetitions: {},
                       )
-                    : repeatTask = null;
+                    : repeatRule = null;
 
                 setState(() {});
               },
-              value: repeatTask != null,
+              value: repeatRule != null,
             ),
           ]
               .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
               .padding(vertical: 10),
-          repeatTask != null
+          repeatRule != null
               ? RepeatsTemplate(
                   onFrequencyChanged: (frequency) {
-                    repeatTask!.repeatRule =
-                        repeatTask!.repeatRule.copyWith(frequency: frequency);
+                    repeatRule = repeatRule!.copyWith(frequency: frequency);
 
                     // Set the default values based on selection
-                    switch (repeatTask!.repeatRule.frequency) {
+                    switch (repeatRule!.frequency) {
                       case "Monthly":
-                        if (repeatTask!.repeatRule.basis == null) {
-                          repeatTask!.repeatRule =
-                              repeatTask!.repeatRule.copyWith(basis: Basis.day);
+                        if (repeatRule!.basis == null) {
+                          repeatRule = repeatRule!.copyWith(basis: Basis.day);
                         }
 
-                        repeatTask!.repeatRule =
-                            repeatTask!.repeatRule.copyWith(
+                        repeatRule = repeatRule!.copyWith(
                           repetitions: {
                             "Dates": [],
                             "DoW": [0, 0]
@@ -201,13 +196,11 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                         break;
 
                       case "Yearly":
-                        if (repeatTask!.repeatRule.basis == null) {
-                          repeatTask!.repeatRule =
-                              repeatTask!.repeatRule.copyWith(basis: Basis.day);
+                        if (repeatRule!.basis == null) {
+                          repeatRule = repeatRule!.copyWith(basis: Basis.day);
                         }
 
-                        repeatTask!.repeatRule =
-                            repeatTask!.repeatRule.copyWith(
+                        repeatRule = repeatRule!.copyWith(
                           repetitions: {
                             "Months": [],
                             "DoW": [0, 0]
@@ -215,60 +208,55 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                         );
 
                       case "Weekly":
-                        repeatTask!.repeatRule.basis = null;
+                        repeatRule!.basis = null;
 
-                        repeatTask!.repeatRule =
-                            repeatTask!.repeatRule.copyWith(
+                        repeatRule = repeatRule!.copyWith(
                           repetitions: {"Weekdays": []},
                         );
 
                       case "Daily":
-                        if (repeatTask!.repeatRule.basis == null) {
-                          repeatTask!.repeatRule =
-                              repeatTask!.repeatRule.copyWith(basis: Basis.day);
+                        if (repeatRule!.basis == null) {
+                          repeatRule = repeatRule!.copyWith(basis: Basis.day);
                         }
 
-                        repeatTask!.repeatRule =
-                            repeatTask!.repeatRule.copyWith(
+                        repeatRule = repeatRule!.copyWith(
                           repetitions: {},
                         );
                     }
 
                     setState(() {});
                   },
-                  onEveryChanged: (every) => repeatTask!.repeatRule =
-                      repeatTask!.repeatRule.copyWith(every: every),
+                  onEveryChanged: (every) =>
+                      repeatRule = repeatRule!.copyWith(every: every),
                   onEndDateChanged: (endDate) {
-                    repeatTask!.repeatRule =
-                        repeatTask!.repeatRule.copyWith(endDate: endDate);
+                    repeatRule = repeatRule!.copyWith(endDate: endDate);
                     setState(() {});
                   },
                   onWeekdaySelectionsChanged: (weekdayIndices) {
-                    repeatTask!.repeatRule = repeatTask!.repeatRule
+                    repeatRule = repeatRule!
                         .copyWith(repetitions: {"Weekdays": weekdayIndices});
                     setState(() {});
                   },
                   onMonthlySelectionsChanged: (dates) {
-                    repeatTask!.repeatRule = repeatTask!.repeatRule.copyWith(
+                    repeatRule = repeatRule!.copyWith(
                       repetitions: {
-                        ...repeatTask!.repeatRule.repetitions,
+                        ...repeatRule!.repetitions,
                         "Dates": dates,
                       },
                     );
                     setState(() {});
                   },
                   onBasisChanged: (basis) {
-                    repeatTask!.repeatRule =
-                        repeatTask!.repeatRule.copyWith(basis: basis);
+                    repeatRule = repeatRule!.copyWith(basis: basis);
                     setState(() {});
                   },
                   onOrdinalPositionChanged: (ordinalPosition) {
-                    repeatTask!.repeatRule = repeatTask!.repeatRule.copyWith(
+                    repeatRule = repeatRule!.copyWith(
                       repetitions: {
-                        ...repeatTask!.repeatRule.repetitions,
+                        ...repeatRule!.repetitions,
                         "DoW": [
                           ordinalPosition,
-                          repeatTask!.repeatRule.repetitions["DoW"][1],
+                          repeatRule!.repetitions["DoW"][1],
                         ],
                       },
                     );
@@ -276,11 +264,11 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                     setState(() {});
                   },
                   onWeekdayIndexChanged: (weekdayIndex) {
-                    repeatTask!.repeatRule = repeatTask!.repeatRule.copyWith(
+                    repeatRule = repeatRule!.copyWith(
                       repetitions: {
-                        ...repeatTask!.repeatRule.repetitions,
+                        ...repeatRule!.repetitions,
                         "DoW": [
-                          repeatTask!.repeatRule.repetitions["DoW"][0],
+                          repeatRule!.repetitions["DoW"][0],
                           weekdayIndex,
                         ],
                       },
@@ -288,15 +276,15 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                     setState(() {});
                   },
                   onYearlySelectionsChanged: (monthIndices) {
-                    repeatTask!.repeatRule = repeatTask!.repeatRule.copyWith(
+                    repeatRule = repeatRule!.copyWith(
                       repetitions: {
-                        ...repeatTask!.repeatRule.repetitions,
+                        ...repeatRule!.repetitions,
                         "Months": monthIndices,
                       },
                     );
                     setState(() {});
                   },
-                  model: repeatTask!.repeatRule,
+                  model: repeatRule!,
                 )
               : Container(),
 
@@ -321,12 +309,12 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
           CancelSubmitRowMolecule(
                   onSubmitPressed: () {
-                    task.repeatTask = repeatTask;
+                    task.repeatRule = repeatRule;
 
                     if (task.time != null && task.date != null) {
-                      if (repeatTask != null) {
-                        NotifService().scheduleRepeatTaskNotifs(
-                            repeatTask!.repeatRule.copyWith(
+                      if (repeatRule != null) {
+                        NotifService().scheduleRepeatTaskNotifs(repeatRule!
+                            .copyWith(
                                 startDate: task.date!, startTime: task.time!));
                       } else {
                         NotifService().scheduleAdHocTaskNotifs(task);

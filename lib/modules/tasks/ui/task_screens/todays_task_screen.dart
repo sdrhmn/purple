@@ -89,7 +89,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                       const SizedBox(height: 10),
                   itemBuilder: (context, index) {
                     if (index + 1 == filteredTasks.length + 1) {
-                      return SizedBox(height: 70);
+                      return const SizedBox(height: 70);
                     } else {
                       return TaskTile(
                         task: filteredTasks[index],

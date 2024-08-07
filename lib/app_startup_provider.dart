@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timely/modules/tasks/data/task_repository.dart';
+import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/tasks/models/repeat_task_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/objectbox.g.dart';
@@ -15,39 +17,57 @@ final appStartupProvider = FutureProvider<void>((ref) async {
   // Change the task.date to the next occurence
   // Save to the database
   await () async {
-    Store taskStore = ref.read(storeProvider).requireValue;
-    Box<DataRepeatTask> repeatTaskBox = taskStore.box<DataRepeatTask>();
-
-    List<DataRepeatTask> dataRepeatTasks = (await repeatTaskBox.getAllAsync());
-
-    List<Task> todaysTasks =
-        (await ref.read(taskRepositoryProvider.notifier).getTodaysTasks());
-
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
 
+    Store taskStore = ref.read(storeProvider).requireValue;
+    Box<RepetitionData> repeatTaskBox = taskStore.box<RepetitionData>();
+    Box<DataTask> taskBox = taskStore.box<DataTask>();
+
+    final query = (taskBox.query(DataTask_.date
+            .betweenDate(DateTime(now.year, now.month, now.day, 0, 0),
+                DateTime(now.year, now.month, now.day, 23, 59))
+            .and(DataTask_.completed.equals(false))))
+        .build();
+
+    List<RepetitionData> repetitionDatas = (await repeatTaskBox.getAllAsync());
+    List<Task> todaysTasks =
+        (await query.findAsync()).map((e) => Task.fromDataTask(e)).toList();
+
     List<DataTask> _ = [];
 
-    for (DataRepeatTask dataRepeatTask in dataRepeatTasks) {
-      RepeatTask repeatTask = RepeatTask.fromDataRepeatTask(dataRepeatTask);
-      // Task task = Task.fromJson(jsonDecode(dataRepeatTask.task));
-      DateTime next = repeatTask.repeatRule.getNextOccurrenceDateTime();
+    for (RepetitionData repetitionData in repetitionDatas) {
+      Task task = Task.fromJson(jsonDecode(repetitionData.task))
+        ..repeatRule = SchedulingModel.fromJson(jsonDecode(repetitionData.data))
+        ..repetitionDataId = repetitionData.id;
+      DateTime next = task.repeatRule!.getNextOccurrenceDateTime();
+
+      task.date = DateTime(next.year, next.month, next.day);
+
       if (DateTime(next.year, next.month, next.day) == today) {
         // Check if it exists in today's tasks or not
         if (todaysTasks
-            .where((task) => task.repeatTask != null)
-            .map((task) => task.repeatTask!.id)
+            .where((task) => task.repeatRule != null)
+            .map((task) => task.repetitionDataId)
             .toList()
-            .contains(repeatTask.id)) {
+            .contains(repetitionData.id)) {
         }
         // If it does NOT contain
         else {
-          _.add(DataTask(date: DateTime.now(), data: dataRepeatTask.task));
+          _.add(
+            DataTask(
+                date: next.copyWith(
+                  hour: task.time?.hour,
+                  minute: task.time!.minute,
+                ),
+                data: jsonEncode(task.toJson()))
+              ..repetitionData.target = repetitionData,
+          );
         }
       }
     }
 
-    taskStore.box<DataTask>().putManyAsync(_);
+    taskBox.putManyAsync(_);
   }();
 
   return;

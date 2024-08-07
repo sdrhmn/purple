@@ -12,7 +12,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
   // Boxes
   late final Box<DataTask> taskBox;
-  late final Box<DataRepeatTask> repeatTaskBox;
+  late final Box<RepetitionData> repetitionDataBox;
 
   @override
   FutureOr<void> build() {
@@ -20,7 +20,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     // Boxes
     taskBox = taskStore.box<DataTask>();
-    repeatTaskBox = taskStore.box<DataRepeatTask>();
+    repetitionDataBox = taskStore.box<RepetitionData>();
   }
 
   // Methods
@@ -41,10 +41,6 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     List<Task> tasks = [];
 
     for (DataTask dataTask in dataTasks) {
-      Task task = Task.fromDataTask(dataTask);
-
-      print(task.repeatTask);
-
       tasks.add(Task.fromDataTask(dataTask));
     }
 
@@ -103,15 +99,13 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   writeTask(Task task) {
-    if (task.repeatTask != null) {
-      task.repeatTask!.id = repeatTaskBox.put(
-        DataRepeatTask(
-          data: jsonEncode(
-            task.repeatTask!.repeatRule.toJson(),
-          ),
-          task: jsonEncode(task.toJson()),
-        ),
+    RepetitionData? repetitionData;
+    if (task.repeatRule != null) {
+      repetitionData = RepetitionData(
+        data: jsonEncode(task.repeatRule!.toJson()),
+        task: jsonEncode(task.toJson()),
       );
+      repetitionDataBox.put(repetitionData);
     }
 
     taskBox.put(
@@ -123,21 +117,19 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         data: jsonEncode(
           task.toJson(),
         ),
-      ),
+      )..repetitionData.target = repetitionData,
     );
   }
 
   updateTask(Task task) {
-    if (task.repeatTask != null) {
-      task.repeatTask!.id = repeatTaskBox.put(
-        DataRepeatTask(
-          id: task.repeatTask!.id,
-          data: jsonEncode(
-            task.repeatTask!.repeatRule.toJson(),
-          ),
-          task: jsonEncode(task.toJson()),
-        ),
+    RepetitionData? repetitionData;
+    if (task.repeatRule != null) {
+      repetitionData = RepetitionData(
+        id: task.repetitionDataId,
+        data: jsonEncode(task.repeatRule!.toJson()),
+        task: jsonEncode(task.toJson()),
       );
+      repetitionDataBox.put(repetitionData);
     }
 
     taskBox.put(
@@ -151,7 +143,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           task.toJson(),
         ),
         completed: task.isComplete,
-      ),
+      )..repetitionData.target = repetitionData,
     );
   }
 

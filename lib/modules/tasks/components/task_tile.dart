@@ -46,14 +46,13 @@ class TaskTile extends ConsumerWidget {
                     !task.isComplete
                 ? Text(
                     "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
-                : task.repeatTask != null
+                : task.repeatRule != null
                     ? Row(
                         children: [
                           const Icon(Icons.repeat).padding(right: 5),
                           Flexible(
                             child: Text(
-                              task.repeatTask!.repeatRule
-                                  .getRepetitionSummary(),
+                              task.repeatRule!.getRepetitionSummary(),
                               style: const TextStyle(
                                 fontStyle: FontStyle.italic,
                               ),

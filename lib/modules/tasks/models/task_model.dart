@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
+import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/tasks/models/repeat_task_model.dart';
 
 class Task {
@@ -15,7 +16,8 @@ class Task {
   String type;
   String priority;
   Duration? duration;
-  RepeatTask? repeatTask;
+  SchedulingModel? repeatRule;
+  int? repetitionDataId;
   Map<int, Duration> reminders;
 
   Task({
@@ -27,7 +29,8 @@ class Task {
     required this.type,
     required this.priority,
     this.duration,
-    this.repeatTask,
+    this.repeatRule,
+    this.repetitionDataId,
     this.reminders = const {},
   }) {
     this.notifId = notifId ?? Random().nextInt(50e3.toInt());
@@ -58,9 +61,10 @@ class Task {
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
-      repeatTask: json['repeat_task'] != null
-          ? RepeatTask.fromJson(json['repeat_task'])
+      repeatRule: json['repeat_rule'] != null
+          ? SchedulingModel.fromJson(json['repeat_rule'])
           : null,
+      repetitionDataId: dataTask.repetitionData.targetId,
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
     )..id = dataTask.id;
@@ -79,8 +83,10 @@ class Task {
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
-      repeatTask:
-          json['repeat_task'] != null ? jsonDecode(json['repeat_task']) : null,
+      repeatRule: json['repeat_rule'] != null
+          ? SchedulingModel.fromJson(json['repeat_rule'])
+          : null,
+      repetitionDataId: json['repetition_data_id'],
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
     );
@@ -100,7 +106,8 @@ class Task {
       'type': type,
       'priority': priority,
       'duration': duration?.inSeconds, // Or any other representation you prefer
-      'repeat_task': repeatTask?.toJson(),
+      'repeat_rule': repeatRule?.toJson(),
+      'repetition_data_id': repetitionDataId,
       'reminders': reminders
           .map((key, value) => MapEntry(key.toString(), value.inSeconds)),
     };
@@ -114,7 +121,7 @@ class Task {
     String? type,
     String? priority,
     Duration? duration,
-    RepeatTask? repeatTask,
+    SchedulingModel? repeatRule,
     Map<int, Duration>? reminders,
   }) {
     return Task(
@@ -124,7 +131,7 @@ class Task {
       type: type ?? this.type,
       priority: priority ?? this.priority,
       duration: duration ?? this.duration,
-      repeatTask: repeatTask ?? this.repeatTask,
+      repeatRule: repeatRule ?? this.repeatRule,
       reminders: reminders ?? this.reminders,
     );
   }
@@ -132,7 +139,7 @@ class Task {
   // Creates a new Task object with specified fields nullified.
   Task nullify({
     bool duration = false,
-    bool repeatTask = false,
+    bool repeatRule = false,
   }) {
     return Task(
       activity: activity,
@@ -142,7 +149,7 @@ class Task {
       priority: priority,
       reminders: reminders,
       duration: duration ? null : this.duration,
-      repeatTask: repeatTask ? null : this.repeatTask,
+      repeatRule: repeatRule ? null : this.repeatRule,
     );
   }
 }
@@ -156,6 +163,7 @@ class DataTask {
   DateTime date;
   bool completed;
   String data;
+  final repetitionData = ToOne<RepetitionData>();
 
   DataTask({
     this.id = 0,

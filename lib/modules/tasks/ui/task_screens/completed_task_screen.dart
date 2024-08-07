@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/tasks/data/task_providers/completed_tasks_provider.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
-import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import '../../components/task_tile.dart';
 

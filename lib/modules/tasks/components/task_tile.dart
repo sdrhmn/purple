@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
-import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/models/task_model.dart';
 
 class TaskTile extends ConsumerWidget {
   final Task task;
@@ -46,13 +46,14 @@ class TaskTile extends ConsumerWidget {
                     !task.isComplete
                 ? Text(
                     "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
-                : task.repeatRule != null
+                : task.repeatTask != null
                     ? Row(
                         children: [
                           const Icon(Icons.repeat).padding(right: 5),
                           Flexible(
                             child: Text(
-                              task.repeatRule!.getRepetitionSummary(),
+                              task.repeatTask!.repeatRule
+                                  .getRepetitionSummary(),
                               style: const TextStyle(
                                 fontStyle: FontStyle.italic,
                               ),

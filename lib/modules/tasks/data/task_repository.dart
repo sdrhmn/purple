@@ -2,24 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/models/repeat_task_model.dart';
+import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
 class TaskRepositoryNotifier extends AsyncNotifier<void> {
   late final Store taskStore;
-  late final Box<DataTask> taskBox;
 
-  // late final Store taskHistoryStore;
-  // late final Box<DataTask> taskBox;
+  // Boxes
+  late final Box<DataTask> taskBox;
+  late final Box<DataRepeatTask> repeatTaskBox;
 
   @override
   FutureOr<void> build() {
-    taskStore = ref.read(storesProvider).requireValue.first;
-    taskBox = taskStore.box<DataTask>();
+    taskStore = ref.read(storeProvider).requireValue;
 
-    // taskHistoryStore = ref.read(storesProvider).requireValue.last;
-    // taskBox = taskHistoryStore.box<DataTask>();
+    // Boxes
+    taskBox = taskStore.box<DataTask>();
+    repeatTaskBox = taskStore.box<DataRepeatTask>();
   }
 
   // Methods
@@ -40,6 +41,10 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     List<Task> tasks = [];
 
     for (DataTask dataTask in dataTasks) {
+      Task task = Task.fromDataTask(dataTask);
+
+      print(task.repeatTask);
+
       tasks.add(Task.fromDataTask(dataTask));
     }
 
@@ -98,6 +103,17 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   writeTask(Task task) {
+    if (task.repeatTask != null) {
+      task.repeatTask!.id = repeatTaskBox.put(
+        DataRepeatTask(
+          data: jsonEncode(
+            task.repeatTask!.repeatRule.toJson(),
+          ),
+          task: jsonEncode(task.toJson()),
+        ),
+      );
+    }
+
     taskBox.put(
       DataTask(
         date: task.date
@@ -112,13 +128,25 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   updateTask(Task task) {
+    if (task.repeatTask != null) {
+      task.repeatTask!.id = repeatTaskBox.put(
+        DataRepeatTask(
+          id: task.repeatTask!.id,
+          data: jsonEncode(
+            task.repeatTask!.repeatRule.toJson(),
+          ),
+          task: jsonEncode(task.toJson()),
+        ),
+      );
+    }
+
     taskBox.put(
       DataTask(
         date: task.date
                 ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
             DateTime.now()
                 .copyWith(hour: task.time?.hour, minute: task.time?.minute),
-        id: task.id,
+        id: task.id!,
         data: jsonEncode(
           task.toJson(),
         ),
@@ -128,7 +156,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   deleteTask(Task task) {
-    taskBox.remove(task.id);
+    taskBox.remove(task.id!);
   }
 
   completeTask(Task task) {
@@ -138,7 +166,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
                 ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
             DateTime.now()
                 .copyWith(hour: task.time?.hour, minute: task.time?.minute),
-        id: task.id,
+        id: task.id!,
         data: jsonEncode(
           task.toJson(),
         ),

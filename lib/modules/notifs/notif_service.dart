@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tasks/task_model.dart';
+import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // NOTE: This class is a singleton.

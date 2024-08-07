@@ -3,10 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
-import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/tasks/models/repeat_task_model.dart';
 
 class Task {
-  int id = 0;
+  int? id;
   late int notifId;
   bool isComplete = false;
   String activity;
@@ -15,7 +15,7 @@ class Task {
   String type;
   String priority;
   Duration? duration;
-  SchedulingModel? repeatRule;
+  RepeatTask? repeatTask;
   Map<int, Duration> reminders;
 
   Task({
@@ -27,7 +27,7 @@ class Task {
     required this.type,
     required this.priority,
     this.duration,
-    this.repeatRule,
+    this.repeatTask,
     this.reminders = const {},
   }) {
     this.notifId = notifId ?? Random().nextInt(50e3.toInt());
@@ -37,8 +37,8 @@ class Task {
   factory Task.empty() {
     return Task(
       activity: "",
-      type: "ad-hoc",
-      priority: "low",
+      type: "routine",
+      priority: "high",
       reminders: {},
     );
   }
@@ -58,12 +58,32 @@ class Task {
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
-      repeatRule: json['repeatRule'] != null
-          ? SchedulingModel.fromJson(json['repeatRule'])
+      repeatTask: json['repeat_task'] != null
+          ? RepeatTask.fromJson(json['repeat_task'])
           : null,
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
     )..id = dataTask.id;
+  }
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      activity: json['activity'],
+      notifId: json['notif_id'],
+      isComplete: json['is_complete'],
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      time: json['time'] != null
+          ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
+          : null,
+      type: json['type'],
+      priority: json['priority'],
+      duration:
+          json['duration'] != null ? Duration(seconds: json['duration']) : null,
+      repeatTask:
+          json['repeat_task'] != null ? jsonDecode(json['repeat_task']) : null,
+      reminders: (json['reminders'] as Map<String, dynamic>).map(
+          (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -80,31 +100,10 @@ class Task {
       'type': type,
       'priority': priority,
       'duration': duration?.inSeconds, // Or any other representation you prefer
-      'repeatRule': repeatRule?.toJson(),
+      'repeat_task': repeatTask?.toJson(),
       'reminders': reminders
           .map((key, value) => MapEntry(key.toString(), value.inSeconds)),
     };
-  }
-
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      activity: json['activity'],
-      notifId: json['notif_id'],
-      isComplete: json['is_complete'],
-      date: json['date'] != null ? DateTime.parse(json['date']) : null,
-      time: json['time'] != null
-          ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
-          : null,
-      type: json['type'],
-      priority: json['priority'],
-      duration:
-          json['duration'] != null ? Duration(seconds: json['duration']) : null,
-      repeatRule: json['repeatRule'] != null
-          ? SchedulingModel.fromJson(json['repeatRule'])
-          : null,
-      reminders: (json['reminders'] as Map<String, dynamic>).map(
-          (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
-    );
   }
 
   // Creates a new Task object with updated properties.
@@ -115,7 +114,7 @@ class Task {
     String? type,
     String? priority,
     Duration? duration,
-    SchedulingModel? repeatRule,
+    RepeatTask? repeatTask,
     Map<int, Duration>? reminders,
   }) {
     return Task(
@@ -125,7 +124,7 @@ class Task {
       type: type ?? this.type,
       priority: priority ?? this.priority,
       duration: duration ?? this.duration,
-      repeatRule: repeatRule ?? this.repeatRule,
+      repeatTask: repeatTask ?? this.repeatTask,
       reminders: reminders ?? this.reminders,
     );
   }
@@ -133,7 +132,7 @@ class Task {
   // Creates a new Task object with specified fields nullified.
   Task nullify({
     bool duration = false,
-    bool repeatRule = false,
+    bool repeatTask = false,
   }) {
     return Task(
       activity: activity,
@@ -143,7 +142,7 @@ class Task {
       priority: priority,
       reminders: reminders,
       duration: duration ? null : this.duration,
-      repeatRule: repeatRule ? null : this.repeatRule,
+      repeatTask: repeatTask ? null : this.repeatTask,
     );
   }
 }

@@ -345,13 +345,10 @@ final List tabInputScreens = [
   const Tab6InputPage(),
 ];
 
-final storesProvider = FutureProvider<List<Store>>((ref) async {
+final storeProvider = FutureProvider<Store>((ref) async {
   final docsDir = await getApplicationDocumentsDirectory();
 
   final taskStore = await openStore(directory: join(docsDir.path, "tasks"));
-  final taskHistoryStore = await openStore(
-    directory: join(docsDir.path, "task-history"),
-  );
 
-  return [taskStore, taskHistoryStore];
+  return taskStore;
 });

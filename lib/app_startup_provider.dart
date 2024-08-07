@@ -24,10 +24,9 @@ final appStartupProvider = FutureProvider<void>((ref) async {
     Box<RepetitionData> repeatTaskBox = taskStore.box<RepetitionData>();
     Box<DataTask> taskBox = taskStore.box<DataTask>();
 
-    final query = (taskBox.query(DataTask_.date
-            .betweenDate(DateTime(now.year, now.month, now.day, 0, 0),
-                DateTime(now.year, now.month, now.day, 23, 59))
-            .and(DataTask_.completed.equals(false))))
+    final query = (taskBox.query(DataTask_.date.betweenDate(
+            DateTime(now.year, now.month, now.day, 0, 0),
+            DateTime(now.year, now.month, now.day, 23, 59))))
         .build();
 
     List<RepetitionData> repetitionDatas = (await repeatTaskBox.getAllAsync());

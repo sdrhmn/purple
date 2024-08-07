@@ -61,10 +61,13 @@ class Task {
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
-      repeatRule: json['repeat_rule'] != null
-          ? SchedulingModel.fromJson(json['repeat_rule'])
+      repeatRule: dataTask.repetitionData.target != null
+          ? SchedulingModel.fromJson(
+              jsonDecode(dataTask.repetitionData.target!.data))
           : null,
-      repetitionDataId: dataTask.repetitionData.targetId,
+      repetitionDataId: dataTask.repetitionData.targetId != 0
+          ? dataTask.repetitionData.targetId
+          : null,
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
     )..id = dataTask.id;
@@ -106,8 +109,6 @@ class Task {
       'type': type,
       'priority': priority,
       'duration': duration?.inSeconds, // Or any other representation you prefer
-      'repeat_rule': repeatRule?.toJson(),
-      'repetition_data_id': repetitionDataId,
       'reminders': reminders
           .map((key, value) => MapEntry(key.toString(), value.inSeconds)),
     };

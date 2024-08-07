@@ -152,6 +152,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   completeTask(Task task) {
+    RepetitionData? repetitionData;
+    if (task.repeatRule != null) {
+      repetitionData = RepetitionData(
+        id: task.repetitionDataId,
+        data: jsonEncode(task.repeatRule!.toJson()),
+        task: jsonEncode(task.toJson()),
+      );
+      repetitionDataBox.put(repetitionData);
+    }
+
     taskBox.put(
       DataTask(
         date: task.date
@@ -163,7 +173,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           task.toJson(),
         ),
         completed: task.isComplete,
-      ),
+      )..repetitionData.target = repetitionData,
     );
   }
 }

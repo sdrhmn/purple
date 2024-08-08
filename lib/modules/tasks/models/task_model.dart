@@ -4,13 +4,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tasks/models/repeat_task_model.dart';
+import 'package:timely/modules/tasks/models/repetition_data_model.dart';
 
 class Task {
   int? id;
   late int notifId;
   bool isComplete = false;
   String activity;
+  String description;
   DateTime? date;
   TimeOfDay? time;
   String type;
@@ -22,6 +23,7 @@ class Task {
 
   Task({
     required this.activity,
+    required this.description,
     this.date,
     isComplete,
     this.time,
@@ -40,6 +42,7 @@ class Task {
   factory Task.empty() {
     return Task(
       activity: "",
+      description: "",
       type: "routine",
       priority: "high",
       reminders: {},
@@ -51,6 +54,7 @@ class Task {
 
     return Task(
       activity: json['activity'],
+      description: json['description'] ?? "",
       notifId: json['notif_id'],
       isComplete: dataTask.completed,
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
@@ -77,6 +81,7 @@ class Task {
     return Task(
       activity: json['activity'],
       notifId: json['notif_id'],
+      description: json['description'] ?? "",
       isComplete: json['is_complete'],
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null
@@ -98,6 +103,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       'activity': activity,
+      'description': description,
       'notif_id': notifId,
       'date': date?.toIso8601String(),
       'time': time == null
@@ -114,29 +120,6 @@ class Task {
     };
   }
 
-  // Creates a new Task object with updated properties.
-  Task copyWith({
-    String? activity,
-    DateTime? date,
-    TimeOfDay? time,
-    String? type,
-    String? priority,
-    Duration? duration,
-    SchedulingModel? repeatRule,
-    Map<int, Duration>? reminders,
-  }) {
-    return Task(
-      activity: activity ?? this.activity,
-      date: date ?? this.date,
-      time: time ?? this.time,
-      type: type ?? this.type,
-      priority: priority ?? this.priority,
-      duration: duration ?? this.duration,
-      repeatRule: repeatRule ?? this.repeatRule,
-      reminders: reminders ?? this.reminders,
-    );
-  }
-
   // Creates a new Task object with specified fields nullified.
   Task nullify({
     bool duration = false,
@@ -144,6 +127,7 @@ class Task {
   }) {
     return Task(
       activity: activity,
+      description: description,
       date: date,
       time: time,
       type: type,

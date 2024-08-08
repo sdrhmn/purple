@@ -42,6 +42,8 @@ class TaskTile extends ConsumerWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            task.description.isNotEmpty ? Text(task.description) : Container(),
+            const SizedBox(height: 20),
             (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
                     !task.isComplete
                 ? Text(
@@ -55,6 +57,7 @@ class TaskTile extends ConsumerWidget {
                               task.repeatRule!.getRepetitionSummary(),
                               style: const TextStyle(
                                 fontStyle: FontStyle.italic,
+                                fontSize: 14,
                               ),
                             ),
                           ),
@@ -71,6 +74,7 @@ class TaskTile extends ConsumerWidget {
                           durationText,
                           style: const TextStyle(
                             fontStyle: FontStyle.italic,
+                            fontSize: 14,
                           ),
                         ),
                       ),

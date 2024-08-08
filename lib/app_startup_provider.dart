@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/tasks/models/repeat_task_model.dart';
+import 'package:timely/modules/tasks/models/repetition_data_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';

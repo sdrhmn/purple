@@ -43,7 +43,9 @@ final appStartupProvider = FutureProvider<void>((ref) async {
 
       task.date = DateTime(next.year, next.month, next.day);
 
-      if (DateTime(next.year, next.month, next.day) == today) {
+      if (DateTime(next.year, next.month, next.day) == today &&
+          today.isBefore(
+              task.repeatRule!.endDate ?? today.copyWith(day: today.day + 1))) {
         // Check if it exists in today's tasks or not
         if (todaysTasks
             .where((task) => task.repeatRule != null)

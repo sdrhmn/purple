@@ -120,6 +120,31 @@ class Task {
     };
   }
 
+  // Creates a new Task object with updated properties.
+  Task copyWith({
+    String? activity,
+    DateTime? date,
+    String? description,
+    TimeOfDay? time,
+    String? type,
+    String? priority,
+    Duration? duration,
+    SchedulingModel? repeatRule,
+    Map<int, Duration>? reminders,
+  }) {
+    return Task(
+      activity: activity ?? this.activity,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      type: type ?? this.type,
+      priority: priority ?? this.priority,
+      duration: duration ?? this.duration,
+      repeatRule: repeatRule ?? this.repeatRule,
+      reminders: reminders ?? this.reminders,
+    );
+  }
+
   // Creates a new Task object with specified fields nullified.
   Task nullify({
     bool duration = false,

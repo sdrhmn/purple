@@ -69,6 +69,7 @@ class SchedulingModel {
             ? Basis.day
             : Basis.date
         : null;
+    startDate = DateTime.parse(json['Start Date'] ?? DateTime.now().toString());
     endDate = json["Ends"] != "Never" ? DateTime.parse(json["Ends"]) : null;
   }
 

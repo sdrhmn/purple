@@ -325,7 +325,8 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
           CancelSubmitRowMolecule(
                   onSubmitPressed: () {
-                    task.repeatRule = repeatRule;
+                    task.repeatRule = repeatRule?.copyWith(
+                        startDate: task.date, startTime: task.time);
 
                     if (task.time != null && task.date != null) {
                       if (repeatRule != null) {

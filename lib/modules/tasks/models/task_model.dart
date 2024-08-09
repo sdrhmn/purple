@@ -160,7 +160,7 @@ class Task {
       reminders: reminders,
       duration: duration ? null : this.duration,
       repeatRule: repeatRule ? null : this.repeatRule,
-    );
+    )..id = id;
   }
 }
 

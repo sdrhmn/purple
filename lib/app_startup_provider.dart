@@ -43,6 +43,8 @@ final appStartupProvider = FutureProvider<void>((ref) async {
 
       task.date = DateTime(next.year, next.month, next.day);
 
+      print(task.repeatRule!.toJson());
+      print(next);
       if (DateTime(next.year, next.month, next.day) == today &&
           today.isBefore(
               task.repeatRule!.endDate ?? today.copyWith(day: today.day + 1))) {

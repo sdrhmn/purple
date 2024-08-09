@@ -68,7 +68,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
       }
     }
 
-    taskBox.putManyAsync(_);
+    await taskBox.putManyAsync(_);
   }();
 
   return;

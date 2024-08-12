@@ -104,6 +104,17 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                     filteredTasks[index].completedAt =
                                         value ? DateTime.now() : null;
 
+                                    if (value) {
+                                      if (task.repeatRule == null) {
+                                        NotifService().cancelNotif(task.id);
+                                        NotifService()
+                                            .cancelReminders(task.reminders);
+                                      } else {
+                                        NotifService()
+                                            .cancelRepeatTaskNotifs(task);
+                                      }
+                                    }
+
                                     ref
                                         .read(taskRepositoryProvider.notifier)
                                         .completeTask(task);
@@ -114,7 +125,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                     ref
                                         .read(taskRepositoryProvider.notifier)
                                         .deleteTask(task);
-                                    filteredTasks.removeAt(index);
+                                    tasks[date]!.remove(task);
                                     if (task.repeatRule == null) {
                                       NotifService().cancelNotif(task.id);
                                       NotifService()
@@ -123,6 +134,11 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                       NotifService()
                                           .cancelRepeatTaskNotifs(task);
                                     }
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                "Notifications and reminders cancelled for ${filteredTasks[index].activity}")));
                                   });
                                 },
                               ).padding(bottom: 10);

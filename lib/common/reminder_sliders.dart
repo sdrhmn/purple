@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:timely/common/inputs.dart';
-import 'package:timely/modules/tab_3/models/ad_hoc_model.dart';
 
 class ReminderSliders extends StatelessWidget {
   final dynamic model;
@@ -26,12 +25,6 @@ class ReminderSliders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int half = (DateTime.now()
-            .copyWith(hour: model.time.hour, minute: model.time.minute)
-            .difference(DateTime.now())
-            .inMinutes ~/
-        2);
-
     return Column(
       children: [
         const Row(
@@ -48,12 +41,11 @@ class ReminderSliders extends StatelessWidget {
         ..._renderReminderSliders(),
         TextButton.icon(
           onPressed: () {
-            if (model is AdHocModel &&
-                DateTime(model.date!.year, model.date!.month, model.date!.day,
-                            model.time.hour, model.time.minute)
-                        .difference(DateTime.now())
-                        .inMinutes <
-                    1) {
+            if (DateTime(model.date!.year, model.date!.month, model.date!.day,
+                        model.time.hour, model.time.minute)
+                    .difference(DateTime.now())
+                    .inMinutes <
+                1) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text(
                       "Not enough time to set a reminder. Try increasing the start time of your task.")));
@@ -62,8 +54,7 @@ class ReminderSliders extends StatelessWidget {
                 model.copyWith(
                   reminders: <int, Duration>{
                     ...model.reminders ?? {},
-                    Random().nextInt(50000):
-                        Duration(minutes: model is AdHocModel ? half : 30),
+                    Random().nextInt(50000): const Duration(minutes: 30),
                   },
                 ),
               );
@@ -78,14 +69,6 @@ class ReminderSliders extends StatelessWidget {
 
   List<Widget> _renderReminderSliders() {
     List<Widget> sliders = [];
-    double max = model is AdHocModel
-        ? DateTime(model.date!.year, model.date!.month, model.date!.day,
-                model.time.hour, model.time.minute)
-            .copyWith(hour: model.time.hour, minute: model.time.minute)
-            .difference(DateTime.now())
-            .inMinutes
-            .toDouble()
-        : 0.0;
 
     if (model.reminders != null) {
       for (var entry in model.reminders!.entries) {
@@ -107,10 +90,8 @@ class ReminderSliders extends StatelessWidget {
                       ),
                     );
                   },
-                  elements: Iterable.generate(
-                          model is AdHocModel ? (max / 60).ceil() : 24)
-                      .map((e) => e.toString())
-                      .toList(),
+                  elements:
+                      Iterable.generate(24).map((e) => e.toString()).toList(),
                   initialItemIndex: entry.value.inHours,
                   size: const Size(0, 70),
                 ),
@@ -134,11 +115,8 @@ class ReminderSliders extends StatelessWidget {
                     );
                   },
                   // Formula: min(max - hours * 60, 59)
-                  elements: Iterable.generate(model is AdHocModel
-                          ? min(max - entry.value.inHours * 60, 60).toInt()
-                          : 60)
-                      .map((e) => e.toString())
-                      .toList(),
+                  elements:
+                      Iterable.generate(60).map((e) => e.toString()).toList(),
                   initialItemIndex: (entry.value.inMinutes % 60).toInt(),
                   size: const Size(0, 70),
                 ),

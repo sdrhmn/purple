@@ -41,7 +41,10 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
                 hour: a.dateTime?.hour ?? 23,
                 minute: a.dateTime?.minute ?? 59) ??
             DateTime.now().copyWith(hour: 23, minute: 59))
-        .difference(b.dateTime ?? DateTime.now().copyWith(hour: 23, minute: 59))
+        .difference(b.dateTime?.copyWith(
+                hour: a.dateTime?.hour ?? 23,
+                minute: a.dateTime?.minute ?? 59) ??
+            DateTime.now().copyWith(hour: 23, minute: 59))
         .inSeconds);
 
     List<Task> tasks = [];

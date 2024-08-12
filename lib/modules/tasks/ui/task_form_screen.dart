@@ -79,7 +79,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             DateButtonAtom.large(
               currentDate: task.date,
               onDateChanged: (date) {
-                task.date = date;
+                task.date = DateTime(date.year, date.month, date.day);
 
                 setState(() {});
               },

@@ -37,21 +37,21 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     List<DataTask> dataTasks = await query.findAsync();
 
-    dataTasks.sort((a, b) => (a.dateTime?.copyWith(
-                hour: a.dateTime?.hour ?? 23,
-                minute: a.dateTime?.minute ?? 59) ??
-            DateTime.now().copyWith(hour: 23, minute: 59))
-        .difference(b.dateTime?.copyWith(
-                hour: b.dateTime?.hour ?? 23,
-                minute: b.dateTime?.minute ?? 59) ??
-            DateTime.now().copyWith(hour: 23, minute: 59))
-        .inSeconds);
-
     List<Task> tasks = [];
 
     for (DataTask dataTask in dataTasks) {
       tasks.add(Task.fromDataTask(dataTask));
     }
+
+    tasks.sort((a, b) {
+      return (a.date?.copyWith(
+                  hour: a.time?.hour ?? 23, minute: a.time?.minute ?? 59) ??
+              DateTime.now().copyWith(hour: 23, minute: 59))
+          .difference(b.date?.copyWith(
+                  hour: b.time?.hour ?? 23, minute: b.time?.minute ?? 59) ??
+              DateTime.now().copyWith(hour: 23, minute: 59))
+          .inSeconds;
+    });
 
     return tasks;
   }

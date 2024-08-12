@@ -329,17 +329,23 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                         startDate: task.date, startTime: task.time);
 
                     if (task.time != null && task.date != null) {
-                      if (repeatRule != null) {
-                        NotifService().scheduleRepeatTaskNotifs(repeatRule!
-                            .copyWith(
-                                startDate: task.date!, startTime: task.time!));
-                      } else {
-                        NotifService().scheduleAdHocTaskNotifs(task);
+                      if (task.date!
+                          .copyWith(
+                              hour: task.time!.hour, minute: task.time!.minute)
+                          .isAfter(DateTime.now())) {
+                        if (repeatRule != null) {
+                          NotifService().scheduleRepeatTaskNotifs(repeatRule!
+                              .copyWith(
+                                  startDate: task.date!,
+                                  startTime: task.time!));
+                        } else {
+                          NotifService().scheduleAdHocTaskNotifs(task);
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
+                        ));
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
-                      ));
                     }
 
                     if (widget.task == null) {

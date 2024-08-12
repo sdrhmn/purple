@@ -16,7 +16,7 @@ class CompletedTaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
-  int pageIndex = 0;
+  String filter = "all";
   late PageController _pageViewController;
 
   @override
@@ -36,119 +36,115 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
     List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(completetdTasksProvider);
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size(100, 100),
-        child: Row(
+    return Column(
+      children: [
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Filter"),
             DropdownButton(
                 borderRadius: BorderRadius.circular(5),
                 underline: Container(),
-                value: filters[pageIndex],
+                value: filter,
                 items: [
                   for (String filter in filters)
                     DropdownMenuItem(
                         value: filter,
                         child: Text(filter.toUpperCase()).padding(all: 5))
                 ],
-                onChanged: (filter) {
+                onChanged: (flt) {
                   setState(() {
-                    pageIndex = filters.indexOf(filter!);
-                    _pageViewController.animateToPage(pageIndex,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut);
+                    filter = flt!;
                   });
-                }).decorated().padding(all: 5)
+                })
           ],
-        ).card().padding(all: 10),
-      ),
-      body: providerOfTasks.when(
-        data: (Map<DateTime, List<Task>> tasks) {
-          return PageView(
-            controller: _pageViewController,
-            onPageChanged: (value) {
-              setState(() {
-                pageIndex = value;
-              });
-            },
-            children: List.generate(4, (i) {
-              return RefreshIndicator(
-                  onRefresh: () {
-                    return Future.delayed(Duration.zero, () {
-                      ref.invalidate(completetdTasksProvider);
-                    });
-                  },
-                  child: ListView(
-                    children: [
-                      for (DateTime date in tasks.keys) ...{
-                        Text(DateFormat(DateFormat.ABBR_MONTH_DAY).format(date))
-                            .padding(all: 10)
-                            .card()
-                            .center(),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ...() {
-                          List<Task> filteredTasks = tasks[date]!
-                              .where(
-                                (task) => filters[i] != 'all'
-                                    ? task.type == filters[i]
-                                    : true,
-                              )
-                              .toList();
-                          return List.generate(filteredTasks.length, (index) {
-                            Task task = filteredTasks[index];
-                            return TaskTile(
-                              task: task,
-                              onCheckboxChanged: (bool? value) {
-                                setState(() {
-                                  tasks[date]![index].isComplete = value!;
-                                  ref
-                                      .read(taskRepositoryProvider.notifier)
-                                      .completeTask(task);
-                                });
-                              },
-                              onLongPressed: () {
-                                setState(() {
-                                  ref
-                                      .read(taskRepositoryProvider.notifier)
-                                      .deleteTask(task);
-                                  tasks[date]!.removeAt(index);
-                                });
-                              },
-                            ).padding(bottom: 10);
-                          });
-                        }()
-                      },
-                      const SizedBox(height: 70),
-                    ],
-                  )).padding(all: 10);
-            }),
-          );
-        },
-        error: (_, __) {
-          return const Text("Error");
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+        ).height(60).card(),
+        const SizedBox(
+          height: 7,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: const Text("Create Task"),
+        Expanded(
+          child: Scaffold(
+            body: providerOfTasks.when(
+              data: (Map<DateTime, List<Task>> tasks) {
+                return RefreshIndicator(
+                    onRefresh: () {
+                      return Future.delayed(Duration.zero, () {
+                        ref.invalidate(completetdTasksProvider);
+                      });
+                    },
+                    child: ListView(
+                      children: [
+                        for (DateTime date in tasks.keys) ...{
+                          Text(DateFormat(DateFormat.ABBR_MONTH_DAY)
+                                  .format(date))
+                              .padding(all: 10)
+                              .card()
+                              .center(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ...() {
+                            List<Task> filteredTasks = tasks[date]!
+                                .where((task) => filter != "all"
+                                    ? task.type == filter
+                                    : true)
+                                .toList()
+                                .toList();
+                            return List.generate(filteredTasks.length, (index) {
+                              Task task = filteredTasks[index];
+                              return TaskTile(
+                                task: task,
+                                onCheckboxChanged: (bool? value) {
+                                  setState(() {
+                                    tasks[date]![index].isComplete = value!;
+                                    ref
+                                        .read(taskRepositoryProvider.notifier)
+                                        .completeTask(task);
+                                  });
+                                },
+                                onLongPressed: () {
+                                  setState(() {
+                                    ref
+                                        .read(taskRepositoryProvider.notifier)
+                                        .deleteTask(task);
+                                    tasks[date]!.removeAt(index);
+                                  });
+                                },
+                              ).padding(bottom: 10, horizontal: 10);
+                            });
+                          }()
+                        },
+                        const SizedBox(height: 70),
+                      ],
+                    ));
+              },
+              error: (_, __) {
+                return const Text("Error");
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
               ),
-              body: const TaskFormScreen(),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: const Text("Create Task"),
+                    ),
+                    body: const TaskFormScreen(),
+                  ),
+                ),
+              ),
+              child: Icon(Icons.add, color: Colors.purple[700]),
             ),
           ),
         ),
-        child: Icon(Icons.add, color: Colors.purple[700]),
-      ),
+      ],
     );
   }
 }

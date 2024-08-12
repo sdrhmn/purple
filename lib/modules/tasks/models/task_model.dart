@@ -173,14 +173,14 @@ class DataTask {
   int id = 0;
 
   @Property(type: PropertyType.date)
-  DateTime date;
+  DateTime? dateTime;
   bool completed;
   String data;
   final repetitionData = ToOne<RepetitionData>();
 
   DataTask({
     this.id = 0,
-    required this.date,
+    required this.dateTime,
     required this.data,
     this.completed = false,
   });

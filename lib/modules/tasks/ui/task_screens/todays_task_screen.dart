@@ -16,7 +16,7 @@ class TodaysTaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
-  int pageIndex = 0;
+  String filter = "all";
   late PageController _pageViewController;
 
   @override
@@ -36,109 +36,105 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
     List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(todaysTasksProvider);
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size(100, 100),
-        child: Row(
+    return Column(
+      children: [
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Filter"),
             DropdownButton(
                 borderRadius: BorderRadius.circular(5),
                 underline: Container(),
-                value: filters[pageIndex],
+                value: filter,
                 items: [
                   for (String filter in filters)
                     DropdownMenuItem(
                         value: filter,
                         child: Text(filter.toUpperCase()).padding(all: 5))
                 ],
-                onChanged: (filter) {
+                onChanged: (flt) {
                   setState(() {
-                    pageIndex = filters.indexOf(filter!);
-                    _pageViewController.animateToPage(pageIndex,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut);
+                    filter = flt!;
                   });
-                }).decorated().padding(all: 5)
+                })
           ],
-        ).card().padding(all: 10),
-      ),
-      body: providerOfTasks.when(
-        data: (List<Task> tasks) {
-          return PageView(
-            controller: _pageViewController,
-            onPageChanged: (value) {
-              setState(() {
-                pageIndex = value;
-              });
-            },
-            children: List.generate(4, (i) {
-              List<Task> filteredTasks = filters[i] == "all"
-                  ? tasks
-                  : tasks.where((task) => task.type == filters[i]).toList();
-
-              return RefreshIndicator(
-                onRefresh: () {
-                  return Future.delayed(Duration.zero, () {
-                    ref.invalidate(todaysTasksProvider);
-                  });
-                },
-                child: ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    if (index + 1 == filteredTasks.length + 1) {
-                      return const SizedBox(height: 70);
-                    } else {
-                      return TaskTile(
-                        task: filteredTasks[index],
-                        onCheckboxChanged: (bool? value) {
-                          setState(() {
-                            filteredTasks[index].isComplete = value!;
-                            ref
-                                .read(taskRepositoryProvider.notifier)
-                                .completeTask(filteredTasks[index]);
-                          });
-                        },
-                        onLongPressed: () {
-                          setState(() {
-                            ref
-                                .read(taskRepositoryProvider.notifier)
-                                .deleteTask(filteredTasks[index]);
-                            filteredTasks.removeAt(index);
-                          });
-                        },
-                      );
-                    }
-                  },
-                  itemCount: filteredTasks.length + 1,
-                ),
-              ).padding(all: 10);
-            }),
-          );
-        },
-        error: (_, __) {
-          return const Text("Error");
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+        ).height(60).card(),
+        const SizedBox(
+          height: 7,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: const Text("Create Task"),
+        Expanded(
+          child: Scaffold(
+            body: providerOfTasks.when(
+              data: (List<Task> tasks) {
+                List<Task> filteredTasks = tasks
+                    .where(
+                        (task) => filter != "all" ? task.type == filter : true)
+                    .toList();
+                return RefreshIndicator(
+                  onRefresh: () {
+                    return Future.delayed(Duration.zero, () {
+                      ref.invalidate(todaysTasksProvider);
+                    });
+                  },
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      if (index + 1 == filteredTasks.length + 1) {
+                        return const SizedBox(height: 70);
+                      } else {
+                        return TaskTile(
+                          task: filteredTasks[index],
+                          onCheckboxChanged: (bool? value) {
+                            setState(() {
+                              filteredTasks[index].isComplete = value!;
+                              ref
+                                  .read(taskRepositoryProvider.notifier)
+                                  .completeTask(filteredTasks[index]);
+                            });
+                          },
+                          onLongPressed: () {
+                            setState(() {
+                              ref
+                                  .read(taskRepositoryProvider.notifier)
+                                  .deleteTask(filteredTasks[index]);
+                              tasks.removeAt(index);
+                            });
+                          },
+                        ).padding(horizontal: 10);
+                      }
+                    },
+                    itemCount: filteredTasks.length + 1,
+                  ),
+                );
+              },
+              error: (_, __) {
+                return const Text("Error");
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
               ),
-              body: const TaskFormScreen(),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: const Text("Create Task"),
+                    ),
+                    body: const TaskFormScreen(),
+                  ),
+                ),
+              ),
+              child: Icon(Icons.add, color: Colors.purple[700]),
             ),
           ),
         ),
-        child: Icon(Icons.add, color: Colors.purple[700]),
-      ),
+      ],
     );
   }
 }

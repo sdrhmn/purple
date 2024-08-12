@@ -24,7 +24,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
     Box<RepetitionData> repeatTaskBox = taskStore.box<RepetitionData>();
     Box<DataTask> taskBox = taskStore.box<DataTask>();
 
-    final query = (taskBox.query(DataTask_.date.betweenDate(
+    final query = (taskBox.query(DataTask_.dateTime.betweenDate(
             DateTime(now.year, now.month, now.day, 0, 0),
             DateTime(now.year, now.month, now.day, 23, 59))))
         .build();
@@ -44,6 +44,9 @@ final appStartupProvider = FutureProvider<void>((ref) async {
       task.date = DateTime(next.year, next.month, next.day);
 
       if (DateTime(next.year, next.month, next.day) == today &&
+          task.date!
+              .copyWith(hour: task.time?.hour, minute: task.time?.minute)
+              .isAfter(DateTime.now()) &&
           today.isBefore(
               task.repeatRule!.endDate ?? today.copyWith(day: today.day + 1))) {
         // Check if it exists in today's tasks or not
@@ -57,7 +60,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
         else {
           _.add(
             DataTask(
-                date: next.copyWith(
+                dateTime: next.copyWith(
                   hour: task.time?.hour,
                   minute: task.time!.minute,
                 ),

@@ -26,17 +26,21 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   // Methods
   Future<List<Task>> getTodaysTasks() async {
     DateTime now = DateTime.now();
-    final query = (taskBox.query(DataTask_.date
+    final query = (taskBox.query(DataTask_.dateTime
             .lessOrEqualDate(DateTime(now.year, now.month, now.day, 23, 59))
+            .or(DataTask_.dateTime.isNull())
             .and(DataTask_.completed.equals(false))
-            .or(DataTask_.date.betweenDate(
+            .or(DataTask_.dateTime.betweenDate(
                 DateTime(now.year, now.month, now.day, 0, 0),
                 DateTime(now.year, now.month, now.day, 23, 59)))))
         .build();
 
     List<DataTask> dataTasks = await query.findAsync();
 
-    dataTasks.sort((a, b) => a.date.difference(b.date).inSeconds);
+    dataTasks.sort((a, b) => (a.dateTime ??
+            DateTime.now().copyWith(hour: 23, minute: 59))
+        .difference(b.dateTime ?? DateTime.now().copyWith(hour: 23, minute: 59))
+        .inSeconds);
 
     List<Task> tasks = [];
 
@@ -49,7 +53,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
   Future<Map<DateTime, List<Task>>> getUpcomingTasks() async {
     DateTime now = DateTime.now();
-    final query = (taskBox.query(DataTask_.date
+    final query = (taskBox.query(DataTask_.dateTime
             .greaterThanDate(DateTime(now.year, now.month, now.day, 23, 59))))
         .build();
 
@@ -79,7 +83,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     for (DataTask dataTask in dataTasks) {
       Task task = Task.fromDataTask(dataTask);
-      task.date ??= dataTask.date;
+      task.date ??= dataTask.dateTime;
       tasks.add(task);
     }
 
@@ -110,10 +114,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
-        date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now()
-                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
+        dateTime: task.date
+            ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         data: jsonEncode(
           task.toJson(),
         ),
@@ -134,10 +136,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
-        date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now()
-                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
+        dateTime: task.date
+            ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         id: task.id!,
         data: jsonEncode(
           task.toJson(),
@@ -164,10 +164,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
-        date: task.date
-                ?.copyWith(hour: task.time?.hour, minute: task.time?.minute) ??
-            DateTime.now()
-                .copyWith(hour: task.time?.hour, minute: task.time?.minute),
+        dateTime: task.date
+            ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         id: task.id!,
         data: jsonEncode(
           task.toJson(),

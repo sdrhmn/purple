@@ -91,6 +91,9 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                           onCheckboxChanged: (bool? value) {
                             setState(() {
                               filteredTasks[index].isComplete = value!;
+                              filteredTasks[index].completedAt =
+                                  value ? DateTime.now() : null;
+
                               ref
                                   .read(taskRepositoryProvider.notifier)
                                   .completeTask(filteredTasks[index]);

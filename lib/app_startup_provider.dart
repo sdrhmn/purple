@@ -68,7 +68,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
                 data: jsonEncode(task.toJson()))
               ..repetitionData.target = repetitionData,
           );
-          NotifService().scheduleRepeatTaskNotifs(task.repeatRule!);
+          NotifService().scheduleRepeatTaskNotifs(task);
         }
       }
     }

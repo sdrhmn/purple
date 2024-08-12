@@ -44,6 +44,18 @@ class TaskTile extends ConsumerWidget {
           children: [
             task.description.isNotEmpty ? Text(task.description) : Container(),
             const SizedBox(height: 20),
+            task.isComplete
+                ? Row(
+                    children: [
+                      const Icon(Icons.done).padding(right: 5),
+                      Flexible(
+                        child: Text(
+                                "Completed on ${DateFormat("MMM dd 'at' H:m").format(task.completedAt!)}")
+                            .fontSize(14),
+                      ),
+                    ],
+                  )
+                : Container(),
             (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
                     !task.isComplete
                 ? Text(

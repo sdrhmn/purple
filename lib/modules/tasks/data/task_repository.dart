@@ -28,8 +28,10 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     DateTime now = DateTime.now();
     final query = (taskBox.query(DataTask_.dateTime
             .lessOrEqualDate(DateTime(now.year, now.month, now.day, 23, 59))
-            .or(DataTask_.dateTime.isNull())
             .and(DataTask_.completed.equals(false))
+            .or(DataTask_.dateTime
+                .isNull()
+                .and(DataTask_.completed.equals(false)))
             .or(DataTask_.dateTime.betweenDate(
                 DateTime(now.year, now.month, now.day, 0, 0),
                 DateTime(now.year, now.month, now.day, 23, 59)))))
@@ -79,7 +81,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     };
   }
 
-  Future<Map<DateTime, List<Task>>> getCompletedTasks() async {
+  Future<Map<DateTime?, List<Task>>> getCompletedTasks() async {
     final query = (taskBox.query(DataTask_.completed.equals(true))).build();
 
     List<DataTask> dataTasks = await query.findAsync();
@@ -92,17 +94,20 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       tasks.add(task);
     }
 
-    tasks.sort((a, b) => b.date!.difference(a.date!).inSeconds);
+    tasks.sort((a, b) => b.completedAt!.difference(a.completedAt!).inSeconds);
 
     return {
-      for (DateTime date in Set.from(List.generate(
+      for (DateTime? date in Set.from(
+        List.generate(
           tasks.length,
-          (index) => DateTime(tasks[index].date!.year, tasks[index].date!.month,
-              tasks[index].date!.day))))
-        date: tasks
+          (index) => tasks[index].completedAt,
+        ),
+      ))
+        DateTime(date!.year, date.month, date.day): tasks
             .where((task) =>
-                DateTime(task.date!.year, task.date!.month, task.date!.day) ==
-                date)
+                DateTime(task.completedAt!.year, task.completedAt!.month,
+                    task.completedAt!.day) ==
+                DateTime(date.year, date.month, date.day))
             .toList()
     };
   }

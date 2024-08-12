@@ -10,6 +10,7 @@ class Task {
   int? id;
   late int notifId;
   bool isComplete = false;
+  DateTime? completedAt;
   String activity;
   String description;
   DateTime? date;
@@ -26,6 +27,7 @@ class Task {
     required this.description,
     this.date,
     isComplete,
+    this.completedAt,
     this.time,
     notifId,
     required this.type,
@@ -57,6 +59,9 @@ class Task {
       description: json['description'] ?? "",
       notifId: json['notif_id'],
       isComplete: dataTask.completed,
+      completedAt: json['completed_at'] != null
+          ? DateTime.parse(json['completed_at'])
+          : null,
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
@@ -83,6 +88,7 @@ class Task {
       notifId: json['notif_id'],
       description: json['description'] ?? "",
       isComplete: json['is_complete'],
+      completedAt: json['completed_at'],
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
@@ -105,6 +111,8 @@ class Task {
       'activity': activity,
       'description': description,
       'notif_id': notifId,
+      'is_complete': isComplete,
+      'completed_at': completedAt?.toIso8601String(),
       'date': date?.toIso8601String(),
       'time': time == null
           ? null
@@ -124,6 +132,8 @@ class Task {
   Task copyWith({
     String? activity,
     DateTime? date,
+    bool? isComplete,
+    DateTime? completedAt,
     String? description,
     TimeOfDay? time,
     String? type,
@@ -135,6 +145,8 @@ class Task {
     return Task(
       activity: activity ?? this.activity,
       description: description ?? this.description,
+      isComplete: isComplete ?? this.isComplete,
+      completedAt: completedAt ?? this.completedAt,
       date: date ?? this.date,
       time: time ?? this.time,
       type: type ?? this.type,
@@ -149,6 +161,7 @@ class Task {
   Task nullify({
     bool duration = false,
     bool repeatRule = false,
+    bool completedAt = false,
   }) {
     return Task(
       activity: activity,
@@ -162,6 +175,7 @@ class Task {
       repeatRule: repeatRule ? null : this.repeatRule,
       repetitionDataId: repetitionDataId,
       isComplete: isComplete,
+      completedAt: completedAt ? null : this.completedAt,
       notifId: notifId,
     )..id = id;
   }

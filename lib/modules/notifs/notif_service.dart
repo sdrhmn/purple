@@ -102,84 +102,77 @@ class NotifService {
   // [-][-][-][-][-] Repeating Notifs [-][-][-][-][-]
 
   /// Schedules notifs for today, tomorrow and also schedules reminders if present.
-  Future<void> scheduleRepeatTaskNotifs(SchedulingModel model) async {
+  Future<void> scheduleRepeatTaskNotifs(Task task) async {
     // ------ Schedule Notifs for today? -------
-    DateTime nextDate = model.getNextOccurrenceDateTime();
+    DateTime nextDate = task.repeatRule!.getNextOccurrenceDateTime();
     if (DateTime(nextDate.year, nextDate.month, nextDate.day) ==
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))
     // Yani, if the task is to occur today
     {
-      NotifService().scheduleNotif(model, nextDate);
+      NotifService().scheduleNotif(task, nextDate);
 
       // Schedule reminders for today
-      scheduleReminders(model, dateTime: nextDate);
+      scheduleReminders(task, dateTime: nextDate);
     }
-
-    //------ Schedule Notifs for tomorrow? ------
-    scheduleRepeatTaskNotifForNextDay(model);
-
-    // print("Scheduled for today");
   }
 
-  Future<void> scheduleRepeatTaskNotifForNextDay(SchedulingModel model) async {
-    // '''If applicable, schedules a notif for the next day'''
-    if (model.getNextOccurrenceDateTime(
-            st: DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day, 23, 59)) ==
-        DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day + 1)) {
-      NotifService().scheduleNotif(
-          model.copyWith(notifId: model.notifId! + 1),
-          model.getNextOccurrenceDateTime(
-              st: DateTime(DateTime.now().year, DateTime.now().month,
-                  DateTime.now().day, 23, 59)));
-    }
-    // print("Scheduled for next day");
-  }
+  // Future<void> scheduleRepeatTaskNotifForNextDay(SchedulingModel model) async {
+  //   // '''If applicable, schedules a notif for the next day'''
+  //   if (model.getNextOccurrenceDateTime(
+  //           st: DateTime(DateTime.now().year, DateTime.now().month,
+  //               DateTime.now().day, 23, 59)) ==
+  //       DateTime(DateTime.now().year, DateTime.now().month,
+  //           DateTime.now().day + 1)) {
+  //     NotifService().scheduleNotif(
+  //         model.copyWith(notifId: model.notifId! + 1),
+  //         model.getNextOccurrenceDateTime(
+  //             st: DateTime(DateTime.now().year, DateTime.now().month,
+  //                 DateTime.now().day, 23, 59)));
+  //   }
+  //   // print("Scheduled for next day");
+  // }
 
-  Future<void> scheduleReminders(dynamic model, {DateTime? dateTime}) async {
-    if (model.reminders != null) {
-      for (var entry in model.reminders!.entries) {
-        try {
-          await FlutterLocalNotificationsPlugin().zonedSchedule(
-            entry.key,
-            model.activity,
-            "Due in ${entry.value.inMinutes} minutes",
-            tz.TZDateTime.from(
-              (dateTime ?? model.repeatRule!.getNextOccurrenceDateTime())
-                  .subtract(
-                entry.value, // yani, subtract the duration
-              ),
-              tz.local,
+  Future<void> scheduleReminders(Task model, {DateTime? dateTime}) async {
+    for (var entry in model.reminders.entries) {
+      try {
+        await FlutterLocalNotificationsPlugin().zonedSchedule(
+          entry.key,
+          model.activity,
+          "Due in ${entry.value.inMinutes} minutes",
+          tz.TZDateTime.from(
+            (dateTime ?? model.repeatRule!.getNextOccurrenceDateTime())
+                .subtract(
+              entry.value, // yani, subtract the duration
             ),
-            const NotificationDetails(
-                linux: LinuxNotificationDetails(),
-                iOS: DarwinNotificationDetails(
-                  presentSound: true,
-                  presentList: true,
-                  presentAlert: true,
-                  presentBadge: true,
-                  presentBanner: true,
-                ),
-                android: AndroidNotificationDetails('', 'Purple Time',
-                    channelDescription: '',
-                    priority: Priority.high,
-                    importance: Importance.high)),
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime,
-          );
-          // print(
-          //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
-          //   entry.value, // yani, subtract the duration
-          // )}");
-        } catch (e) {
-          // print(
-          //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
-          //   entry.value, // yani, subtract the duration
-          // )}");
-          // ignore: avoid_print
-          // print(e.toString());
-        }
+            tz.local,
+          ),
+          const NotificationDetails(
+              linux: LinuxNotificationDetails(),
+              iOS: DarwinNotificationDetails(
+                presentSound: true,
+                presentList: true,
+                presentAlert: true,
+                presentBadge: true,
+                presentBanner: true,
+              ),
+              android: AndroidNotificationDetails('', 'Purple Time',
+                  channelDescription: '',
+                  priority: Priority.high,
+                  importance: Importance.high)),
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+        // print(
+        //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+        //   entry.value, // yani, subtract the duration
+        // )}");
+      } catch (e) {
+        // print(
+        //     "Scheduled reminder at ${(dateTime ?? model.getNextOccurrenceDateTime()).subtract(
+        //   entry.value, // yani, subtract the duration
+        // )}");
+        // ignore: avoid_print
+        // print(e.toString());
       }
     }
   }
@@ -209,28 +202,25 @@ class NotifService {
     // print("Cancelled notifs");
   }
 
-  Future<void> cancelReminders(dynamic model) async {
+  Future<void> cancelReminders(reminders) async {
     // Cancel reminders
-    if (model.reminders != null) {
-      await Future.wait([
-        for (int id in model.reminders!.keys)
-          flutterLocalNotificationsPlugin.cancel(id),
-        for (int id in model.reminders!.keys)
-          flutterLocalNotificationsPlugin.cancel(id + 1)
-      ]);
-    }
-
-    // print("Cancelled reminders");
+    await Future.wait([
+      for (int id in reminders!.keys)
+        flutterLocalNotificationsPlugin.cancel(id),
+      for (int id in reminders!.keys)
+        flutterLocalNotificationsPlugin.cancel(id + 1)
+    ]);
   }
 
-  Future<void> cancelRepeatTaskNotifs(SchedulingModel model) async {
+  Future<void> cancelRepeatTaskNotifs(
+      SchedulingModel model, Map<int, Duration> reminders) async {
     // Cancel today's and tomo's
     await Future.wait([
       for (int id in [model.notifId!, model.notifId! + 1])
         flutterLocalNotificationsPlugin.cancel(id)
     ]);
 
-    await cancelReminders(model);
+    await cancelReminders(reminders);
   }
 
   void onDidReceiveLocalNotification(

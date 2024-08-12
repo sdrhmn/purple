@@ -334,10 +334,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                               hour: task.time!.hour, minute: task.time!.minute)
                           .isAfter(DateTime.now())) {
                         if (repeatRule != null) {
-                          NotifService().scheduleRepeatTaskNotifs(repeatRule!
-                              .copyWith(
-                                  startDate: task.date!,
-                                  startTime: task.time!));
+                          NotifService().scheduleRepeatTaskNotifs(task
+                            ..repeatRule = task.repeatRule!.copyWith(
+                                startDate: task.date!, startTime: task.time!));
                         } else {
                           NotifService().scheduleAdHocTaskNotifs(task);
                         }

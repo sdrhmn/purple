@@ -68,7 +68,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
         Expanded(
           child: Scaffold(
             body: providerOfTasks.when(
-              data: (Map<DateTime, List<Task>> tasks) {
+              data: (Map<DateTime?, List<Task>> tasks) {
                 return RefreshIndicator(
                     onRefresh: () {
                       return Future.delayed(Duration.zero, () {
@@ -77,9 +77,11 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                     },
                     child: ListView(
                       children: [
-                        for (DateTime date in tasks.keys) ...{
-                          Text(DateFormat(DateFormat.ABBR_MONTH_DAY)
-                                  .format(date))
+                        for (DateTime? date in tasks.keys) ...{
+                          Text(date != null
+                                  ? DateFormat(DateFormat.ABBR_MONTH_DAY)
+                                      .format(date)
+                                  : "")
                               .padding(all: 10)
                               .card()
                               .center(),
@@ -100,6 +102,9 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                 onCheckboxChanged: (bool? value) {
                                   setState(() {
                                     tasks[date]![index].isComplete = value!;
+                                    tasks[date]![index].completedAt =
+                                        value ? DateTime.now() : null;
+
                                     ref
                                         .read(taskRepositoryProvider.notifier)
                                         .completeTask(task);
@@ -122,7 +127,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                     ));
               },
               error: (_, __) {
-                return const Text("Error");
+                return Text("Error $_ , $__");
               },
               loading: () => const Center(
                 child: CircularProgressIndicator(),

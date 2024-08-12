@@ -88,7 +88,9 @@ class Task {
       notifId: json['notif_id'],
       description: json['description'] ?? "",
       isComplete: json['is_complete'],
-      completedAt: json['completed_at'],
+      completedAt: json['completed_at'] != null
+          ? DateTime.parse(json['completed_at'])
+          : null,
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)

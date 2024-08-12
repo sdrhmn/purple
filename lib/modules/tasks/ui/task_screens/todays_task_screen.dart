@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
@@ -100,11 +101,18 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                             });
                           },
                           onLongPressed: () {
+                            Task task = filteredTasks[index];
                             setState(() {
                               ref
                                   .read(taskRepositoryProvider.notifier)
-                                  .deleteTask(filteredTasks[index]);
-                              tasks.removeAt(index);
+                                  .deleteTask(task);
+                              filteredTasks.removeAt(index);
+                              if (task.repeatRule == null) {
+                                NotifService().cancelNotif(task.id);
+                                NotifService().cancelReminders(task.reminders);
+                              } else {
+                                NotifService().cancelRepeatTaskNotifs(task);
+                              }
                             });
                           },
                         ).padding(horizontal: 10);

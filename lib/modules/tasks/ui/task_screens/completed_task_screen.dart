@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/data/task_providers/completed_tasks_provider.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
@@ -101,8 +102,8 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                 task: task,
                                 onCheckboxChanged: (bool? value) {
                                   setState(() {
-                                    tasks[date]![index].isComplete = value!;
-                                    tasks[date]![index].completedAt =
+                                    filteredTasks[index].isComplete = value!;
+                                    filteredTasks[index].completedAt =
                                         value ? DateTime.now() : null;
 
                                     ref
@@ -115,7 +116,15 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                     ref
                                         .read(taskRepositoryProvider.notifier)
                                         .deleteTask(task);
-                                    tasks[date]!.removeAt(index);
+                                    filteredTasks.removeAt(index);
+                                    if (task.repeatRule == null) {
+                                      NotifService().cancelNotif(task.id);
+                                      NotifService()
+                                          .cancelReminders(task.reminders);
+                                    } else {
+                                      NotifService()
+                                          .cancelRepeatTaskNotifs(task);
+                                    }
                                   });
                                 },
                               ).padding(bottom: 10, horizontal: 10);

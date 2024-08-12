@@ -2,7 +2,6 @@ import 'dart:core';
 import 'dart:io' show Platform;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -212,15 +211,14 @@ class NotifService {
     ]);
   }
 
-  Future<void> cancelRepeatTaskNotifs(
-      SchedulingModel model, Map<int, Duration> reminders) async {
+  Future<void> cancelRepeatTaskNotifs(Task task) async {
     // Cancel today's and tomo's
     await Future.wait([
-      for (int id in [model.notifId!, model.notifId! + 1])
+      for (int id in [task.notifId, task.notifId + 1])
         flutterLocalNotificationsPlugin.cancel(id)
     ]);
 
-    await cancelReminders(reminders);
+    await cancelReminders(task.reminders);
   }
 
   void onDidReceiveLocalNotification(

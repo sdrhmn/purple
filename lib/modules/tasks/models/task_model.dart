@@ -156,7 +156,7 @@ class Task {
       duration: duration ?? this.duration,
       repeatRule: repeatRule ?? this.repeatRule,
       reminders: reminders ?? this.reminders,
-    );
+    )..id = id;
   }
 
   // Creates a new Task object with specified fields nullified.

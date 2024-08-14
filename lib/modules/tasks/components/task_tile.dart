@@ -56,6 +56,7 @@ class TaskTile extends ConsumerWidget {
                     ],
                   )
                 : Container(),
+            const SizedBox(height: 10),
             (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
                     !task.isComplete
                 ? Text(

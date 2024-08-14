@@ -81,7 +81,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                       showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            late DateTime selectedDateTime;
+                            DateTime selectedDateTime = DateTime.now().copyWith(
+                                hour: task.time?.hour,
+                                minute: task.time?.minute);
 
                             return Column(
                               children: [

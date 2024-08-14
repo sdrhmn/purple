@@ -41,7 +41,6 @@ class DateButtonAtom extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple[600],
           foregroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -87,27 +86,41 @@ class TextButtonAtom extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
   final Color? color;
+  final Size buttonSize;
 
   const TextButtonAtom({
     super.key,
     required this.onPressed,
     required this.text,
     this.color,
+    this.buttonSize = const Size(120, 30),
+  });
+
+  const TextButtonAtom.large({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.color,
+    this.buttonSize = const Size(170, 50),
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.r_8),
+    return SizedBox(
+      width: buttonSize.width,
+      height: buttonSize.height,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.r_8),
+          ),
         ),
-      ),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.titleSmall,
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
       ),
     );
   }
@@ -145,7 +158,6 @@ class TimeButtonAtom extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple[700],
           foregroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(

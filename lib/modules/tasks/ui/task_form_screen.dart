@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:timely/common/buttons.dart';
 import 'package:timely/common/reminder_sliders.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/common/scheduling/duration_selection.dart';
@@ -88,13 +90,53 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             const SizedBox(width: 10),
 
             // Time
-            TimeButtonAtom.large(
-                initialTime: task.time,
-                onTimeChanged: (time) {
-                  task.time = time;
+            TextButtonAtom.large(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            late DateTime selectedDateTime;
 
-                  setState(() {});
-                }).padding(vertical: 10).expanded(),
+                            return Column(
+                              children: [
+                                CupertinoDatePicker(
+                                  initialDateTime: DateTime.now().copyWith(
+                                      hour: task.time?.hour,
+                                      minute: task.time?.minute),
+                                  onDateTimeChanged: (DateTime dateTime) {
+                                    selectedDateTime = dateTime;
+                                  },
+                                  mode: CupertinoDatePickerMode.time,
+                                ).expanded(),
+                                [
+                                  IconButton.outlined(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      icon: const Icon(Icons.cancel,
+                                          color: Colors.red)),
+                                  IconButton.outlined(
+                                      onPressed: () {
+                                        task.time = TimeOfDay.fromDateTime(
+                                            selectedDateTime);
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      },
+                                      icon: const Icon(Icons.done,
+                                          color: Colors.blue)),
+                                ]
+                                    .toRow(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround)
+                                    .padding(bottom: 20),
+                              ],
+                            );
+                          });
+                    },
+                    text: task.time == null
+                        ? "Select Time"
+                        : task.time!.format(context))
+                .padding(vertical: 10)
+                .expanded(),
           ].toRow(),
 
           // Type

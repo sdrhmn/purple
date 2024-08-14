@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -100,27 +101,88 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                               Task task = filteredTasks[index];
                               return TaskTile(
                                 task: task,
-                                onCheckboxChanged: (bool? value) {
-                                  setState(() {
-                                    filteredTasks[index].isComplete = value!;
-                                    filteredTasks[index].completedAt =
-                                        value ? DateTime.now() : null;
+                                onCheckboxChanged: (bool? value) async {
+                                  // Select the DateTime at which the task was completed
+                                  if (value!)
+                                  // If the task is marked complete
+                                  {
+                                    await showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          DateTime selectedDateTime =
+                                              DateTime.now();
+                                          return Column(
+                                            children: [
+                                              CupertinoDatePicker(
+                                                      onDateTimeChanged:
+                                                          (DateTime dateTime) {
+                                                        selectedDateTime =
+                                                            dateTime;
+                                                      },
+                                                      mode:
+                                                          CupertinoDatePickerMode
+                                                              .dateAndTime)
+                                                  .expanded(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  IconButton.outlined(
+                                                      onPressed: () {
+                                                        filteredTasks[index]
+                                                            .completedAt = null;
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.cancel,
+                                                          color: Colors.red)),
+                                                  IconButton.outlined(
+                                                      onPressed: () {
+                                                        filteredTasks[index]
+                                                                .completedAt =
+                                                            selectedDateTime;
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.done,
+                                                          color: Colors.blue))
+                                                ],
+                                              ).padding(bottom: 20),
+                                            ],
+                                          );
+                                        });
+                                  }
 
-                                    if (value) {
-                                      if (task.repeatRule == null) {
-                                        NotifService().cancelNotif(task.id);
-                                        NotifService()
-                                            .cancelReminders(task.reminders);
-                                      } else {
-                                        NotifService()
-                                            .cancelRepeatTaskNotifs(task);
+                                  if ((value == true &&
+                                          filteredTasks[index].completedAt !=
+                                              null) ||
+                                      (value == false)) {
+                                    setState(() {
+                                      filteredTasks[index].isComplete = value;
+
+                                      if (value == false) {
+                                        task.completedAt = null;
                                       }
-                                    }
 
-                                    ref
-                                        .read(taskRepositoryProvider.notifier)
-                                        .completeTask(task);
-                                  });
+                                      if (value) {
+                                        if (task.repeatRule == null) {
+                                          NotifService().cancelNotif(task.id);
+                                          NotifService()
+                                              .cancelReminders(task.reminders);
+                                        } else {
+                                          NotifService()
+                                              .cancelRepeatTaskNotifs(task);
+                                        }
+                                      }
+
+                                      ref
+                                          .read(taskRepositoryProvider.notifier)
+                                          .completeTask(task);
+                                    });
+                                  }
                                 },
                                 onLongPressed: () {
                                   setState(

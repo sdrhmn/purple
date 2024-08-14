@@ -7,13 +7,11 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 
 class TaskTile extends ConsumerWidget {
   final Task task;
-  final Function(bool? value) onCheckboxChanged;
-  final Function() onLongPressed;
+  final Function(DismissDirection direction) onDismissed;
   const TaskTile({
     super.key,
     required this.task,
-    required this.onCheckboxChanged,
-    required this.onLongPressed,
+    required this.onDismissed,
   });
 
   @override
@@ -23,16 +21,44 @@ class TaskTile extends ConsumerWidget {
         ? "Duration: ${task.duration!.inHours} hours${task.duration!.inMinutes % 60 != 0 ? ' and ${task.duration!.inMinutes % 60} minutes' : ''}${task.time != null ? '\nUp till ${DateFormat('MMM dd, H:mm').format((task.date ?? DateTime.now()).copyWith(hour: task.time!.hour, minute: task.time!.minute).add(task.duration!))}' : ''}"
         : "";
 
-    return [
-      Checkbox(
-          activeColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          value: task.isComplete,
-          onChanged: (value) => onCheckboxChanged(value)).scale(all: 1.2),
-      const SizedBox(width: 10),
-      ListTile(
+    return Dismissible(
+      key: Key(task.id.toString()),
+      confirmDismiss: (direction) async {
+        bool dismiss = false;
+        if (direction == DismissDirection.startToEnd) {
+          await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title:
+                      const Text("Are you sure you want to delete this task?"),
+                  actions: [
+                    IconButton.filled(
+                      onPressed: () {
+                        dismiss = true;
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.done),
+                      color: Colors.red,
+                    ),
+                    IconButton.filled(
+                      onPressed: () {
+                        dismiss = false;
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.cancel),
+                    ),
+                  ],
+                );
+              });
+        } else {
+          // Direction is opposite, action == "COMPLETE"
+          dismiss = true;
+        }
+        return dismiss;
+      },
+      onDismissed: (DismissDirection direction) => onDismissed(direction),
+      child: ListTile(
         title: Text(
           task.activity,
           style: TextStyle(
@@ -115,7 +141,6 @@ class TaskTile extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7),
         ),
-        onLongPress: () => onLongPressed(),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -130,7 +155,7 @@ class TaskTile extends ConsumerWidget {
             ),
           );
         },
-      ).expanded(),
-    ].toRow();
+      ),
+    );
   }
 }

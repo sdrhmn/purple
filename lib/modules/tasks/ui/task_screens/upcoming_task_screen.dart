@@ -98,13 +98,14 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                               Task task = filteredTasks[index];
                               return TaskTile(
                                 task: task,
-                                onCheckboxChanged: (bool? value) {
+                                onDismissed: (DismissDirection direction) {
                                   setState(() {
-                                    filteredTasks[index].isComplete = value!;
-                                    filteredTasks[index].completedAt =
-                                        value ? DateTime.now() : null;
-
-                                    if (value) {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
+                                      ref
+                                          .read(taskRepositoryProvider.notifier)
+                                          .deleteTask(task);
+                                      tasks[date]!.remove(task);
                                       if (task.repeatRule == null) {
                                         NotifService().cancelNotif(task.id);
                                         NotifService()
@@ -113,32 +114,34 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                         NotifService()
                                             .cancelRepeatTaskNotifs(task);
                                       }
-                                    }
 
-                                    ref
-                                        .read(taskRepositoryProvider.notifier)
-                                        .completeTask(task);
-                                  });
-                                },
-                                onLongPressed: () {
-                                  setState(() {
-                                    ref
-                                        .read(taskRepositoryProvider.notifier)
-                                        .deleteTask(task);
-                                    tasks[date]!.remove(task);
-                                    if (task.repeatRule == null) {
-                                      NotifService().cancelNotif(task.id);
-                                      NotifService()
-                                          .cancelReminders(task.reminders);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Notifications and reminders cancelled for ${filteredTasks[index].activity}")));
                                     } else {
-                                      NotifService()
-                                          .cancelRepeatTaskNotifs(task);
-                                    }
+                                      filteredTasks[index].isComplete =
+                                          !filteredTasks[index].isComplete;
+                                      filteredTasks[index].completedAt =
+                                          filteredTasks[index].isComplete
+                                              ? DateTime.now()
+                                              : null;
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Notifications and reminders cancelled for ${filteredTasks[index].activity}")));
+                                      if (filteredTasks[index].isComplete) {
+                                        if (task.repeatRule == null) {
+                                          NotifService().cancelNotif(task.id);
+                                          NotifService()
+                                              .cancelReminders(task.reminders);
+                                        } else {
+                                          NotifService()
+                                              .cancelRepeatTaskNotifs(task);
+                                        }
+                                      }
+
+                                      ref
+                                          .read(taskRepositoryProvider.notifier)
+                                          .completeTask(task);
+                                    }
                                   });
                                 },
                               ).padding(bottom: 10);

@@ -100,31 +100,10 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                               Task task = filteredTasks[index];
                               return TaskTile(
                                 task: task,
-                                onCheckboxChanged: (bool? value) {
+                                onDismissed: (DismissDirection direction) {
                                   setState(() {
-                                    filteredTasks[index].isComplete = value!;
-                                    filteredTasks[index].completedAt =
-                                        value ? DateTime.now() : null;
-
-                                    if (value) {
-                                      if (task.repeatRule == null) {
-                                        NotifService().cancelNotif(task.id);
-                                        NotifService()
-                                            .cancelReminders(task.reminders);
-                                      } else {
-                                        NotifService()
-                                            .cancelRepeatTaskNotifs(task);
-                                      }
-                                    }
-
-                                    ref
-                                        .read(taskRepositoryProvider.notifier)
-                                        .completeTask(task);
-                                  });
-                                },
-                                onLongPressed: () {
-                                  setState(
-                                    () {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
                                       ref
                                           .read(taskRepositoryProvider.notifier)
                                           .deleteTask(task);
@@ -138,12 +117,30 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                         NotifService()
                                             .cancelRepeatTaskNotifs(task);
                                       }
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "Notifications and reminders cancelled for ${task.activity}")));
-                                    },
-                                  );
+                                    } else {
+                                      filteredTasks[index].isComplete =
+                                          !filteredTasks[index].isComplete;
+                                      filteredTasks[index].completedAt =
+                                          filteredTasks[index].isComplete
+                                              ? DateTime.now()
+                                              : null;
+
+                                      if (filteredTasks[index].isComplete) {
+                                        if (task.repeatRule == null) {
+                                          NotifService().cancelNotif(task.id);
+                                          NotifService()
+                                              .cancelReminders(task.reminders);
+                                        } else {
+                                          NotifService()
+                                              .cancelRepeatTaskNotifs(task);
+                                        }
+                                      }
+
+                                      ref
+                                          .read(taskRepositoryProvider.notifier)
+                                          .completeTask(task);
+                                    }
+                                  });
                                 },
                               ).padding(bottom: 10, horizontal: 10);
                             });

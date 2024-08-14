@@ -140,11 +140,6 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                       label: "Ad-hoc",
                       value: "ad-hoc",
                       leadingIcon: Icon(Icons.line_style)),
-                  DropdownMenuEntry(
-                    label: "Routine",
-                    value: "routine",
-                    leadingIcon: Icon(Icons.sunny),
-                  ),
                 ]),
           ]
               .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)

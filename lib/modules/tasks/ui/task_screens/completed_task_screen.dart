@@ -138,10 +138,6 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                         NotifService()
                                             .cancelRepeatTaskNotifs(task);
                                       }
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "Notifications and reminders cancelled for ${task.activity}")));
                                     },
                                   );
                                 },

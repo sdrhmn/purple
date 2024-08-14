@@ -45,6 +45,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
         children: [
           // Activity
           TextFormField(
+            maxLines: 3,
             textCapitalization: TextCapitalization.sentences,
             initialValue: task.activity,
             decoration: InputDecoration(

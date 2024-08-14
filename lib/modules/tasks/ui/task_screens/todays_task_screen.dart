@@ -43,7 +43,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
           height: 5,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("Filter"),
             DropdownButton(
@@ -64,7 +64,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                   });
                 })
           ],
-        ).height(60).card(),
+        ).padding(horizontal: 20).height(60).card(),
         const SizedBox(
           height: 7,
         ),

@@ -103,13 +103,13 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                               return TaskTile(
                                 task: task,
                                 onDismissed: (DismissDirection direction) {
+                                  tasks[date]!.remove(task);
                                   setState(() {
                                     if (direction ==
                                         DismissDirection.startToEnd) {
                                       ref
                                           .read(taskRepositoryProvider.notifier)
                                           .deleteTask(task);
-                                      tasks[date]!.remove(task);
 
                                       if (task.repeatRule == null) {
                                         NotifService().cancelNotif(task.id);

@@ -93,6 +93,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                           task: filteredTasks[index],
                           onDismissed: (DismissDirection direction) {
                             Task task = filteredTasks[index];
+                            tasks.remove(task);
 
                             setState(
                               () {
@@ -100,7 +101,6 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                                   ref
                                       .read(taskRepositoryProvider.notifier)
                                       .deleteTask(task);
-                                  tasks.remove(task);
                                   if (task.repeatRule == null) {
                                     NotifService().cancelNotif(task.id);
                                     NotifService()

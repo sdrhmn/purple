@@ -34,7 +34,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
+    List<String> filters = ['all', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(upcomingTasksProvider);
 
     return Column(

@@ -51,10 +51,13 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                 underline: Container(),
                 value: filter,
                 items: [
-                  for (String filter in filters)
+                  for (int i in Iterable.generate(filters.length))
                     DropdownMenuItem(
-                        value: filter,
-                        child: Text(filter.toUpperCase()).padding(all: 5))
+                        value: filters[i],
+                        child: Text(
+                                'All Tasks.Routine Tasks.Ad-hoc Tasks.Exercises'
+                                    .split(".")[i])
+                            .padding(all: 5))
                 ],
                 onChanged: (flt) {
                   setState(() {

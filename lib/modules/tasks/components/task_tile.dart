@@ -23,6 +23,19 @@ class TaskTile extends ConsumerWidget {
 
     return Dismissible(
       key: Key(task.id.toString()),
+      background: Container(
+        color: Colors.red,
+        child: const Row(
+          children: [Icon(Icons.delete)],
+        ).padding(horizontal: 10),
+      ).clipRRect(all: 7),
+      secondaryBackground: Container(
+              color: Colors.green,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [Icon(Icons.done)],
+              ).padding(horizontal: 10))
+          .clipRRect(all: 7),
       confirmDismiss: (direction) async {
         bool dismiss = false;
         if (direction == DismissDirection.startToEnd) {

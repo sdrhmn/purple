@@ -34,7 +34,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> filters = ['all', 'routine', 'ad-hoc', 'exercise'];
+    List<String> filters = ['all', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(upcomingTasksProvider);
 
     return Column(
@@ -54,9 +54,8 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                   for (int i in Iterable.generate(filters.length))
                     DropdownMenuItem(
                         value: filters[i],
-                        child: Text(
-                                'All Tasks.Routine Tasks.Ad-hoc Tasks.Exercises'
-                                    .split(".")[i])
+                        child: Text('All Tasks.Ad-hoc Tasks.Exercises'
+                                .split(".")[i])
                             .padding(all: 5))
                 ],
                 onChanged: (flt) {

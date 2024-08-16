@@ -45,6 +45,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
         children: [
           // Activity
           TextFormField(
+            onTapOutside: (PointerDownEvent event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             initialValue: task.activity,
             decoration: InputDecoration(
               hintText: "Activity",
@@ -60,6 +63,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
           ).padding(vertical: 10),
 
           TextFormField(
+            onTapOutside: (PointerDownEvent event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             maxLines: 5,
             initialValue: task.description,
             decoration: InputDecoration(
@@ -363,45 +369,42 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 ).padding(vertical: 10),
 
           CancelSubmitRowMolecule(
-                  onSubmitPressed: () {
-                    task.repeatRule = repeatRule?.copyWith(
-                        startDate: task.date, startTime: task.time);
+            onSubmitPressed: () {
+              task.repeatRule = repeatRule?.copyWith(
+                  startDate: task.date, startTime: task.time);
 
-                    if (task.time != null && task.date != null) {
-                      if (task.date!
-                          .copyWith(
-                              hour: task.time!.hour, minute: task.time!.minute)
-                          .isAfter(DateTime.now())) {
-                        if (repeatRule != null) {
-                          NotifService().scheduleRepeatTaskNotifs(task
-                            ..repeatRule = task.repeatRule!.copyWith(
-                                startDate: task.date!, startTime: task.time!));
-                        } else {
-                          NotifService().scheduleAdHocTaskNotifs(task);
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
-                        ));
-                      }
-                    }
+              if (task.time != null && task.date != null) {
+                if (task.date!
+                    .copyWith(hour: task.time!.hour, minute: task.time!.minute)
+                    .isAfter(DateTime.now())) {
+                  if (repeatRule != null) {
+                    NotifService().scheduleRepeatTaskNotifs(task
+                      ..repeatRule = task.repeatRule!.copyWith(
+                          startDate: task.date!, startTime: task.time!));
+                  } else {
+                    NotifService().scheduleAdHocTaskNotifs(task);
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
+                  ));
+                }
+              }
 
-                    if (widget.task == null) {
-                      ref.read(taskRepositoryProvider.notifier).writeTask(task);
-                    } else {
-                      ref
-                          .read(taskRepositoryProvider.notifier)
-                          .updateTask(task);
-                    }
+              if (widget.task == null) {
+                ref.read(taskRepositoryProvider.notifier).writeTask(task);
+              } else {
+                ref.read(taskRepositoryProvider.notifier).updateTask(task);
+              }
 
-                    ref.invalidate(todaysTasksProvider);
-                    ref.invalidate(upcomingTasksProvider);
-                    ref.invalidate(completetdTasksProvider);
+              ref.invalidate(todaysTasksProvider);
+              ref.invalidate(upcomingTasksProvider);
+              ref.invalidate(completetdTasksProvider);
 
-                    Navigator.of(context).pop();
-                  },
-                  onCancelPressed: () {})
-              .padding(vertical: 10),
+              Navigator.of(context).pop();
+            },
+            onCancelPressed: () => Navigator.of(context).pop(),
+          ).padding(vertical: 10),
         ],
       ),
     ).padding(all: 10);

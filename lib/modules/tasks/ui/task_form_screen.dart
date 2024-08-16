@@ -64,25 +64,6 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             },
           ).padding(vertical: 10),
 
-          TextFormField(
-            onTapOutside: (PointerDownEvent event) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            maxLines: 5,
-            initialValue: task.description,
-            decoration: InputDecoration(
-              hintText: "Description",
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.purple[900],
-            ),
-            onChanged: (value) {
-              task.description = value;
-            },
-          ).padding(vertical: 10),
-
           // Date and Time
           [
             // Date

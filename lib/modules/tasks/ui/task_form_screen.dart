@@ -106,11 +106,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                                 ).expanded(),
                                 [
                                   IconButton.outlined(
+                                      iconSize: 30,
                                       onPressed: () =>
                                           Navigator.of(context).pop(),
                                       icon: const Icon(Icons.cancel,
-                                          color: Colors.red)),
+                                          color: Colors.yellow)),
                                   IconButton.outlined(
+                                      iconSize: 30,
                                       onPressed: () {
                                         task.time = TimeOfDay.fromDateTime(
                                             selectedDateTime);

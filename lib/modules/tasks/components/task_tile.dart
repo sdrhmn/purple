@@ -8,12 +8,12 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 class TaskTile extends ConsumerWidget {
   final Task task;
   final Function(bool? value) onCheckboxChanged;
-  final Function() onLongPressed;
+  final Function() onDelete;
   const TaskTile({
     super.key,
     required this.task,
     required this.onCheckboxChanged,
-    required this.onLongPressed,
+    required this.onDelete,
   });
 
   @override
@@ -24,13 +24,50 @@ class TaskTile extends ConsumerWidget {
         : "";
 
     return [
-      Checkbox(
-          activeColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Checkbox(
+              activeColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              value: task.isComplete,
+              onChanged: (value) => onCheckboxChanged(value)).scale(all: 1.2),
+          const SizedBox(height: 10),
+          IconButton(
+            onPressed: () async {
+              bool shouldDelete = false;
+              await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(
+                          "Are you sure you want to delete ${task.activity}"),
+                      actions: [
+                        IconButton(
+                            onPressed: () {
+                              shouldDelete = false;
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.cancel)),
+                        IconButton(
+                            onPressed: () {
+                              shouldDelete = true;
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.done)),
+                      ],
+                    );
+                  });
+              if (shouldDelete) {
+                onDelete();
+              }
+            },
+            icon: const Icon(Icons.delete_outline_outlined),
           ),
-          value: task.isComplete,
-          onChanged: (value) => onCheckboxChanged(value)).scale(all: 1.2),
+        ],
+      ),
       const SizedBox(width: 10),
       ListTile(
         title: Text(
@@ -116,7 +153,6 @@ class TaskTile extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7),
         ),
-        onLongPress: () => onLongPressed(),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(

@@ -167,7 +167,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                               });
                             }
                           },
-                          onLongPressed: () {
+                          onDelete: () {
                             Task task = filteredTasks[index];
 
                             setState(

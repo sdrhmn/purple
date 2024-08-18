@@ -182,7 +182,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                     });
                                   }
                                 },
-                                onLongPressed: () {
+                                onDelete: () {
                                   setState(() {
                                     ref
                                         .read(taskRepositoryProvider.notifier)

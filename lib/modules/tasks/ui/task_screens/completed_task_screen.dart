@@ -184,7 +184,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                     });
                                   }
                                 },
-                                onLongPressed: () {
+                                onDelete: () {
                                   setState(
                                     () {
                                       ref

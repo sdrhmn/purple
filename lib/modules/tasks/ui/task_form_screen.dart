@@ -28,7 +28,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 class _TaskFormState extends ConsumerState<TaskFormScreen> {
   late Task task;
   SchedulingModel? repeatRule;
-  final _formKey = GlobalKey<_TaskFormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -45,22 +45,29 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
         children: [
           // Activity
           TextFormField(
-            onTapOutside: (PointerDownEvent event) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            initialValue: task.activity,
-            decoration: InputDecoration(
-              hintText: "Activity",
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
+              maxLines: 3,
+              textCapitalization: TextCapitalization.sentences,
+              onTapOutside: (PointerDownEvent event) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              initialValue: task.activity,
+              decoration: InputDecoration(
+                hintText: "Activity",
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.purple[800],
               ),
-              filled: true,
-              fillColor: Colors.purple[800],
-            ),
-            onChanged: (value) {
-              task.activity = value;
-            },
-          ).padding(vertical: 10),
+              onChanged: (value) {
+                task.activity = value;
+              },
+              validator: (value) {
+                if (value != null && value.isEmpty) {
+                  return 'Please do not leave the activity field blank.';
+                }
+                return null;
+              }).padding(vertical: 10),
 
           TextFormField(
             onTapOutside: (PointerDownEvent event) {
@@ -370,38 +377,48 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
           CancelSubmitRowMolecule(
             onSubmitPressed: () {
-              task.repeatRule = repeatRule?.copyWith(
-                  startDate: task.date, startTime: task.time);
+              if (_formKey.currentState!.validate()) {
+                task.repeatRule = repeatRule?.copyWith(
+                    startDate: task.date, startTime: task.time);
 
-              if (task.time != null && task.date != null) {
-                if (task.date!
-                    .copyWith(hour: task.time!.hour, minute: task.time!.minute)
-                    .isAfter(DateTime.now())) {
-                  if (repeatRule != null) {
-                    NotifService().scheduleRepeatTaskNotifs(task
-                      ..repeatRule = task.repeatRule!.copyWith(
-                          startDate: task.date!, startTime: task.time!));
-                  } else {
-                    NotifService().scheduleAdHocTaskNotifs(task);
+                if (task.time != null && task.date != null) {
+                  if (task.date!
+                      .copyWith(
+                          hour: task.time!.hour, minute: task.time!.minute)
+                      .isAfter(DateTime.now())) {
+                    if (repeatRule != null) {
+                      NotifService().scheduleRepeatTaskNotifs(task
+                        ..repeatRule = task.repeatRule!.copyWith(
+                            startDate: task.date!, startTime: task.time!));
+                    } else {
+                      NotifService().scheduleAdHocTaskNotifs(task);
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
+                    ));
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
-                  ));
                 }
+
+                if (widget.task == null) {
+                  ref.read(taskRepositoryProvider.notifier).writeTask(task);
+                } else {
+                  ref.read(taskRepositoryProvider.notifier).updateTask(task);
+                }
+
+                ref.invalidate(todaysTasksProvider);
+                ref.invalidate(upcomingTasksProvider);
+                ref.invalidate(completetdTasksProvider);
+
+                Navigator.of(context).pop();
+              } else
+              // If the form is NOT valid
+              {
+                // ignore: prefer_const_constructors
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text("Please fix the errors first."),
+                ));
               }
-
-              if (widget.task == null) {
-                ref.read(taskRepositoryProvider.notifier).writeTask(task);
-              } else {
-                ref.read(taskRepositoryProvider.notifier).updateTask(task);
-              }
-
-              ref.invalidate(todaysTasksProvider);
-              ref.invalidate(upcomingTasksProvider);
-              ref.invalidate(completetdTasksProvider);
-
-              Navigator.of(context).pop();
             },
             onCancelPressed: () => Navigator.of(context).pop(),
           ).padding(vertical: 10),

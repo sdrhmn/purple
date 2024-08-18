@@ -45,7 +45,7 @@ class Task {
     return Task(
       activity: "",
       description: "",
-      type: "ad-hoc",
+      type: "",
       priority: "high",
       reminders: {},
     );

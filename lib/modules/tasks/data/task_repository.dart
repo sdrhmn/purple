@@ -72,9 +72,12 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       tasks.add(Task.fromDataTask(dataTask));
     }
 
+    List<DateTime> dates = List.from(
+        Set.from(List.generate(tasks.length, (index) => tasks[index].date!)))
+      ..sort();
+
     return {
-      for (DateTime date in Set.from(
-          List.generate(tasks.length, (index) => tasks[index].date!)))
+      for (DateTime date in dates)
         date: tasks.where((task) => task.date == date).toList()
           ..sort((a, b) => a.date!
               .copyWith(hour: a.time?.hour, minute: a.time?.minute)

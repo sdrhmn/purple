@@ -45,7 +45,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Placeholder"),
+            const Text("Readiness"),
             DropdownButton(
                 borderRadius: BorderRadius.circular(5),
                 underline: Container(),

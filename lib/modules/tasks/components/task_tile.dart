@@ -95,7 +95,8 @@ class TaskTile extends ConsumerWidget {
                       const Icon(Icons.done).padding(right: 5),
                       Flexible(
                         child: Text(
-                                "Completed on ${DateFormat("MMM dd 'at' H:m").format(task.completedAt!)}")
+                                "Completed on ${DateFormat("MMM dd 'at' H:m")
+                                .format(task.completedAt!)}")
                             .fontSize(14),
                       ),
                     ],

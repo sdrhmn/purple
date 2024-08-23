@@ -118,9 +118,6 @@ class TaskTile extends ConsumerWidget {
       child: ListTile(
         title: Text(
           task.activity,
-          style: TextStyle(
-            decoration: task.isComplete ? TextDecoration.lineThrough : null,
-          ),
         ).padding(all: 10),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,10 +183,8 @@ class TaskTile extends ConsumerWidget {
         trailing: task.time == null
             ? const Text("")
             : Text(task.time!.format(context)).textStyle(
-                TextStyle(
+                const TextStyle(
                   fontSize: 18,
-                  decoration:
-                      task.isComplete ? TextDecoration.lineThrough : null,
                   fontWeight: FontWeight.w500,
                 ),
               ),

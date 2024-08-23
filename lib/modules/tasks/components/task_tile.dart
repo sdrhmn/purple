@@ -80,7 +80,14 @@ class TaskTile extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ...task.description.isNotEmpty
-                ? [Text(task.description), const SizedBox(height: 20)]
+                ? [
+                    Text(
+                      task.description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 10)
+                  ]
                 : [Container()],
             task.isComplete
                 ? Row(

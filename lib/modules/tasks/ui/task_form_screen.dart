@@ -341,7 +341,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
           task.time == null
               ? Container()
               : ReminderSliders(
-                  model: task,
+                  model: task.copyWith(repeatRule: repeatRule),
                   onAddReminder: (tsk) {
                     task = tsk;
                     setState(() {});

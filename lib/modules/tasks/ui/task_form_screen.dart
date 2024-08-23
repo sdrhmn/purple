@@ -15,6 +15,7 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_providers/completed_tasks_provider.dart';
+import 'package:timely/modules/tasks/tokens.dart';
 import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -143,16 +144,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             DropdownMenu(
                 initialSelection: task.type,
                 onSelected: (value) => task.type = value!,
-                width: 150,
-                dropdownMenuEntries: const [
-                  DropdownMenuEntry(
-                      label: "Exercise",
-                      value: "exercise",
-                      leadingIcon: Icon(Icons.sports_gymnastics)),
-                  DropdownMenuEntry(
-                      label: "Ad-hoc",
-                      value: "ad-hoc",
-                      leadingIcon: Icon(Icons.line_style)),
+                width: 190,
+                dropdownMenuEntries: [
+                  for (int i in Iterable.generate(types.length))
+                    DropdownMenuEntry(
+                      value: types.keys.toList()[i],
+                      label: types.values.toList()[i],
+                    )
                 ]),
           ]
               .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
@@ -164,7 +162,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             DropdownMenu(
                 initialSelection: task.priority,
                 onSelected: (value) => task.priority = value!,
-                width: 150,
+                width: 190,
                 dropdownMenuEntries: [
                   for (String difficulty in 'Low,Medium,High'.split(","))
                     DropdownMenuEntry(

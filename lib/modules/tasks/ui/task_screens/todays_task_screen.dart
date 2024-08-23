@@ -91,7 +91,8 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                       } else {
                         return TaskTile(
                           task: filteredTasks[index],
-                          onDismissed: (DismissDirection direction) {
+                          onDismissed:
+                              (DismissDirection direction, Task dismissedTask) {
                             Task task = filteredTasks[index];
                             tasks.remove(task);
 
@@ -137,6 +138,21 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                                   ref
                                       .read(taskRepositoryProvider.notifier)
                                       .completeTask(filteredTasks[index]);
+
+                                  if (dismissedTask.nextActivity != null) {
+                                    ref
+                                        .read(taskRepositoryProvider.notifier)
+                                        .writeTask(dismissedTask
+                                          ..id = null
+                                          ..isComplete = false
+                                          ..date = dismissedTask.repeatRule !=
+                                                  null
+                                              ? dismissedTask.repeatRule!
+                                                  .getNextOccurrenceDateTime(
+                                                  st: DateTime.now(),
+                                                )
+                                              : dismissedTask.date);
+                                  }
                                 }
                               },
                             );

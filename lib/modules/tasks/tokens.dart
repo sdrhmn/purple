@@ -13,7 +13,7 @@ Map<String, String> filters = {
 };
 
 Map<String, String> types = {
-  "ad-hoc": "Ad-hoc Task",
+  "ad-hoc": "Ad-hoc",
   "exercise": "Exercise",
   "meal": "Meal / Suppliment",
   "shopping": "Shopping",

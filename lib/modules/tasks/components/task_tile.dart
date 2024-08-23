@@ -7,7 +7,7 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 
 class TaskTile extends ConsumerWidget {
   final Task task;
-  final Function(DismissDirection direction) onDismissed;
+  final Function(DismissDirection direction, Task task) onDismissed;
   const TaskTile({
     super.key,
     required this.task,
@@ -70,7 +70,51 @@ class TaskTile extends ConsumerWidget {
         }
         return dismiss;
       },
-      onDismissed: (DismissDirection direction) => onDismissed(direction),
+      onDismissed: (DismissDirection direction) async {
+        String text = "";
+        if (direction == DismissDirection.endToStart && task.type == "project")
+        // If the task is being marked complete and is a project
+        {
+          // Show a pop-up asking the next activity
+          await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: task.repeatRule != null
+                      ? Text("Next occurrence: \n${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(task.repeatRule!.getNextOccurrenceDateTime(
+                          st: DateTime.now(),
+                        ))}${task.time != null ? ' ${task.time!.format(context)}' : ''}")
+                          .fontSize(15)
+                      : null,
+                  actions: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: "Enter your next activity",
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.purple[800],
+                      ),
+                      maxLines: 3,
+                      onChanged: (txt) {
+                        text = txt;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.done),
+                    )
+                  ],
+                );
+              });
+        }
+        onDismissed(direction,
+            task.copyWith(nextActivity: text.isNotEmpty ? text : null));
+      },
       child: ListTile(
         title: Text(
           task.activity,
@@ -81,8 +125,12 @@ class TaskTile extends ConsumerWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            task.description.isNotEmpty ? Text(task.description) : Container(),
-            const SizedBox(height: 20),
+            ...task.description.isNotEmpty
+                ? [Text(task.description), const SizedBox(height: 10)]
+                : [Container()],
+            ...task.nextActivity != null
+                ? [Text(task.nextActivity!), const SizedBox(height: 10)]
+                : [Container()],
             task.isComplete
                 ? Row(
                     children: [

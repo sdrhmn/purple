@@ -13,6 +13,7 @@ class Task {
   DateTime? completedAt;
   String activity;
   String description;
+  String? nextActivity; // nextActivity is only for projects
   DateTime? date;
   TimeOfDay? time;
   String type;
@@ -31,6 +32,7 @@ class Task {
     this.time,
     notifId,
     required this.type,
+    this.nextActivity,
     required this.priority,
     this.duration,
     this.repeatRule,
@@ -67,6 +69,7 @@ class Task {
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
           : null,
       type: json['type'],
+      nextActivity: json['next_activity'],
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
@@ -96,6 +99,7 @@ class Task {
           ? TimeOfDay(hour: json['time'].first, minute: json['time'].last)
           : null,
       type: json['type'],
+      nextActivity: json['next_activity'],
       priority: json['priority'],
       duration:
           json['duration'] != null ? Duration(seconds: json['duration']) : null,
@@ -123,6 +127,7 @@ class Task {
               time!.minute
             ], // You might need to define a method to convert TimeOfDay to a string
       'type': type,
+      'next_activity': nextActivity,
       'priority': priority,
       'duration': duration?.inSeconds, // Or any other representation you prefer
       'reminders': reminders
@@ -136,6 +141,7 @@ class Task {
     DateTime? date,
     bool? isComplete,
     DateTime? completedAt,
+    String? nextActivity,
     String? description,
     TimeOfDay? time,
     String? type,
@@ -152,6 +158,8 @@ class Task {
       date: date ?? this.date,
       time: time ?? this.time,
       type: type ?? this.type,
+      notifId: notifId,
+      nextActivity: nextActivity ?? this.nextActivity,
       priority: priority ?? this.priority,
       duration: duration ?? this.duration,
       repeatRule: repeatRule ?? this.repeatRule,

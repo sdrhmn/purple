@@ -143,7 +143,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             const Text("Type"),
             DropdownMenu(
                 initialSelection: task.type,
-                onSelected: (value) => task.type = value!,
+                onSelected: (value) {
+                  if ((value == "project") ||
+                      (task.type == "project" && value != "project")) {
+                    setState(() {});
+                  }
+                  task.type = value!;
+                },
                 width: 190,
                 dropdownMenuEntries: [
                   for (int i in Iterable.generate(types.length))
@@ -155,6 +161,29 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
           ]
               .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
               .padding(vertical: 10),
+
+          // NextActivity
+          task.type == "project"
+              ? TextFormField(
+                  maxLines: 2,
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  initialValue: task.nextActivity,
+                  decoration: InputDecoration(
+                    hintText: "Next Activity",
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.purple[700],
+                  ),
+                  onChanged: (value) {
+                    task.nextActivity = value;
+                  },
+                ).padding(vertical: 10)
+              : Container(),
 
           // Difficulty
           [

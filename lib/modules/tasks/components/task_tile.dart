@@ -79,8 +79,9 @@ class TaskTile extends ConsumerWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            task.description.isNotEmpty ? Text(task.description) : Container(),
-            const SizedBox(height: 20),
+            ...task.description.isNotEmpty
+                ? [Text(task.description), const SizedBox(height: 20)]
+                : [Container()],
             task.isComplete
                 ? Row(
                     children: [

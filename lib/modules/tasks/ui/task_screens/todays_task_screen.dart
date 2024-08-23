@@ -98,10 +98,25 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                               await showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
-                                    DateTime selectedDateTime = DateTime.now();
+                                    Task task = filteredTasks[index];
+
+                                    DateTime? taskTimePlusDuration = task.date
+                                        ?.copyWith(
+                                            hour: task.time?.hour,
+                                            minute: task.time?.minute)
+                                        .add(task.duration ?? Duration.zero);
+
+                                    DateTime selectedDateTime = DateTime.now()
+                                        .copyWith(
+                                            hour: taskTimePlusDuration?.hour,
+                                            minute:
+                                                taskTimePlusDuration?.minute);
+
                                     return Column(
                                       children: [
                                         CupertinoDatePicker(
+                                                initialDateTime:
+                                                    selectedDateTime,
                                                 onDateTimeChanged:
                                                     (DateTime dateTime) {
                                                   selectedDateTime = dateTime;

@@ -42,7 +42,7 @@ class ReminderSliders extends StatelessWidget {
         ..._renderReminderSliders(),
         TextButton.icon(
           onPressed: () {
-            if (model.repeatRule != null &&
+            if (model.repeatRule == null &&
                 DateTime(model.date!.year, model.date!.month, model.date!.day,
                             model.time!.hour, model.time!.minute)
                         .difference(DateTime.now())

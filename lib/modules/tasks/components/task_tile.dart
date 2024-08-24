@@ -70,7 +70,7 @@ class TaskTile extends ConsumerWidget {
       ),
       const SizedBox(width: 10),
       ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 100),
+        constraints: const BoxConstraints(minHeight: 120),
         child: ListTile(
           title: Text(
             task.activity,

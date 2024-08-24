@@ -69,113 +69,117 @@ class TaskTile extends ConsumerWidget {
         ],
       ),
       const SizedBox(width: 10),
-      ListTile(
-        title: Text(
-          task.activity,
-          style: TextStyle(
-            decoration: task.isComplete ? TextDecoration.lineThrough : null,
-          ),
-        ).padding(all: 10),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...task.description.isNotEmpty
-                ? [
-                    Text(
-                      task.description,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 10)
-                  ]
-                : [Container()],
-            task.isComplete
-                ? Row(
-                    children: [
-                      const Icon(Icons.done).padding(right: 5),
-                      Flexible(
-                        child: Text(
-                                "Completed on ${DateFormat("MMM dd 'at' H:m")
-                                .format(task.completedAt!)}")
-                            .fontSize(14),
+      ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 100),
+        child: ListTile(
+          title: Text(
+            task.activity,
+            style: TextStyle(
+              decoration: task.isComplete ? TextDecoration.lineThrough : null,
+              fontSize: 10,
+            ),
+          ).padding(all: 10),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...task.description.isNotEmpty
+                  ? [
+                      Text(
+                        task.description,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
-                    ],
-                  )
-                : Container(),
-            const SizedBox(height: 10),
-            (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
-                    !task.isComplete
-                ? Text(
-                    "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
-                : task.repeatRule != null
-                    ? Row(
-                        children: [
-                          const Icon(Icons.repeat).padding(right: 5),
-                          Flexible(
-                            child: Text(
-                              task.repeatRule!.getRepetitionSummary(),
-                              style: const TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 14,
+                      const SizedBox(height: 10)
+                    ]
+                  : [Container()],
+              task.isComplete
+                  ? Row(
+                      children: [
+                        const Icon(Icons.done).padding(right: 5),
+                        Flexible(
+                          child: Text(
+                                  "Completed on ${DateFormat("MMM dd 'at' H:m").format(task.completedAt!)}")
+                              .fontSize(14),
+                        ),
+                      ],
+                    )
+                  : Container(),
+              const SizedBox(height: 10),
+              (task.date?.copyWith(hour: 23, minute: 59) ?? now)
+                          .isBefore(now) &&
+                      !task.isComplete
+                  ? Text(
+                      "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
+                  : task.repeatRule != null
+                      ? Row(
+                          children: [
+                            const Icon(Icons.repeat).padding(right: 5),
+                            Flexible(
+                              child: Text(
+                                task.repeatRule!.getRepetitionSummary(),
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    : Container(),
-            const SizedBox(height: 10),
-            task.duration != null
-                ? Row(
-                    children: [
-                      const Icon(Icons.alarm).padding(right: 5),
-                      Flexible(
-                        child: Text(
-                          durationText,
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontSize: 14,
+                          ],
+                        )
+                      : Container(),
+              const SizedBox(height: 10),
+              task.duration != null
+                  ? Row(
+                      children: [
+                        const Icon(Icons.alarm).padding(right: 5),
+                        Flexible(
+                          child: Text(
+                            durationText,
+                            style: const TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                : Container(),
-          ],
-        ),
-        trailing: task.time == null
-            ? const Text("")
-            : Text(task.time!.format(context)).textStyle(
-                TextStyle(
-                  fontSize: 18,
-                  decoration:
-                      task.isComplete ? TextDecoration.lineThrough : null,
-                  fontWeight: FontWeight.w500,
+                      ],
+                    )
+                  : Container(),
+            ],
+          ),
+          trailing: task.time == null
+              ? const Text("")
+              : Text(task.time!.format(context)).textStyle(
+                  TextStyle(
+                    fontSize: 18,
+                    decoration:
+                        task.isComplete ? TextDecoration.lineThrough : null,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+          tileColor: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
+                      .isBefore(now) &&
+                  !task.isComplete
+              ? Colors.orange[900]
+              : task.isComplete
+                  ? Colors.green[800]
+                  : Colors.purple[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(7),
+          ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: const Text("Edit Task"),
+                  ),
+                  body: TaskFormScreen(
+                    task: task,
+                  ),
                 ),
               ),
-        tileColor:
-            (task.date?.copyWith(hour: 23, minute: 59) ?? now).isBefore(now) &&
-                    !task.isComplete
-                ? Colors.orange[900]
-                : task.isComplete
-                    ? Colors.green[800]
-                    : Colors.purple[800],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7),
+            );
+          },
         ),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                appBar: AppBar(
-                  title: const Text("Edit Task"),
-                ),
-                body: TaskFormScreen(
-                  task: task,
-                ),
-              ),
-            ),
-          );
-        },
       ).expanded(),
     ].toRow();
   }

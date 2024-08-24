@@ -76,7 +76,6 @@ class TaskTile extends ConsumerWidget {
             task.activity,
             style: TextStyle(
               decoration: task.isComplete ? TextDecoration.lineThrough : null,
-              fontSize: 10,
             ),
           ).padding(all: 10),
           subtitle: Column(

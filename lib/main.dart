@@ -7,6 +7,7 @@ import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/ui/task_screens/completed_task_screen.dart';
+import 'package:timely/modules/tasks/ui/task_screens/overdue_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/todays_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/upcoming_task_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -66,6 +67,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
       const TodaysTaskScreen(),
       const UpcomingTaskScreen(),
       const CompletedTaskScreen(),
+      const OverdueTaskScreen(),
     ];
 
     final appStartup = ref.watch(appStartupProvider);
@@ -148,6 +150,29 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     },
                     icon: const Icon(Icons.done_outline_rounded),
                     label: const Text("Completed Tasks"),
+                  ),
+                ).padding(horizontal: 10),
+                Container().height(10),
+                SizedBox(
+                  height: 50,
+                  child: TextButton.icon(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                      backgroundColor: WidgetStatePropertyAll(pageIndex == 3
+                          ? Colors.purple[500]
+                          : Colors.purple[700]),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        pageIndex = 3;
+                      });
+                    },
+                    icon: const Icon(Icons.slow_motion_video),
+                    label: const Text("Overdue Tasks"),
                   ),
                 ).padding(horizontal: 10),
               ],

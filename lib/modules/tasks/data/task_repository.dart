@@ -27,14 +27,49 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   Future<List<Task>> getTodaysTasks() async {
     DateTime now = DateTime.now();
     final query = taskBox
-        .query(DataTask_.completed
-            .equals(false)
-            .or(DataTask_.dateTime
-                .isNull()
-                .and(DataTask_.completed.equals(false)))
+        .query(DataTask_.dateTime
+            .isNull()
+            .and(DataTask_.completed.equals(false))
             .or(DataTask_.dateTime.betweenDate(
                 DateTime(now.year, now.month, now.day, 0, 0),
                 DateTime(now.year, now.month, now.day, 23, 59))))
+        .build();
+
+    List<DataTask> dataTasks = await query.findAsync();
+
+    List<Task> tasks = [];
+
+    for (DataTask dataTask in dataTasks) {
+      tasks.add(Task.fromDataTask(dataTask));
+    }
+
+    tasks.sort((a, b) {
+      return (a.date?.copyWith(
+                  hour: a.time?.hour ?? 23, minute: a.time?.minute ?? 59) ??
+              DateTime.now().copyWith(hour: 23, minute: 59))
+          .difference(b.date?.copyWith(
+                  hour: b.time?.hour ?? 23, minute: b.time?.minute ?? 59) ??
+              DateTime.now().copyWith(hour: 23, minute: 59))
+          .inSeconds;
+    });
+
+    query.close();
+
+    return tasks;
+  }
+
+  Future<List<Task>> getOverdueTasks() async {
+    DateTime now = DateTime.now();
+    final query = taskBox
+        .query(
+          DataTask_.dateTime
+              .lessThanDate(
+                DateTime(now.year, now.month, now.day),
+              )
+              .and(
+                DataTask_.completed.equals(false),
+              ),
+        )
         .build();
 
     List<DataTask> dataTasks = await query.findAsync();

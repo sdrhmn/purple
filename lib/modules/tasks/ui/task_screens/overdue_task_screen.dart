@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/tasks/ui/task_form_screen.dart';
-import 'package:timely/modules/tasks/models/task_model.dart';
+import 'package:timely/modules/tasks/components/task_tile.dart';
+import 'package:timely/modules/tasks/data/task_providers/overdue_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
-import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
+import 'package:timely/modules/tasks/models/task_model.dart';
+import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 
-import '../../components/task_tile.dart';
-
-class TodaysTaskScreen extends ConsumerStatefulWidget {
-  const TodaysTaskScreen({super.key});
+class OverdueTaskScreen extends ConsumerStatefulWidget {
+  const OverdueTaskScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TaskScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _OverdueTaskScreenState();
 }
 
-class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
+class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
   String filter = "all";
   late PageController _pageViewController;
 
@@ -36,7 +36,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> filters = ['all', 'ad-hoc', 'exercise'];
-    final providerOfTasks = ref.watch(todaysTasksProvider);
+    final providerOfTasks = ref.watch(overdueTasksProvider);
 
     return Column(
       children: [
@@ -78,7 +78,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                 return RefreshIndicator(
                   onRefresh: () {
                     return Future.delayed(Duration.zero, () {
-                      ref.invalidate(todaysTasksProvider);
+                      ref.invalidate(overdueTasksProvider);
                     });
                   },
                   child: ListView.separated(

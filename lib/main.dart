@@ -78,7 +78,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
           drawer: Drawer(
             child: ListView(
               children: [
-                const Text("Purple Time")
+                const Text("PurpleTime")
                     .letterSpacing(10)
                     .fontWeight(FontWeight.w300)
                     .fontSize(20)

@@ -3,5 +3,6 @@
     // The following will hide the js and map files in the editor
     "files.exclude": {
         "**/*.freezed.dart": true
-    }
+    },
+    "dart.previewFlutterUiGuides": true
 }

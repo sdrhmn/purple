@@ -63,9 +63,53 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:7133346629129162575",
+      "lastPropertyId": "7:1966147705417516366",
+      "name": "KPIModel",
+      "properties": [
+        {
+          "id": "1:5294892937404213443",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:899739396152267140",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "3:8378233874725168631",
+          "name": "activity",
+          "type": 6
+        },
+        {
+          "id": "4:5638505623255260327",
+          "name": "sleep",
+          "type": 6
+        },
+        {
+          "id": "5:6477403899153128195",
+          "name": "bowelMovement",
+          "type": 6
+        },
+        {
+          "id": "6:6013819329531552271",
+          "name": "weight",
+          "type": 8
+        },
+        {
+          "id": "7:1966147705417516366",
+          "name": "comments",
+          "type": 30
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:528195779332023649",
+  "lastEntityId": "6:7133346629129162575",
   "lastIndexId": "1:7375183161489578996",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

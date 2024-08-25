@@ -6,9 +6,9 @@ import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/tasks/ui/task_screens/completed_task_screen.dart';
-import 'package:timely/modules/tasks/ui/task_screens/todays_task_screen.dart';
-import 'package:timely/modules/tasks/ui/task_screens/upcoming_task_screen.dart';
+import 'package:timely/modules/tasks/ui/screens/completed_task_screen.dart';
+import 'package:timely/modules/tasks/ui/screens/todays_tasks_and_lifestyle_screen.dart';
+import 'package:timely/modules/tasks/ui/screens/upcoming_task_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 // ------ Firebase --------
@@ -63,7 +63,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
   @override
   Widget build(BuildContext context) {
     List pages = [
-      const TodaysTaskScreen(),
+      const TodaysScreen(),
       const UpcomingTaskScreen(),
       const CompletedTaskScreen(),
     ];
@@ -149,6 +149,36 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     label: const Text("Completed Tasks"),
                   ),
                 ).padding(horizontal: 10),
+                const Divider(
+                  height: 50,
+                ),
+                ...List.generate(4, (index) {
+                  List<String> controls =
+                      'Daily Controls.Daily Performance.Health.Wisdom'
+                          .split(".");
+                  return SizedBox(
+                    height: 50,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                        backgroundColor: WidgetStatePropertyAll(
+                            pageIndex == (3 + index)
+                                ? Colors.purple[500]
+                                : Colors.purple[700]),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          pageIndex = 3 + index;
+                        });
+                      },
+                      child: Text(controls[index]),
+                    ),
+                  ).padding(horizontal: 10, vertical: 5);
+                }),
               ],
             ),
           ),

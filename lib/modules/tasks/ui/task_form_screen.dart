@@ -99,7 +99,6 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               .padding(vertical: 5),
 
           ...List.generate(task.subtasks.length, (index) {
-            print(task.subtasks[index].name);
             return Row(
               children: [
                 index == task.subtasks.length - 1

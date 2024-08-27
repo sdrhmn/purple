@@ -7,6 +7,7 @@ import 'package:timely/modules/tasks/components/task_tile.dart';
 import 'package:timely/modules/tasks/data/task_providers/overdue_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
+import 'package:timely/modules/tasks/tokens.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 
 class OverdueTaskScreen extends ConsumerStatefulWidget {
@@ -22,7 +23,6 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> filters = ['all', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(overdueTasksProvider);
 
     return Column(
@@ -42,7 +42,9 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
                   for (String filter in filters)
                     DropdownMenuItem(
                         value: filter,
-                        child: Text(filter.toUpperCase()).padding(all: 5))
+                        child:
+                            Text(filter[0].toUpperCase() + filter.substring(1))
+                                .padding(all: 5))
                 ],
                 onChanged: (flt) {
                   setState(() {

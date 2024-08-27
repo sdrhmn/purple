@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
+import 'package:timely/modules/tasks/tokens.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
@@ -22,7 +23,6 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> filters = ['all', 'ad-hoc', 'exercise'];
     final providerOfTasks = ref.watch(upcomingTasksProvider);
 
     return Column(
@@ -42,7 +42,9 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                   for (String filter in filters)
                     DropdownMenuItem(
                         value: filter,
-                        child: Text(filter.toUpperCase()).padding(all: 5))
+                        child:
+                            Text(filter[0].toUpperCase() + filter.substring(1))
+                                .padding(all: 5))
                 ],
                 onChanged: (flt) {
                   setState(() {

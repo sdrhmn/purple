@@ -15,6 +15,7 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
 import 'package:timely/modules/tasks/data/task_providers/todays_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_providers/completed_tasks_provider.dart';
+import 'package:timely/modules/tasks/tokens.dart';
 import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -67,7 +68,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   return 'Please do not leave the activity field blank.';
                 }
                 return null;
-              }).padding(vertical: 10),
+              }).padding(vertical: 5),
 
           TextFormField(
             onTapOutside: (PointerDownEvent event) {
@@ -86,10 +87,10 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             onChanged: (value) {
               task.description = value;
             },
-          ).padding(vertical: 10),
+          ).padding(vertical: 5),
 
           // Subtasks
-          TextButtonAtom(
+          TextButtonAtom.large(
                   onPressed: () {
                     setState(() {
                       task.subtasks = [...task.subtasks, Subtask(name: "")];
@@ -98,23 +99,31 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   text: "Add Subtask")
               .padding(vertical: 5),
 
+          SizedBox(
+            height: 5,
+          ),
+
           ...List.generate(task.subtasks.length, (index) {
             return Row(
               children: [
-                index == task.subtasks.length - 1
-                    ? IconButton(
-                        onPressed: () {
-                          task.subtasks.removeLast();
-                          setState(() {});
-                        },
-                        icon: const Icon(
-                          Icons.remove_circle,
+                ...index == task.subtasks.length - 1
+                    ? [
+                        IconButton(
+                          onPressed: () {
+                            task.subtasks.removeLast();
+                            setState(() {});
+                          },
+                          icon: const Icon(
+                            Icons.remove_circle,
+                          ),
                         ),
-                      )
-                    : Container(),
-                const SizedBox(
-                  width: 10,
-                ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ]
+                    : [
+                        Container(),
+                      ],
                 TextFormField(
                   maxLines: 1,
                   textCapitalization: TextCapitalization.sentences,
@@ -133,7 +142,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   onChanged: (value) {
                     task.subtasks[index].name = value;
                   },
-                ).padding(vertical: 10).expanded(),
+                ).padding(bottom: 10).expanded(),
               ],
             );
           }),
@@ -148,7 +157,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
                 setState(() {});
               },
-            ).padding(vertical: 10).expanded(),
+            ).expanded(),
 
             const SizedBox(width: 10),
 
@@ -200,7 +209,6 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                     text: task.time == null
                         ? "Select Time"
                         : task.time!.format(context))
-                .padding(vertical: 10)
                 .expanded(),
           ].toRow(),
 
@@ -211,16 +219,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 initialSelection: task.type,
                 onSelected: (value) => task.type = value!,
                 width: 150,
-                dropdownMenuEntries: const [
-                  DropdownMenuEntry(
-                      label: "Exercise",
-                      value: "exercise",
-                      leadingIcon: Icon(Icons.sports_gymnastics)),
-                  DropdownMenuEntry(
-                      label: "Ad-hoc",
-                      value: "ad-hoc",
-                      leadingIcon: Icon(Icons.line_style)),
-                ]),
+                dropdownMenuEntries: List.generate(filters.length - 1, (index) {
+                  return DropdownMenuEntry(
+                    label: filters[index + 1][0].toUpperCase() +
+                        filters[index + 1].substring(1),
+                    value: filters[index + 1],
+                  );
+                })),
           ]
               .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
               .padding(vertical: 10),

@@ -70,7 +70,7 @@ class TaskTile extends ConsumerWidget {
             icon: const Icon(Icons.delete_outline_outlined),
           ),
         ],
-      ),
+      ).padding(horizontal: 2, vertical: 5).card(),
       const SizedBox(width: 10),
       ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 120),

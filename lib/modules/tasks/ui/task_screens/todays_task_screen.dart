@@ -33,7 +33,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Text("Filter"),
+            const Text("Type"),
             DropdownButton(
                 borderRadius: BorderRadius.circular(5),
                 underline: Container(),

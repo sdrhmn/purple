@@ -115,6 +115,11 @@ class TaskTile extends ConsumerWidget {
                         task.description,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
+                        style: TextStyle(
+                          decoration: task.isComplete
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
                       ),
                       const SizedBox(height: 10)
                     ]
@@ -123,7 +128,7 @@ class TaskTile extends ConsumerWidget {
                 return Row(
                   children: [
                     Checkbox(
-                      activeColor: Colors.green,
+                      activeColor: Colors.lightGreen,
                       value: task.subtasks[index].isComplete,
                       onChanged: (value) =>
                           onSubtaskCheckboxChanged(value, index),
@@ -135,7 +140,14 @@ class TaskTile extends ConsumerWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7),
                       ),
-                      title: Text(task.subtasks[index].name),
+                      title: Text(
+                        task.subtasks[index].name,
+                        style: TextStyle(
+                          decoration: task.subtasks[index].isComplete
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
                       tileColor: task.subtasks[index].isComplete
                           ? Colors.green.withAlpha(150)
                           : Colors.black.withAlpha(60),

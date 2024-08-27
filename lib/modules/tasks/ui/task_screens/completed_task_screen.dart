@@ -19,19 +19,6 @@ class CompletedTaskScreen extends ConsumerStatefulWidget {
 
 class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
   String filter = "all";
-  late PageController _pageViewController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageViewController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageViewController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +88,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                               Task task = filteredTasks[index];
                               return TaskTile(
                                 task: task,
-                                onCheckboxChanged: (bool? value) async {
+                                onTaskCheckboxChanged: (bool? value) async {
                                   // Select the DateTime at which the task was completed
                                   if (value!)
                                   // If the task is marked complete
@@ -183,6 +170,16 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                                           .completeTask(task);
                                     });
                                   }
+                                },
+                                onSubtaskCheckboxChanged:
+                                    (bool? value, int subtaskIndex) {
+                                  filteredTasks[index]
+                                      .subtasks[subtaskIndex]
+                                      .isComplete = value!;
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .updateTask(filteredTasks[index]);
+                                  setState(() {});
                                 },
                                 onDelete: () {
                                   setState(

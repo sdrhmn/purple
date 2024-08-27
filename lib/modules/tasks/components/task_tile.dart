@@ -7,12 +7,14 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 
 class TaskTile extends ConsumerWidget {
   final Task task;
-  final Function(bool? value) onCheckboxChanged;
+  final Function(bool? value) onTaskCheckboxChanged;
+  final Function(bool? value, int index) onSubtaskCheckboxChanged;
   final Function() onDelete;
   const TaskTile({
     super.key,
     required this.task,
-    required this.onCheckboxChanged,
+    required this.onTaskCheckboxChanged,
+    required this.onSubtaskCheckboxChanged,
     required this.onDelete,
   });
 
@@ -28,12 +30,13 @@ class TaskTile extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Checkbox(
-              activeColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              value: task.isComplete,
-              onChanged: (value) => onCheckboxChanged(value)).scale(all: 1.2),
+                  activeColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  value: task.isComplete,
+                  onChanged: (value) => onTaskCheckboxChanged(value))
+              .scale(all: 1.2),
           const SizedBox(height: 10),
           IconButton(
             onPressed: () async {
@@ -42,8 +45,8 @@ class TaskTile extends ConsumerWidget {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(
-                          "Are you sure you want to delete ${task.activity}"),
+                      title:
+                          Text("Are you sure you want to delete ${task.name}"),
                       actions: [
                         IconButton(
                             onPressed: () {
@@ -73,7 +76,7 @@ class TaskTile extends ConsumerWidget {
         constraints: const BoxConstraints(minHeight: 120),
         child: ListTile(
           title: Text(
-            task.activity,
+            task.name,
             style: TextStyle(
               decoration: task.isComplete ? TextDecoration.lineThrough : null,
             ),
@@ -81,6 +84,27 @@ class TaskTile extends ConsumerWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ...List.generate(task.subtasks.length, (index) {
+                return Row(
+                  children: [
+                    Checkbox(
+                      value: task.subtasks[index].isComplete,
+                      onChanged: (value) =>
+                          onSubtaskCheckboxChanged(value, index),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      title: Text(task.subtasks[index].name),
+                      tileColor: Colors.purple,
+                    ).expanded(),
+                  ],
+                ).padding(vertical: 5);
+              }),
               ...task.description.isNotEmpty
                   ? [
                       Text(

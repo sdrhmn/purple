@@ -136,7 +136,7 @@ class NotifService {
       try {
         await FlutterLocalNotificationsPlugin().zonedSchedule(
           entry.key,
-          model.activity,
+          model.name,
           "Due in ${entry.value.inMinutes} minutes",
           tz.TZDateTime.from(
             (dateTime ?? model.repeatRule!.getNextOccurrenceDateTime())

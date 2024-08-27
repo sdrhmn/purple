@@ -50,9 +50,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               onTapOutside: (PointerDownEvent event) {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              initialValue: task.activity,
+              initialValue: task.name,
               decoration: InputDecoration(
-                hintText: "Activity",
+                hintText: "Name",
                 border: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
@@ -60,7 +60,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 fillColor: Colors.purple[800],
               ),
               onChanged: (value) {
-                task.activity = value;
+                task.name = value;
               },
               validator: (value) {
                 if (value != null && value.isEmpty) {
@@ -87,6 +87,57 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               task.description = value;
             },
           ).padding(vertical: 10),
+
+          // Subtasks
+          TextButtonAtom(
+                  onPressed: () {
+                    setState(() {
+                      task.subtasks = [...task.subtasks, Subtask(name: "")];
+                    });
+                  },
+                  text: "Add Subtask")
+              .padding(vertical: 5),
+
+          ...List.generate(task.subtasks.length, (index) {
+            print(task.subtasks[index].name);
+            return Row(
+              children: [
+                index == task.subtasks.length - 1
+                    ? IconButton(
+                        onPressed: () {
+                          task.subtasks.removeLast();
+                          setState(() {});
+                        },
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(
+                  width: 10,
+                ),
+                TextFormField(
+                  maxLines: 1,
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  initialValue: task.subtasks[index].name,
+                  decoration: InputDecoration(
+                    hintText: "Name",
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.purple[800],
+                  ),
+                  onChanged: (value) {
+                    task.subtasks[index].name = value;
+                  },
+                ).padding(vertical: 10).expanded(),
+              ],
+            );
+          }),
 
           // Date and Time
           [
@@ -395,7 +446,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                     }
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
-                          "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.activity} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
+                          "Scheduled${task.reminders.isNotEmpty ? ' reminders and' : ''} a notification for ${task.name} at ${task.time!.format(context)} on ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}"),
                     ));
                   }
                 }

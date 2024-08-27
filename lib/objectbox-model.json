@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:4292185959515019916",
-      "lastPropertyId": "7:7659067757784348448",
+      "lastPropertyId": "8:2857444642779856708",
       "name": "DataTask",
       "properties": [
         {
@@ -36,6 +36,14 @@
           "id": "7:7659067757784348448",
           "name": "dateTime",
           "type": 10
+        },
+        {
+          "id": "8:2857444642779856708",
+          "name": "projectId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:7729446245451169542",
+          "relationTarget": "Project"
         }
       ],
       "relations": []
@@ -63,10 +71,39 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:8190541606705415328",
+      "lastPropertyId": "4:5201057447727094880",
+      "name": "Project",
+      "properties": [
+        {
+          "id": "1:1902180123833500654",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6120310063893436341",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:7586970251302419548",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:5201057447727094880",
+          "name": "duration",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:528195779332023649",
-  "lastIndexId": "1:7375183161489578996",
+  "lastEntityId": "6:8190541606705415328",
+  "lastIndexId": "2:7729446245451169542",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

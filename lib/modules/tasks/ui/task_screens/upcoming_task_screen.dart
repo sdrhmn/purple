@@ -19,19 +19,6 @@ class UpcomingTaskScreen extends ConsumerStatefulWidget {
 
 class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
   String filter = "all";
-  late PageController _pageViewController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageViewController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageViewController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +86,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                               Task task = filteredTasks[index];
                               return TaskTile(
                                 task: task,
-                                onCheckboxChanged: (bool? value) async {
+                                onTaskCheckboxChanged: (bool? value) async {
                                   // Select the DateTime at which the task was completed
                                   if (value!)
                                   // If the task is marked complete
@@ -182,6 +169,16 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                     });
                                   }
                                 },
+                                onSubtaskCheckboxChanged:
+                                    (bool? value, int subtaskIndex) {
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .updateTask(filteredTasks[index]);
+                                  filteredTasks[index]
+                                      .subtasks[subtaskIndex]
+                                      .isComplete = value!;
+                                  setState(() {});
+                                },
                                 onDelete: () {
                                   setState(() {
                                     ref
@@ -200,7 +197,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content: Text(
-                                                "Notifications and reminders cancelled for ${filteredTasks[index].activity}")));
+                                                "Notifications and reminders cancelled for ${filteredTasks[index].name}")));
                                   });
                                 },
                               ).padding(bottom: 10);

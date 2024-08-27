@@ -19,19 +19,6 @@ class OverdueTaskScreen extends ConsumerStatefulWidget {
 
 class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
   String filter = "all";
-  late PageController _pageViewController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageViewController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageViewController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +77,19 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
                       } else {
                         return TaskTile(
                           task: filteredTasks[index],
-                          onCheckboxChanged: (bool? value) =>
+                          onTaskCheckboxChanged: (bool? value) =>
                               _onCheckboxChanged(value, filteredTasks, index),
+                          onSubtaskCheckboxChanged:
+                              (bool? value, int subtaskIndex) {
+                            filteredTasks[index]
+                                .subtasks[subtaskIndex]
+                                .isComplete = value!;
+
+                            ref
+                                .read(taskRepositoryProvider.notifier)
+                                .updateTask(filteredTasks[index]);
+                            setState(() {});
+                          },
                           onDelete: () {
                             Task task = filteredTasks[index];
 
@@ -112,7 +110,7 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "Notifications and reminders cancelled for ${filteredTasks[index].activity}",
+                                      "Notifications and reminders cancelled for ${filteredTasks[index].name}",
                                     ),
                                   ),
                                 );

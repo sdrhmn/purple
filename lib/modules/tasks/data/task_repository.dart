@@ -126,10 +126,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     };
   }
 
-  Future<Map<DateTime?, List<Task>>> getCompletedTasks() async {
+  Future<Map<DateTime?, List<Task>>> getCompletedTasks(
+      // {int page = 1}
+      ) async {
     final query = (taskBox.query(DataTask_.completed.equals(true))).build();
 
-    List<DataTask> dataTasks = await query.findAsync();
+    List<DataTask> dataTasks = await (query
+        // ..limit = page * 5
+        // ..offset = (page - 1) * 5
+        )
+        .findAsync();
 
     List<Task> tasks = [];
 

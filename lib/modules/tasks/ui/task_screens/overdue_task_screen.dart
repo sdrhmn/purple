@@ -52,7 +52,7 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
                   });
                 })
           ],
-        ).height(60).card(),
+        ).height(60),
         const SizedBox(
           height: 7,
         ),

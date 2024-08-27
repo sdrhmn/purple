@@ -52,7 +52,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                   });
                 })
           ],
-        ).height(60).card(),
+        ).height(60),
         const SizedBox(
           height: 7,
         ),

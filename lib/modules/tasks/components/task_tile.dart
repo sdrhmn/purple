@@ -103,7 +103,8 @@ class TaskTile extends ConsumerWidget {
                         ),
                       )
                       .padding(all: 5)
-                      .card(),
+                      .decorated(color: Colors.black38)
+                      .clipRRect(all: 5),
             ],
           ),
           subtitle: Column(
@@ -128,7 +129,9 @@ class TaskTile extends ConsumerWidget {
                 return Row(
                   children: [
                     Checkbox(
-                      activeColor: Colors.lightGreen,
+                      activeColor: task.isComplete
+                          ? Colors.lightGreen
+                          : Colors.purple[200],
                       value: task.subtasks[index].isComplete,
                       onChanged: (value) =>
                           onSubtaskCheckboxChanged(value, index),
@@ -149,7 +152,7 @@ class TaskTile extends ConsumerWidget {
                         ),
                       ),
                       tileColor: task.subtasks[index].isComplete
-                          ? Colors.green.withAlpha(150)
+                          ? Colors.green.withAlpha(200)
                           : Colors.black.withAlpha(60),
                     ).expanded(),
                   ],

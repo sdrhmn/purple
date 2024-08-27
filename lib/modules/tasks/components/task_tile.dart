@@ -75,19 +75,55 @@ class TaskTile extends ConsumerWidget {
       ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 120),
         child: ListTile(
-          title: Text(
-            task.name,
-            style: TextStyle(
-              decoration: task.isComplete ? TextDecoration.lineThrough : null,
-            ),
-          ).padding(all: 10),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  task.name,
+                  style: TextStyle(
+                    decoration:
+                        task.isComplete ? TextDecoration.lineThrough : null,
+                  ),
+                ).padding(all: 10),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              task.time == null
+                  ? const Text("")
+                  : Text(task.time!.format(context))
+                      .textStyle(
+                        TextStyle(
+                          fontSize: 18,
+                          decoration: task.isComplete
+                              ? TextDecoration.lineThrough
+                              : null,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                      .padding(all: 5)
+                      .card(),
+            ],
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ...task.description.isNotEmpty
+                  ? [
+                      Text(
+                        task.description,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 10)
+                    ]
+                  : [Container()],
               ...List.generate(task.subtasks.length, (index) {
                 return Row(
                   children: [
                     Checkbox(
+                      activeColor: Colors.green,
                       value: task.subtasks[index].isComplete,
                       onChanged: (value) =>
                           onSubtaskCheckboxChanged(value, index),
@@ -100,21 +136,16 @@ class TaskTile extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(7),
                       ),
                       title: Text(task.subtasks[index].name),
-                      tileColor: Colors.purple,
+                      tileColor: task.subtasks[index].isComplete
+                          ? Colors.green.withAlpha(150)
+                          : Colors.black.withAlpha(60),
                     ).expanded(),
                   ],
                 ).padding(vertical: 5);
               }),
-              ...task.description.isNotEmpty
-                  ? [
-                      Text(
-                        task.description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 10)
-                    ]
-                  : [Container()],
+              task.subtasks.isNotEmpty
+                  ? const SizedBox(height: 20)
+                  : Container(),
               task.isComplete
                   ? Row(
                       children: [
@@ -168,16 +199,6 @@ class TaskTile extends ConsumerWidget {
                   : Container(),
             ],
           ),
-          trailing: task.time == null
-              ? const Text("")
-              : Text(task.time!.format(context)).textStyle(
-                  TextStyle(
-                    fontSize: 18,
-                    decoration:
-                        task.isComplete ? TextDecoration.lineThrough : null,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
           tileColor: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
                       .isBefore(now) &&
                   !task.isComplete

@@ -186,7 +186,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
         );
       },
       error: (_, __) {
-        return Text("Error: $_ $__");
+        return Scaffold(body: Text("Error: $_ $__"));
       },
       loading: () {
         return const Center(child: SplashScreen());

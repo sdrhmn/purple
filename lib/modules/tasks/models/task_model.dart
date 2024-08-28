@@ -58,7 +58,7 @@ class Task {
     Map json = jsonDecode(dataTask.data);
 
     return Task(
-      name: json['name'],
+      name: json['name'] ?? json['activity'],
       description: json['description'] ?? "",
       notifId: json['notif_id'],
       isComplete: dataTask.completed,
@@ -91,7 +91,7 @@ class Task {
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
-      name: json['name'],
+      name: json['name'] ?? json['activity'],
       notifId: json['notif_id'],
       description: json['description'] ?? "",
       isComplete: json['is_complete'],

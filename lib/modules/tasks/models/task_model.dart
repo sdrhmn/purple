@@ -82,11 +82,10 @@ class Task {
           : null,
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
-      subtasks: jsonDecode(json['subtasks'])
-              .map((json) => Subtask.fromJson(json))
-              .toList()
-              .cast<Subtask>() ??
-          [],
+      subtasks: jsonDecode(json['subtasks'] ?? '[]')
+          .map((json) => Subtask.fromJson(json))
+          .toList()
+          .cast<Subtask>(),
     )..id = dataTask.id;
   }
 
@@ -113,11 +112,10 @@ class Task {
       repetitionDataId: json['repetition_data_id'],
       reminders: (json['reminders'] as Map<String, dynamic>).map(
           (key, value) => MapEntry(int.parse(key), Duration(seconds: value))),
-      subtasks: jsonDecode(json['subtasks'])
-              .map((json) => Subtask.fromJson(json))
-              .toList()
-              .cast<Subtask>() ??
-          [],
+      subtasks: jsonDecode(json['subtasks'] ?? '[]')
+          .map((json) => Subtask.fromJson(json))
+          .toList()
+          .cast<Subtask>(),
     );
   }
 

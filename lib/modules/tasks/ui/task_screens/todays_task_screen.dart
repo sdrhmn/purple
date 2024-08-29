@@ -34,23 +34,27 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Type"),
-            DropdownButton(
-                borderRadius: BorderRadius.circular(5),
-                underline: Container(),
-                value: filter,
-                items: [
-                  for (String filter in filters)
-                    DropdownMenuItem(
-                        value: filter,
-                        child:
-                            Text(filter[0].toUpperCase() + filter.substring(1))
-                                .padding(all: 5))
-                ],
-                onChanged: (flt) {
-                  setState(() {
-                    filter = flt!;
-                  });
-                })
+            Container(
+              color: Colors.grey.withAlpha(40),
+              child: DropdownButton(
+                  dropdownColor: Colors.purple,
+                  borderRadius: BorderRadius.circular(5),
+                  underline: Container(),
+                  value: filter,
+                  items: [
+                    for (String filter in filters)
+                      DropdownMenuItem(
+                          value: filter,
+                          child: Text(
+                                  filter[0].toUpperCase() + filter.substring(1))
+                              .padding(all: 10))
+                  ],
+                  onChanged: (flt) {
+                    setState(() {
+                      filter = flt!;
+                    });
+                  }),
+            ).clipRRect(all: 5)
           ],
         ).height(60),
         const SizedBox(

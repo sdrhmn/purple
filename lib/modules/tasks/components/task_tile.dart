@@ -129,19 +129,21 @@ class TaskTile extends ConsumerWidget {
                 return Row(
                   children: [
                     Checkbox(
+                      checkColor: Colors.white,
                       activeColor: task.isComplete
                           ? Colors.lightGreen
-                          : Colors.purple[200],
+                          : Colors.transparent,
                       value: task.subtasks[index].isComplete,
                       onChanged: (value) =>
                           onSubtaskCheckboxChanged(value, index),
                     ),
                     const SizedBox(
-                      width: 5,
+                      width: 10,
                     ),
                     ListTile(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7),
+                        side: const BorderSide(color: Colors.white24),
                       ),
                       title: Text(
                         task.subtasks[index].name,
@@ -152,7 +154,7 @@ class TaskTile extends ConsumerWidget {
                         ),
                       ),
                       tileColor: task.subtasks[index].isComplete
-                          ? Colors.green.withAlpha(200)
+                          ? Colors.green.withAlpha(160)
                           : Colors.black.withAlpha(60),
                     ).expanded(),
                   ],
@@ -217,12 +219,13 @@ class TaskTile extends ConsumerWidget {
           tileColor: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
                       .isBefore(now) &&
                   !task.isComplete
-              ? Colors.orange[900]
+              ? Colors.orange.withAlpha(60)
               : task.isComplete
                   ? Colors.green[800]
-                  : Colors.purple[800],
+                  : Colors.purple.withAlpha(40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
+            side: BorderSide(color: Colors.white24),
           ),
           onTap: () {
             Navigator.of(context).push(

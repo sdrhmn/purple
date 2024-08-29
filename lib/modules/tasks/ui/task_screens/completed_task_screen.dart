@@ -223,7 +223,11 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: Colors.white24),
+              ),
+              backgroundColor: Colors.purple.withAlpha(50),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Scaffold(
@@ -234,7 +238,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                   ),
                 ),
               ),
-              child: Icon(Icons.add, color: Colors.purple[700]),
+              child: Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),

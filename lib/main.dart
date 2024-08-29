@@ -180,7 +180,10 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
           ),
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text("PurpleTime"),
+            title: const Text("PurpleTime")
+                .letterSpacing(2)
+                .fontWeight(FontWeight.w300)
+                .fontSize(20),
           ),
           body: pages[pageIndex],
         );

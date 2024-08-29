@@ -58,7 +58,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.purple[800],
+                fillColor: Colors.purple.withAlpha(40),
               ),
               onChanged: (value) {
                 task.name = value;
@@ -82,7 +82,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: Colors.purple[900],
+              fillColor: Colors.purple.withAlpha(20),
             ),
             onChanged: (value) {
               task.description = value;
@@ -133,7 +133,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: Colors.purple[800],
+                    fillColor: Colors.purple.withAlpha(20),
                   ),
                   onChanged: (value) {
                     task.subtasks[index].name = value;

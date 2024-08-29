@@ -138,7 +138,11 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: Colors.white24),
+              ),
+              backgroundColor: Colors.purple.withAlpha(50),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Scaffold(
@@ -149,7 +153,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                   ),
                 ),
               ),
-              child: Icon(Icons.add, color: Colors.purple[700]),
+              child: Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),

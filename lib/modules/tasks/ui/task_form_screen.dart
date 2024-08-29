@@ -99,38 +99,34 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   text: "Add Subtask")
               .padding(vertical: 5),
 
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
 
           ...List.generate(task.subtasks.length, (index) {
             return Row(
               children: [
-                ...index == task.subtasks.length - 1
-                    ? [
-                        IconButton(
-                          onPressed: () {
-                            task.subtasks.removeLast();
-                            setState(() {});
-                          },
-                          icon: const Icon(
-                            Icons.remove_circle,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                      ]
-                    : [
-                        Container(),
-                      ],
+                IconButton(
+                  onPressed: () {
+                    task.subtasks.removeAt(index);
+                    setState(() {});
+                  },
+                  icon: const Icon(
+                    Icons.remove_circle,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
                 TextFormField(
+                  controller:
+                      TextEditingController(text: task.subtasks[index].name),
                   maxLines: 1,
                   textCapitalization: TextCapitalization.sentences,
                   onTapOutside: (PointerDownEvent event) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
-                  initialValue: task.subtasks[index].name,
+                  // initialValue: task.subtasks[index].name,
                   decoration: InputDecoration(
                     hintText: "Name",
                     border: const OutlineInputBorder(

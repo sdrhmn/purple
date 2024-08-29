@@ -49,7 +49,7 @@ class Task {
       name: "",
       description: "",
       type: "",
-      priority: "high",
+      priority: "",
       reminders: {},
     );
   }

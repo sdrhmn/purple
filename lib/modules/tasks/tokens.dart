@@ -5,4 +5,6 @@ List<String> filters = [
   "assignment",
   "exercise",
   "dawah",
+  "event",
+  "work",
 ];

@@ -114,7 +114,7 @@ class TaskTile extends ConsumerWidget {
                   ? [
                       Text(
                         task.description,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.fade,
                         maxLines: 2,
                         style: TextStyle(
                           decoration: task.isComplete

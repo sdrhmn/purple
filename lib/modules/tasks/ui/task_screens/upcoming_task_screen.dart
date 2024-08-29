@@ -69,7 +69,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                     child: ListView(
                       children: [
                         for (DateTime date in tasks.keys) ...{
-                          Text(DateFormat(DateFormat.ABBR_MONTH_DAY)
+                          Text(DateFormat(DateFormat.ABBR_MONTH_WEEKDAY_DAY)
                                   .format(date))
                               .padding(all: 10)
                               .card()

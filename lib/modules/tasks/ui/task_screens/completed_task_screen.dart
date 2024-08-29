@@ -70,7 +70,8 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                       children: [
                         for (DateTime? date in tasks.keys) ...{
                           Text(date != null
-                                  ? DateFormat(DateFormat.ABBR_MONTH_DAY)
+                                  ? DateFormat(
+                                          DateFormat.ABBR_MONTH_WEEKDAY_DAY)
                                       .format(date)
                                   : "")
                               .padding(all: 10)

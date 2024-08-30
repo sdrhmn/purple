@@ -37,7 +37,6 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
             Container(
               color: Colors.grey.withAlpha(40),
               child: DropdownButton(
-                  dropdownColor: Colors.purple,
                   borderRadius: BorderRadius.circular(5),
                   underline: Container(),
                   value: filter,

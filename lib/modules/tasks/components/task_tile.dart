@@ -7,7 +7,7 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 
 extension on List<Widget> {
   List<Widget> intersperse(Widget item) {
-    return map((e) => [item, e]).expand((e) => e).toList().skip(1).toList();
+    return map((e) => [item, e]).expand((e) => e).skip(1).toList();
   }
 }
 

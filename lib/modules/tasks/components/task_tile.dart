@@ -7,7 +7,7 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 
 extension on List<Widget> {
   List<Widget> intersperse(Widget item) {
-    return map((e) => [item, e]).expand((e) => e).toList().sublist(1);
+    return map((e) => [item, e]).expand((e) => e).toList().skip(1).toList();
   }
 }
 
@@ -217,7 +217,7 @@ class TaskTile extends ConsumerWidget {
                     )
                   : null,
             ].whereType<Widget>().toList().intersperse(
-                  const SizedBox(
+                  SizedBox(
                     height: 10,
                   ),
                 ),

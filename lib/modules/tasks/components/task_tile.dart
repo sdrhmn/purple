@@ -178,7 +178,12 @@ class TaskTile extends ConsumerWidget {
                           .isBefore(now) &&
                       !task.isComplete
                   ? Text(
-                      "Overdue since ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}${task.time != null ? ', ${task.time!.format(context)}' : ''}")
+                      '''Overdue since 
+                      ${DateFormat(DateFormat.ABBR_MONTH_DAY).format(task.date!)}
+                      ${task.time != null ? ', ${task.time!.format(context)}' : ''}
+                      '''
+                          .replaceAll('\n', ''),
+                    )
                   : task.repeatRule != null
                       ? Row(
                           children: [

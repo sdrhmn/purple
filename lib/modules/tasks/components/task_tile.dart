@@ -217,7 +217,7 @@ class TaskTile extends ConsumerWidget {
                     )
                   : null,
             ].whereType<Widget>().toList().intersperse(
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ),

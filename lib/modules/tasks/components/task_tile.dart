@@ -5,6 +5,12 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/tasks/ui/task_form_screen.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 
+extension on List<Widget> {
+  List<Widget> intersperse(Widget item) {
+    return map((e) => [item, e]).expand((e) => e).toList().sublist(1);
+  }
+}
+
 class TaskTile extends ConsumerWidget {
   final Task task;
   final Function(bool? value) onTaskCheckboxChanged;
@@ -110,21 +116,17 @@ class TaskTile extends ConsumerWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...task.description.isNotEmpty
-                  ? [
-                      Text(
-                        task.description,
-                        overflow: TextOverflow.fade,
-                        maxLines: 2,
-                        style: TextStyle(
-                          decoration: task.isComplete
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
+              task.description.isNotEmpty
+                  ? Text(
+                      task.description,
+                      overflow: TextOverflow.fade,
+                      maxLines: 2,
+                      style: TextStyle(
+                        decoration:
+                            task.isComplete ? TextDecoration.lineThrough : null,
                       ),
-                      const SizedBox(height: 10)
-                    ]
-                  : [Container()],
+                    )
+                  : null,
               ...List.generate(task.subtasks.length, (index) {
                 return Row(
                   children: [
@@ -160,9 +162,6 @@ class TaskTile extends ConsumerWidget {
                   ],
                 ).padding(vertical: 5);
               }),
-              task.subtasks.isNotEmpty
-                  ? const SizedBox(height: 20)
-                  : Container(),
               task.isComplete
                   ? Row(
                       children: [
@@ -174,8 +173,7 @@ class TaskTile extends ConsumerWidget {
                         ),
                       ],
                     )
-                  : Container(),
-              const SizedBox(height: 10),
+                  : null,
               (task.date?.copyWith(hour: 23, minute: 59) ?? now)
                           .isBefore(now) &&
                       !task.isComplete
@@ -196,8 +194,7 @@ class TaskTile extends ConsumerWidget {
                             ),
                           ],
                         )
-                      : Container(),
-              const SizedBox(height: 10),
+                      : null,
               task.duration != null
                   ? Row(
                       children: [
@@ -213,8 +210,12 @@ class TaskTile extends ConsumerWidget {
                         ),
                       ],
                     )
-                  : Container(),
-            ],
+                  : null,
+            ].whereType<Widget>().toList().intersperse(
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ),
           ),
           tileColor: (task.date?.copyWith(hour: 23, minute: 59) ?? now)
                       .isBefore(now) &&
@@ -225,7 +226,7 @@ class TaskTile extends ConsumerWidget {
                   : Colors.purple.withAlpha(40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
-            side: BorderSide(color: Colors.white24),
+            side: const BorderSide(color: Colors.white24),
           ),
           onTap: () {
             Navigator.of(context).push(

@@ -4,6 +4,7 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/inputs.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_model.dart';
+import 'package:timely/modules/lifestyle/kpi/kpi_models_provider.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_repository.dart';
 
 class KPIFormPage extends ConsumerStatefulWidget {
@@ -14,13 +15,20 @@ class KPIFormPage extends ConsumerStatefulWidget {
 }
 
 class _KpiFormPageState extends ConsumerState<KPIFormPage> {
-  KPIModel kpiModel = KPIModel(
-    date: DateTime.now(),
-    activity: 1,
-    sleep: 1,
-    bowelMovement: 1,
-    weight: 60,
-  );
+  late KPIModel kpiModel;
+
+  @override
+  void initState() {
+    DateTime now = DateTime.now();
+    kpiModel = KPIModel(
+      date: DateTime(now.year, now.month, now.day),
+      activity: 1,
+      sleep: 1,
+      bowelMovement: 1,
+      weight: 60,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +53,13 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
                     flex: 1,
                   ),
                   indicators[index] == "Weight"
-                      ? TextFormFieldAtom(
-                              initialValue: kpiModel.weight.toString(),
-                              onChanged: (String value) => kpiModel.weight =
-                                  double.parse(
-                                      value.isNotEmpty ? value : "0.0"),
-                              hintText: "")
-                          .expanded()
+                      ? TextFormField(
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          initialValue: kpiModel.weight.toString(),
+                          onChanged: (String value) => kpiModel.weight =
+                              double.parse(value.isNotEmpty ? value : "0.0"),
+                        ).expanded()
                       : CupertinoPickerAtom(
                           itemExtent: 50,
                           onSelectedItemChanged: (item) {
@@ -73,26 +81,30 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
                         ).expanded(flex: 8)
                 ],
               ).padding(all: 10),
-              TextFormField(
-                maxLines: 2,
-                onChanged: (value) {
-                  kpiModel.comments[index] = value;
-                },
-                decoration: InputDecoration(
-                  hintText: "Comments...",
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.purple[800],
-                ),
-              ).padding(horizontal: 10)
             ];
           }).expand((i) => i).toList(),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            maxLines: 3,
+            onChanged: (value) {
+              kpiModel.comments = value;
+            },
+            decoration: InputDecoration(
+              hintText: "Comments...",
+              border: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.purple[800],
+            ),
+          ).padding(horizontal: 10),
           CancelSubmitRowMolecule(
-            onSubmitPressed: () {
-              ref.read(kpiRepositoryProvider.notifier).write(kpiModel);
+            onSubmitPressed: () async {
               Navigator.of(context).pop();
+              await ref.read(kpiRepositoryProvider.notifier).write(kpiModel);
+              ref.invalidate(kpiModelsProvider);
             },
             onCancelPressed: () => Navigator.of(context).pop(),
           ).padding(vertical: 30, horizontal: 10),

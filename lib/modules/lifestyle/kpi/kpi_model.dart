@@ -10,7 +10,7 @@ class KPIModel {
   late int sleep;
   late int bowelMovement;
   late double weight;
-  late List<String> comments;
+  late String comments;
   List get values => [activity, sleep, bowelMovement, weight];
 
   KPIModel({
@@ -21,12 +21,6 @@ class KPIModel {
     required this.weight,
     comments,
   }) {
-    this.comments = comments ??
-        [
-          '',
-          '',
-          '',
-          '',
-        ];
+    this.comments = comments ?? "";
   }
 }

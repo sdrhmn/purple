@@ -9,7 +9,8 @@ export 'package:timely/common/inputs.dart';
 final storeProvider = FutureProvider<Store>((ref) async {
   final docsDir = await getApplicationDocumentsDirectory();
 
-  final taskStore = await openStore(directory: join(docsDir.path, "tasks"));
+  final taskStore =
+      await openStore(directory: join(docsDir.path, "purple-time-db"));
 
   return taskStore;
 });

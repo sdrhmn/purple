@@ -107,9 +107,43 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "7:6850466840735033921",
+      "lastPropertyId": "5:8356028429561592397",
+      "name": "ControlsModel",
+      "properties": [
+        {
+          "id": "1:8304312403309197202",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5071099219931758757",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "3:8418013981771812503",
+          "name": "communication",
+          "type": 6
+        },
+        {
+          "id": "4:8859716787361050267",
+          "name": "food",
+          "type": 6
+        },
+        {
+          "id": "5:8356028429561592397",
+          "name": "spending",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "6:7133346629129162575",
+  "lastEntityId": "7:6850466840735033921",
   "lastIndexId": "1:7375183161489578996",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

@@ -83,7 +83,7 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
               ).padding(all: 10),
             ];
           }).expand((i) => i).toList(),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextFormField(

@@ -110,7 +110,7 @@
     },
     {
       "id": "7:6850466840735033921",
-      "lastPropertyId": "5:8356028429561592397",
+      "lastPropertyId": "6:7770704984550869504",
       "name": "ControlsModel",
       "properties": [
         {
@@ -138,13 +138,79 @@
           "id": "5:8356028429561592397",
           "name": "spending",
           "type": 6
+        },
+        {
+          "id": "6:7770704984550869504",
+          "name": "comments",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:7749967382415126934",
+      "lastPropertyId": "3:375054125959783538",
+      "name": "HealthProject",
+      "properties": [
+        {
+          "id": "1:8991801276819977845",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2986806830556004289",
+          "name": "condition",
+          "type": 9
+        },
+        {
+          "id": "3:375054125959783538",
+          "name": "criticality",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:4309239738176592958",
+      "lastPropertyId": "5:340026664385531404",
+      "name": "HealthTask",
+      "properties": [
+        {
+          "id": "1:8342088100458845736",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5147908630724554973",
+          "name": "dateTime",
+          "type": 10
+        },
+        {
+          "id": "3:8066200443440816178",
+          "name": "task",
+          "type": 9
+        },
+        {
+          "id": "4:4148386222954881090",
+          "name": "update",
+          "type": 9
+        },
+        {
+          "id": "5:340026664385531404",
+          "name": "healthProjectId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:55001190194957372",
+          "relationTarget": "HealthProject"
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "7:6850466840735033921",
-  "lastIndexId": "1:7375183161489578996",
+  "lastEntityId": "9:4309239738176592958",
+  "lastIndexId": "2:55001190194957372",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -77,20 +77,20 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
           const SizedBox(
             height: 10,
           ),
-          // TextFormField(
-          //   maxLines: 3,
-          //   onChanged: (value) {
-          //     controlsModel.comments = value;
-          //   },
-          //   decoration: InputDecoration(
-          //     hintText: "Comments...",
-          //     border: const OutlineInputBorder(
-          //       borderSide: BorderSide.none,
-          //     ),
-          //     filled: true,
-          //     fillColor: Colors.purple[800],
-          //   ),
-          // ).padding(horizontal: 10),
+          TextFormField(
+            maxLines: 3,
+            onChanged: (value) {
+              controlsModel.comments = value;
+            },
+            decoration: InputDecoration(
+              hintText: "Comments...",
+              border: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.purple[800],
+            ),
+          ).padding(horizontal: 10),
           CancelSubmitRowMolecule(
             onSubmitPressed: () async {
               Navigator.of(context).pop();

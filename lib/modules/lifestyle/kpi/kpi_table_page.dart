@@ -30,11 +30,12 @@ class KPITablePage extends ConsumerWidget {
             child: SingleChildScrollView(
               child: Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                columnWidths: {
+                columnWidths: const {
                   0: FixedColumnWidth(50),
                 },
                 border: TableBorder.all(
                   color: Colors.grey,
+                  width: 0.5,
                 ),
                 children: [
                   TableRow(children: [
@@ -50,27 +51,41 @@ class KPITablePage extends ConsumerWidget {
                             .padding(all: 5)
                             .center(),
                         Table(
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
+                          border: TableBorder.all(
+                            color: Colors.grey,
+                            width: 0.25,
+                          ),
                           children: [
                             TableRow(children: [
-                              const Text('Activity').padding(all: 5),
+                              const Text(
+                                'Activity',
+                                overflow: TextOverflow.ellipsis,
+                              ).fontSize(15).padding(all: 5),
                               Center(
                                 child: Text(kpiModels[i].activity.toString())
+                                    .fontSize(15)
                                     .padding(all: 5),
                               ),
                             ]),
                             TableRow(children: [
-                              const Text('Sleep').padding(all: 5),
+                              const Text('Sleep').fontSize(15).padding(all: 5),
                               Center(
                                 child: Text(kpiModels[i].sleep.toString())
+                                    .fontSize(15)
                                     .padding(all: 5),
                               ),
                             ]),
                             TableRow(
                               children: [
-                                const Text('Bowel').padding(all: 5),
+                                const Text('Bowel')
+                                    .fontSize(15)
+                                    .padding(all: 5),
                                 Center(
                                   child: Text(
                                           kpiModels[i].bowelMovement.toString())
+                                      .fontSize(15)
                                       .padding(all: 5),
                                 ),
                               ],

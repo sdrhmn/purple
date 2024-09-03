@@ -10,7 +10,7 @@ class ControlsTablePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> headers = "Date.Communciation.Food.Spending".split(".");
+    List<String> headers = "Date.Indicators.Comments".split(".");
     final providerOfControolsModels = ref.watch(controlsModelsProvider);
 
     return providerOfControolsModels.when(
@@ -33,9 +33,7 @@ class ControlsTablePage extends ConsumerWidget {
                 columnWidths: const {
                   0: FixedColumnWidth(50),
                 },
-                border: TableBorder.all(
-                  color: Colors.grey,
-                ),
+                border: TableBorder.all(color: Colors.grey, width: 0.5),
                 children: [
                   TableRow(
                       children: List.generate(headers.length, (index) {
@@ -48,11 +46,33 @@ class ControlsTablePage extends ConsumerWidget {
                                 .format(controlsModels[i].date))
                             .padding(all: 5)
                             .center(),
-                        ...List.generate(controlsModels[i].values.length, (j) {
-                          return Text(controlsModels[i].values[j].toString())
-                              .padding(all: 5)
-                              .center();
-                        })
+                        Table(
+                          border: TableBorder.all(
+                            color: Colors.grey,
+                            width: 0.25,
+                          ),
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
+                          columnWidths: const {
+                            0: FlexColumnWidth(4),
+                          },
+                          children: [
+                            ...List.generate(controlsModels[i].values.length,
+                                (j) {
+                              return TableRow(children: [
+                                Text(
+                                  ["Communication", "Food", "Spending"][j],
+                                  overflow: TextOverflow.ellipsis,
+                                ).fontSize(15).padding(all: 5),
+                                Text(controlsModels[i].values[j].toString())
+                                    .fontSize(15)
+                                    .padding(all: 5)
+                                    .center(),
+                              ]);
+                            }),
+                          ],
+                        ),
+                        Text(controlsModels[i].comments).padding(all: 5),
                       ],
                     );
                   })

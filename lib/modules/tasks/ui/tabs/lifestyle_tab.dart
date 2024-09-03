@@ -48,9 +48,13 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
                 },
                 child: Text(controls[index]).fontSize(16),
               ),
-            ).padding(horizontal: 5, vertical: 2).expanded();
+            ).padding(horizontal: 5).expanded();
           }),
-        ],
+        ]
+            .map((e) => [const SizedBox(height: 2), e])
+            .expand((e) => e)
+            .skip(1)
+            .toList(),
       ),
       // floatingActionButton: FloatingActionButton(
       //   child: Icon(Icons.add),

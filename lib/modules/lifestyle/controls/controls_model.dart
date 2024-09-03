@@ -9,7 +9,7 @@ class ControlsModel {
   late int communication;
   late int food;
   late int spending;
-  // late String comments;
+  late String comments;
   List get values => [communication, food, spending];
 
   ControlsModel({
@@ -17,8 +17,8 @@ class ControlsModel {
     required this.communication,
     required this.food,
     required this.spending,
-    // comments,
+    comments,
   }) {
-    // this.comments = comments ?? "";
+    this.comments = comments ?? "";
   }
 }

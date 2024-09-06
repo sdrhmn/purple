@@ -18,6 +18,7 @@ class Task {
   TimeOfDay? time;
   String type;
   String priority;
+  int? position; // The sorting position.
   Duration? duration;
   SchedulingModel? repeatRule;
   int? repetitionDataId;
@@ -39,6 +40,7 @@ class Task {
     this.repetitionDataId,
     this.reminders = const {},
     this.subtasks = const [],
+    this.position,
   }) {
     this.notifId = notifId ?? Random().nextInt(50e3.toInt());
     this.isComplete = isComplete ?? this.isComplete;
@@ -86,6 +88,7 @@ class Task {
           .map((json) => Subtask.fromJson(json))
           .toList()
           .cast<Subtask>(),
+      position: json['position'],
     )..id = dataTask.id;
   }
 
@@ -116,6 +119,7 @@ class Task {
           .map((json) => Subtask.fromJson(json))
           .toList()
           .cast<Subtask>(),
+      position: json['position'],
     );
   }
 
@@ -140,6 +144,7 @@ class Task {
           .map((key, value) => MapEntry(key.toString(), value.inSeconds)),
       'subtasks':
           jsonEncode(subtasks.map((subtask) => subtask.toJson()).toList()),
+      'position': position,
     };
   }
 
@@ -157,6 +162,7 @@ class Task {
     SchedulingModel? repeatRule,
     Map<int, Duration>? reminders,
     List<Subtask>? subtasks,
+    int? position,
   }) {
     return Task(
       name: name ?? this.name,
@@ -171,6 +177,7 @@ class Task {
       repeatRule: repeatRule ?? this.repeatRule,
       reminders: reminders ?? this.reminders,
       subtasks: subtasks ?? this.subtasks,
+      position: position ?? this.position,
     )..id = id;
   }
 
@@ -194,6 +201,8 @@ class Task {
       isComplete: isComplete,
       completedAt: completedAt ? null : this.completedAt,
       notifId: notifId,
+      subtasks: subtasks,
+      position: position,
     )..id = id;
   }
 }

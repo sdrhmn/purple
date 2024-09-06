@@ -53,6 +53,13 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           .inSeconds;
     });
 
+    tasks.where((task) => task.position != null).forEach((task) {
+      if (task.position! < tasks.length) {
+        tasks.remove(task);
+        tasks.insert(task.position!, task);
+      }
+    });
+
     query.close();
 
     return tasks;

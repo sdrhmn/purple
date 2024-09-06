@@ -63,47 +63,54 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
           child: Scaffold(
             body: providerOfTasks.when(
               data: (List<Task> tasks) {
-                List<Task> filteredTasks = tasks
-                    .where(
-                        (task) => filter != "all" ? task.type == filter : true)
-                    .toList();
                 return RefreshIndicator(
                   onRefresh: () {
                     return Future.delayed(Duration.zero, () {
                       ref.invalidate(todaysTasksProvider);
                     });
                   },
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      if (index + 1 == filteredTasks.length + 1) {
-                        return const SizedBox(height: 70);
-                      } else {
+                  child: ReorderableListView(
+                    footer: SizedBox(height: 80),
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) {
+                          newIndex -= 1;
+                        }
+                        final Task task =
+                            tasks.removeAt(tasks.indexOf(tasks[oldIndex]));
+                        tasks.insert(newIndex, task);
+
+                        ref
+                            .read(taskRepositoryProvider.notifier)
+                            .updateTask(task..position = newIndex);
+                      });
+                    },
+                    children: List.generate(tasks.length, (index) {
+                      if (filter != "all"
+                          ? tasks[index].type == filter
+                          : true) {
                         return TaskTile(
-                          task: filteredTasks[index],
+                          key: ValueKey(index),
+                          task: tasks[index],
                           onTaskCheckboxChanged: (bool? value) =>
-                              _onCheckboxChanged(value, filteredTasks, index),
+                              _onCheckboxChanged(value, tasks, index),
                           onSubtaskCheckboxChanged:
                               (bool? value, int subtaskIndex) {
-                            filteredTasks[index]
-                                .subtasks[subtaskIndex]
-                                .isComplete = value!;
+                            tasks[index].subtasks[subtaskIndex].isComplete =
+                                value!;
 
                             ref
                                 .read(taskRepositoryProvider.notifier)
-                                .updateTask(filteredTasks[index]);
+                                .updateTask(tasks[index]);
                             setState(() {});
                           },
                           onDelete: () {
-                            Task task = filteredTasks[index];
-
+                            Task task = tasks[index];
                             setState(
                               () {
                                 ref
                                     .read(taskRepositoryProvider.notifier)
                                     .deleteTask(task);
-                                tasks.remove(task);
                                 if (task.repeatRule == null) {
                                   NotifService().cancelNotif(task.id);
                                   NotifService()
@@ -115,18 +122,22 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "Notifications and reminders cancelled for ${filteredTasks[index].name}",
+                                      "Notifications and reminders cancelled for ${tasks[index].name}",
                                     ),
                                   ),
                                 );
+
+                                tasks.removeAt(index);
                               },
                             );
                           },
-                        ).padding(horizontal: 10);
+                        ).padding(
+                          bottom: 10,
+                          key: ValueKey(index),
+                        );
                       }
-                    },
-                    itemCount: filteredTasks.length + 1,
-                  ),
+                    }).whereType<Widget>().toList(),
+                  ).decorated().padding(all: 10),
                 );
               },
               error: (_, __) {
@@ -152,7 +163,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                   ),
                 ),
               ),
-              child: Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),

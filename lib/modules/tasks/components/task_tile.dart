@@ -81,6 +81,7 @@ class TaskTile extends ConsumerWidget {
       ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 120),
         child: ListTile(
+          key: ValueKey(task.id),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

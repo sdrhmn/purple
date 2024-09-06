@@ -6,7 +6,7 @@ import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/projects/project_form.dart';
+import 'package:timely/modules/projects/projects_page.dart';
 import 'package:timely/modules/tasks/ui/task_screens/completed_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/overdue_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/todays_task_screen.dart';
@@ -69,7 +69,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
       const UpcomingTaskScreen(),
       const CompletedTaskScreen(),
       const OverdueTaskScreen(),
-      const ProjectForm()
+      const ProjectsPage()
     ];
 
     final appStartup = ref.watch(appStartupProvider);
@@ -123,7 +123,7 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                     .expand((e) => e)
                     .skip(1)
                     .toList(),
-                Divider(
+                const Divider(
                   height: 30,
                   indent: 10,
                   endIndent: 10,
@@ -146,8 +146,8 @@ class _MyHomePageState extends ConsumerState<PurpleTimeHomePage> {
                         pageIndex = 5 - 1;
                       });
                     },
-                    icon: Icon(Icons.settings_applications),
-                    label: Text("Projects"),
+                    icon: const Icon(Icons.settings_applications),
+                    label: const Text("Projects"),
                   ),
                 ).padding(horizontal: 10),
               ],

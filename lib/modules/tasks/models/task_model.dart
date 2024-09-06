@@ -24,6 +24,7 @@ class Task {
   int? repetitionDataId;
   Map<int, Duration> reminders;
   List<Subtask> subtasks;
+  final project = ToOne<Project>();
 
   Task({
     required this.name,
@@ -89,7 +90,9 @@ class Task {
           .toList()
           .cast<Subtask>(),
       position: json['position'],
-    )..id = dataTask.id;
+    )
+      ..id = dataTask.id
+      ..project.target = dataTask.project.target;
   }
 
   factory Task.fromJson(Map<String, dynamic> json) {

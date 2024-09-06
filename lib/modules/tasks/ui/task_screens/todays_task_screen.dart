@@ -70,7 +70,8 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                     });
                   },
                   child: ReorderableListView(
-                    footer: SizedBox(height: 80),
+                    buildDefaultDragHandles: false,
+                    footer: const SizedBox(height: 80),
                     onReorder: (oldIndex, newIndex) {
                       setState(() {
                         if (oldIndex < newIndex) {
@@ -89,51 +90,54 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                       if (filter != "all"
                           ? tasks[index].type == filter
                           : true) {
-                        return TaskTile(
+                        return ReorderableDragStartListener(
                           key: ValueKey(index),
-                          task: tasks[index],
-                          onTaskCheckboxChanged: (bool? value) =>
-                              _onCheckboxChanged(value, tasks, index),
-                          onSubtaskCheckboxChanged:
-                              (bool? value, int subtaskIndex) {
-                            tasks[index].subtasks[subtaskIndex].isComplete =
-                                value!;
+                          index: index,
+                          child: TaskTile(
+                            task: tasks[index],
+                            onTaskCheckboxChanged: (bool? value) =>
+                                _onCheckboxChanged(value, tasks, index),
+                            onSubtaskCheckboxChanged:
+                                (bool? value, int subtaskIndex) {
+                              tasks[index].subtasks[subtaskIndex].isComplete =
+                                  value!;
 
-                            ref
-                                .read(taskRepositoryProvider.notifier)
-                                .updateTask(tasks[index]);
-                            setState(() {});
-                          },
-                          onDelete: () {
-                            Task task = tasks[index];
-                            setState(
-                              () {
-                                ref
-                                    .read(taskRepositoryProvider.notifier)
-                                    .deleteTask(task);
-                                if (task.repeatRule == null) {
-                                  NotifService().cancelNotif(task.id);
-                                  NotifService()
-                                      .cancelReminders(task.reminders);
-                                } else {
-                                  NotifService().cancelRepeatTaskNotifs(task);
-                                }
+                              ref
+                                  .read(taskRepositoryProvider.notifier)
+                                  .updateTask(tasks[index]);
+                              setState(() {});
+                            },
+                            onDelete: () {
+                              Task task = tasks[index];
+                              setState(
+                                () {
+                                  ref
+                                      .read(taskRepositoryProvider.notifier)
+                                      .deleteTask(task);
+                                  if (task.repeatRule == null) {
+                                    NotifService().cancelNotif(task.id);
+                                    NotifService()
+                                        .cancelReminders(task.reminders);
+                                  } else {
+                                    NotifService().cancelRepeatTaskNotifs(task);
+                                  }
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Notifications and reminders cancelled for ${tasks[index].name}",
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "Notifications and reminders cancelled for ${tasks[index].name}",
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
 
-                                tasks.removeAt(index);
-                              },
-                            );
-                          },
-                        ).padding(
-                          bottom: 10,
-                          key: ValueKey(index),
+                                  tasks.removeAt(index);
+                                },
+                              );
+                            },
+                          ).padding(
+                            bottom: 10,
+                            key: ValueKey(index),
+                          ),
                         );
                       }
                     }).whereType<Widget>().toList(),

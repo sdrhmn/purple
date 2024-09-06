@@ -10,6 +10,7 @@ import 'package:timely/common/scheduling/duration_selection.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
+import 'package:timely/modules/projects/project_model.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
@@ -20,7 +21,8 @@ import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
   final Task? task;
-  const TaskFormScreen({super.key, this.task});
+  final Project? project;
+  const TaskFormScreen({super.key, this.task, this.project});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskFormState();
@@ -28,12 +30,14 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 
 class _TaskFormState extends ConsumerState<TaskFormScreen> {
   late Task task;
+  late Project? project;
   SchedulingModel? repeatRule;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     task = widget.task ?? Task.empty();
+    project = widget.project;
     repeatRule = task.repeatRule;
     super.initState();
   }
@@ -452,9 +456,14 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 }
 
                 if (widget.task == null) {
-                  ref.read(taskRepositoryProvider.notifier).writeTask(task);
+                  ref.read(taskRepositoryProvider.notifier).writeTask(
+                        task,
+                        project: project,
+                      );
                 } else {
-                  ref.read(taskRepositoryProvider.notifier).updateTask(task);
+                  ref.read(taskRepositoryProvider.notifier).updateTask(
+                        task,
+                      );
                 }
 
                 ref.invalidate(todaysTasksProvider);

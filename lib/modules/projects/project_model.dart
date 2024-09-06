@@ -15,7 +15,7 @@ class Project {
   String get dbDuration => "${duration.inDays}:${duration.inHours}";
 
   set dbDuration(String value) {
-    List vals = value.split(":");
+    List vals = value.split(":").map((val) => int.parse(val)).toList();
     duration = Duration(days: vals.first, hours: vals.last);
   }
 

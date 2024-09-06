@@ -152,7 +152,7 @@ class _OverdueTaskScreenState extends ConsumerState<OverdueTaskScreen> {
                   ),
                 ),
               ),
-              child: Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),

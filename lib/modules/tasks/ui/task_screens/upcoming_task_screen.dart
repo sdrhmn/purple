@@ -72,20 +72,28 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
                     child: ListView(
                       children: [
                         for (DateTime date in tasks.keys) ...{
-                          Text(DateFormat(DateFormat.ABBR_MONTH_WEEKDAY_DAY)
-                                  .format(date))
-                              .padding(all: 10)
-                              .card()
-                              .center(),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          ...tasks[date]!
+                                  .where((task) => filter != "all"
+                                      ? task.type == filter
+                                      : true)
+                                  .isNotEmpty
+                              ? [
+                                  Text(DateFormat(
+                                              DateFormat.ABBR_MONTH_WEEKDAY_DAY)
+                                          .format(date))
+                                      .padding(all: 10)
+                                      .card()
+                                      .center(),
+                                  const SizedBox(
+                                    height: 10,
+                                  )
+                                ]
+                              : [],
                           ...() {
                             List<Task> filteredTasks = tasks[date]!
                                 .where((task) => filter != "all"
                                     ? task.type == filter
                                     : true)
-                                .toList()
                                 .toList();
                             return List.generate(filteredTasks.length, (index) {
                               Task task = filteredTasks[index];

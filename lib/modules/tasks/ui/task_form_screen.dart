@@ -11,6 +11,7 @@ import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/projects/project_model.dart';
+import 'package:timely/modules/tasks/data/task_providers/overdue_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/modules/tasks/data/task_repository.dart';
@@ -466,9 +467,14 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                       );
                 }
 
-                ref.invalidate(todaysTasksProvider);
-                ref.invalidate(upcomingTasksProvider);
-                ref.invalidate(completetdTasksProvider);
+                for (ProviderOrFamily provider in [
+                  todaysTasksProvider,
+                  upcomingTasksProvider,
+                  completetdTasksProvider,
+                  overdueTasksProvider
+                ]) {
+                  ref.invalidate(provider);
+                }
 
                 Navigator.of(context).pop();
               } else

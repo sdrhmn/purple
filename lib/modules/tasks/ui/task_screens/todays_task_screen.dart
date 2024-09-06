@@ -90,7 +90,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                       if (filter != "all"
                           ? tasks[index].type == filter
                           : true) {
-                        return ReorderableDragStartListener(
+                        return ReorderableDelayedDragStartListener(
                           key: ValueKey(index),
                           index: index,
                           child: TaskTile(

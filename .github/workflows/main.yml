@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - moDdeD
-  workflow_dispatch:  # This allows you to manually trigger the workflow
+  workflow_dispatch:  # Allows manual triggers
 
 jobs:
   build:
@@ -15,21 +15,26 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: 'stable'
+      run: git clone ${{ github.repository_url }} .  # Manually clone the repository
 
     - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+        curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.10.5-stable.tar.xz
+        tar xf flutter_linux_3.10.5-stable.tar.xz
+        export PATH="$PATH:`pwd`/flutter/bin"
+        flutter doctor
+        dart run build_runner build
+
+    - name: Install Flutter dependencies
       run: flutter pub get
 
     - name: Build APK
       run: flutter build apk --release
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: app-release.apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+    - name: Upload APK as artifact
+      run: |
+        mkdir -p artifacts
+        cp build/app/outputs/flutter-apk/app-release.apk artifacts/
+        echo "APK generated and stored in artifacts/ folder"

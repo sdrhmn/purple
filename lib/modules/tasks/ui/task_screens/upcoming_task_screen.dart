@@ -35,7 +35,7 @@ class _TaskScreenState extends ConsumerState<UpcomingTaskScreen> {
           children: [
             const Text("Type"),
             Container(
-              color: Colors.grey.withAlpha(40),
+              color: Colors.purple.withAlpha(50),
               child: DropdownButton(
                   borderRadius: BorderRadius.circular(5),
                   underline: Container(),

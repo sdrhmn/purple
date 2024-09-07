@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/lifestyle/controls/controls_table_page.dart';
+import 'package:timely/modules/lifestyle/health/ui/health_projects_page.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_table_page.dart';
 
 class LifestyleTab extends ConsumerStatefulWidget {
@@ -19,6 +20,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
     List<Widget> pages = [
       const KPITablePage(),
       const ControlsTablePage(),
+      const HealthProjectsPage(),
     ];
 
     return Scaffold(

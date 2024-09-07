@@ -27,6 +27,7 @@ class _ProjectPageState extends ConsumerState<ProjectTasksPage> {
             children: List.generate(
               tasks.length,
               (index) => TaskTile(
+                hideProjectLabel: true,
                 task: tasks[index],
                 onTaskCheckboxChanged: (value) {},
                 onSubtaskCheckboxChanged: (value, subTaskIndex) {},

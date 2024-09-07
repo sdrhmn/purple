@@ -129,8 +129,6 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
                                       ),
                                     ),
                                   );
-
-                                  tasks.removeAt(index);
                                 },
                               );
                             },

@@ -27,45 +27,44 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   // Methods
-  Future<List<Task>> getTodaysTasks() async {
+  Stream<List<Task>> getTodaysTasks() async* {
     DateTime now = DateTime.now();
-    final query = taskBox
-        .query(DataTask_.dateTime
-            .isNull()
-            .and(DataTask_.completed.equals(false))
-            .or(DataTask_.dateTime.betweenDate(
-                DateTime(now.year, now.month, now.day, 0, 0),
-                DateTime(now.year, now.month, now.day, 23, 59))))
-        .build();
+    final query = taskBox.query(DataTask_.dateTime
+        .isNull()
+        .and(DataTask_.completed.equals(false))
+        .or(DataTask_.dateTime.betweenDate(
+            DateTime(now.year, now.month, now.day, 0, 0),
+            DateTime(now.year, now.month, now.day, 23, 59))));
 
-    List<DataTask> dataTasks = await query.findAsync();
+    yield* query
+        .watch(triggerImmediately: true)
+        .map((q) => q.find())
+        .map((List<DataTask> dataTasks) {
+      List<Task> tasks = [];
 
-    List<Task> tasks = [];
-
-    for (DataTask dataTask in dataTasks) {
-      tasks.add(Task.fromDataTask(dataTask));
-    }
-
-    tasks.sort((a, b) {
-      return (a.date?.copyWith(
-                  hour: a.time?.hour ?? 23, minute: a.time?.minute ?? 59) ??
-              DateTime.now().copyWith(hour: 23, minute: 59))
-          .difference(b.date?.copyWith(
-                  hour: b.time?.hour ?? 23, minute: b.time?.minute ?? 59) ??
-              DateTime.now().copyWith(hour: 23, minute: 59))
-          .inSeconds;
-    });
-
-    tasks.where((task) => task.position != null).forEach((task) {
-      if (task.position! < tasks.length) {
-        tasks.remove(task);
-        tasks.insert(task.position!, task);
+      for (DataTask dataTask in dataTasks) {
+        tasks.add(Task.fromDataTask(dataTask));
       }
+
+      tasks.sort((a, b) {
+        return (a.date?.copyWith(
+                    hour: a.time?.hour ?? 23, minute: a.time?.minute ?? 59) ??
+                DateTime.now().copyWith(hour: 23, minute: 59))
+            .difference(b.date?.copyWith(
+                    hour: b.time?.hour ?? 23, minute: b.time?.minute ?? 59) ??
+                DateTime.now().copyWith(hour: 23, minute: 59))
+            .inSeconds;
+      });
+
+      tasks.where((task) => task.position != null).forEach((task) {
+        if (task.position! < tasks.length) {
+          tasks.remove(task);
+          tasks.insert(task.position!, task);
+        }
+      });
+
+      return tasks;
     });
-
-    query.close();
-
-    return tasks;
   }
 
   Future<List<Task>> getOverdueTasks() async {

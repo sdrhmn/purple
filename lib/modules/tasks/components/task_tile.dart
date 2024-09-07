@@ -16,12 +16,15 @@ class TaskTile extends ConsumerWidget {
   final Function(bool? value) onTaskCheckboxChanged;
   final Function(bool? value, int index) onSubtaskCheckboxChanged;
   final Function() onDelete;
+  final bool hideProjectLabel;
+
   const TaskTile({
     super.key,
     required this.task,
     required this.onTaskCheckboxChanged,
     required this.onSubtaskCheckboxChanged,
     required this.onDelete,
+    this.hideProjectLabel = false,
   });
 
   @override
@@ -117,10 +120,12 @@ class TaskTile extends ConsumerWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              task.project.target != null
+              (task.project.target != null && hideProjectLabel == false)
                   ? Text(task.project.target!.name)
-                      .padding(all: 5)
-                      .decorated(color: Colors.black)
+                      .padding(all: 5, horizontal: 10)
+                      .decorated(color: Colors.black38)
+                      .clipRRect(all: 5)
+                      .padding(vertical: 10)
                   : null,
               task.description.isNotEmpty
                   ? Text(

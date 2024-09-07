@@ -207,9 +207,43 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "10:1598989543814778321",
+      "lastPropertyId": "5:8605899251100128235",
+      "name": "MemoryModel",
+      "properties": [
+        {
+          "id": "1:283311730292751589",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2558539211568386449",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:4157155235690693458",
+          "name": "detail",
+          "type": 9
+        },
+        {
+          "id": "4:4619856753349330649",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "5:8605899251100128235",
+          "name": "importance",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "9:4309239738176592958",
+  "lastEntityId": "10:1598989543814778321",
   "lastIndexId": "2:55001190194957372",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

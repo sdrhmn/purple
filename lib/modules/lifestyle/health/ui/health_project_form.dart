@@ -67,7 +67,7 @@ class HealthProjectFormState extends State<HealthProjectForm> {
                 children: [
                   Text(
                     _selectedCriticality != null
-                        ? 'Criticality: ${_selectedCriticality}'
+                        ? 'Criticality: $_selectedCriticality'
                         : 'Select Criticality',
                     style: const TextStyle(color: Colors.white),
                   ),

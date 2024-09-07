@@ -1,0 +1,5 @@
+- Date
+- Title
+- Detail
+- Learning / Story / Jokes -> [Selectable]
+- Importance -> [Selectable(1, 3)]

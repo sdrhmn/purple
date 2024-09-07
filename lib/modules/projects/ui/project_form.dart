@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/buttons.dart';
-import 'package:timely/modules/projects/project_model.dart';
+import 'package:timely/modules/projects/data/project_repository.dart';
+import 'package:timely/modules/projects/data/projects_provider.dart';
+import 'package:timely/modules/projects/ui/project_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
-import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
 extension on BuildContext {
@@ -14,19 +15,27 @@ extension on BuildContext {
 }
 
 class ProjectForm extends ConsumerStatefulWidget {
-  const ProjectForm({super.key});
+  final Project? project;
+  const ProjectForm({super.key, this.project});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProjectFormState();
 }
 
 class _ProjectFormState extends ConsumerState<ProjectForm> {
-  Project project = Project(
-    name: "",
-    description: "",
-    duration: Duration.zero,
-  );
+  late Project project;
   List<Task> tasks = [];
+
+  @override
+  void initState() {
+    project = widget.project ??
+        Project(
+          name: "",
+          description: "",
+          duration: Duration.zero,
+        );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +94,17 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
         TextButtonAtom.large(
                 onPressed: () {
                   setState(() {
+                    ref
+                        .read(projectRepositoryProvider.notifier)
+                        .writeProject(project)
+                        .then((v) {
+                      ref.invalidate(projectsProvider);
+                    });
                     context.pop();
-
-                    Store store = ref.read(storeProvider).requireValue;
-                    Box<Project> box = store.box<Project>();
-
-                    box.put(project);
                   });
                 },
-                text: "Create Project")
+                text:
+                    widget.project == null ? "Create Project" : "Save Changes")
             .padding(vertical: 5),
       ]
           .map((e) => [

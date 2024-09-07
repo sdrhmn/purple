@@ -243,7 +243,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                   ),
                 ),
               ),
-              child: Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: Colors.white),
             ),
           ),
         ),

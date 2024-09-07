@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
-import 'package:timely/modules/projects/project_model.dart';
+import 'package:timely/modules/projects/ui/project_model.dart';
 import 'package:timely/modules/tasks/models/repetition_data_model.dart';
 
 class Task {

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timely/modules/projects/project_model.dart';
+import 'package:timely/modules/projects/ui/project_model.dart';
 import 'package:timely/modules/tasks/models/repetition_data_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
 import 'package:timely/objectbox.g.dart';
@@ -175,10 +175,11 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     };
   }
 
-  writeTask(Task task, {Project? project}) {
+  Future<void> writeTask(Task task) async {
     RepetitionData? repetitionData;
     if (task.repeatRule != null) {
       repetitionData = RepetitionData(
+        id: task.repetitionDataId ?? 0,
         data: jsonEncode(task.repeatRule!.toJson()),
         task: jsonEncode(task.toJson()),
       );
@@ -186,6 +187,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     }
 
     DataTask dataTask = DataTask(
+      id: task.id ?? 0,
       dateTime:
           task.date?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
       data: jsonEncode(
@@ -193,23 +195,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
       ),
     )
       ..repetitionData.target = repetitionData
-      ..project.target = project;
+      ..project.target = task.project.target;
 
-    taskBox.put(dataTask);
-
-    // TODO InShaaAllah :: Add SoC by creating
-    // projectRepository with addTask method
-    if (project != null) {
-      project.tasks.add(dataTask);
-      projectBox.put(project);
-    }
+    await taskBox.putAsync(dataTask);
   }
 
   updateTask(Task task) {
     RepetitionData? repetitionData;
     if (task.repeatRule != null) {
       repetitionData = RepetitionData(
-        id: task.repetitionDataId,
+        id: task.repetitionDataId ?? 0,
         data: jsonEncode(task.repeatRule!.toJson()),
         task: jsonEncode(task.toJson()),
       );
@@ -227,6 +222,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     )
       ..repetitionData.target = repetitionData
       ..project.target = task.project.target;
+
     taskBox.put(dataTask);
   }
 
@@ -238,7 +234,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
     RepetitionData? repetitionData;
     if (task.repeatRule != null) {
       repetitionData = RepetitionData(
-        id: task.repetitionDataId,
+        id: task.repetitionDataId ?? 0,
         data: jsonEncode(task.repeatRule!.toJson()),
         task: jsonEncode(task.toJson()),
       );
@@ -254,7 +250,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           task.toJson(),
         ),
         completed: task.isComplete,
-      )..repetitionData.target = repetitionData,
+      )
+        ..repetitionData.target = repetitionData
+        ..project.target = task.project.target,
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:timely/app_startup_provider.dart';
 import 'package:timely/app_theme.dart';
 import 'package:timely/common/splash.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/projects/projects_page.dart';
+import 'package:timely/modules/projects/ui/projects_page.dart';
 import 'package:timely/modules/tasks/ui/task_screens/completed_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/overdue_task_screen.dart';
 import 'package:timely/modules/tasks/ui/task_screens/todays_task_screen.dart';

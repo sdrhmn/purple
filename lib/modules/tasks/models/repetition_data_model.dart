@@ -3,15 +3,13 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class RepetitionData {
   @Id()
-  int id = 0;
+  int id;
   String data;
   String task;
 
   RepetitionData({
-    id,
+    this.id = 0,
     required this.data,
     required this.task,
-  }) {
-    this.id = id ?? 0;
-  }
+  });
 }

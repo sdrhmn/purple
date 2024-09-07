@@ -83,7 +83,7 @@ class _TaskScreenState extends ConsumerState<TodaysTaskScreen> {
 
                         ref
                             .read(taskRepositoryProvider.notifier)
-                            .updateTask(task..position = newIndex);
+                            .writeTask(task..position = newIndex);
                       });
                     },
                     children: List.generate(tasks.length, (index) {

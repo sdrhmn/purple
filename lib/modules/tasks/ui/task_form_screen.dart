@@ -10,7 +10,9 @@ import 'package:timely/common/scheduling/duration_selection.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
-import 'package:timely/modules/projects/project_model.dart';
+import 'package:timely/modules/projects/data/project_tasks_provider.dart';
+import 'package:timely/modules/projects/data/projects_provider.dart';
+import 'package:timely/modules/projects/ui/project_model.dart';
 import 'package:timely/modules/tasks/data/task_providers/overdue_tasks_provider.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
@@ -432,7 +434,10 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 ).padding(vertical: 10),
 
           CancelSubmitRowMolecule(
-            onSubmitPressed: () {
+            onSubmitPressed: () async {
+              if (project != null) {
+                task.project.target = project;
+              }
               if (_formKey.currentState!.validate()) {
                 task.repeatRule = repeatRule?.copyWith(
                     startDate: task.date, startTime: task.time);
@@ -456,22 +461,17 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                   }
                 }
 
-                if (widget.task == null) {
-                  ref.read(taskRepositoryProvider.notifier).writeTask(
-                        task,
-                        project: project,
-                      );
-                } else {
-                  ref.read(taskRepositoryProvider.notifier).updateTask(
-                        task,
-                      );
-                }
+                await ref.read(taskRepositoryProvider.notifier).writeTask(
+                      task,
+                    );
 
                 for (ProviderOrFamily provider in [
                   todaysTasksProvider,
                   upcomingTasksProvider,
                   completetdTasksProvider,
-                  overdueTasksProvider
+                  overdueTasksProvider,
+                  projectTasksProvider,
+                  projectsProvider,
                 ]) {
                   ref.invalidate(provider);
                 }

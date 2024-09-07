@@ -117,6 +117,11 @@ class TaskTile extends ConsumerWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              task.project.target != null
+                  ? Text(task.project.target!.name)
+                      .padding(all: 5)
+                      .decorated(color: Colors.black)
+                  : null,
               task.description.isNotEmpty
                   ? Text(
                       task.description,

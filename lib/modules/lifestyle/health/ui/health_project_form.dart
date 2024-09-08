@@ -100,7 +100,7 @@ class HealthProjectFormState extends State<HealthProjectForm> {
       builder: (context) => CupertinoActionSheet(
         title: const Text('Select Criticality'),
         actions: List.generate(
-          10,
+          5,
           (index) => CupertinoActionSheetAction(
             onPressed: () {
               setState(() {

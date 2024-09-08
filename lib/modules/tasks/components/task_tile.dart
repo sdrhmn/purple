@@ -8,10 +8,12 @@ import 'package:timely/modules/tasks/models/task_model.dart';
 class TaskTile extends ConsumerWidget {
   final Task task;
   final Function(DismissDirection direction, Task task) onDismissed;
+  final bool isProjectType;
   const TaskTile({
     super.key,
     required this.task,
     required this.onDismissed,
+    this.isProjectType = false,
   });
 
   @override
@@ -207,6 +209,7 @@ class TaskTile extends ConsumerWidget {
                 ),
                 body: TaskFormScreen(
                   task: task,
+                  allowProjectType: isProjectType,
                 ),
               ),
             ),

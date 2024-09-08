@@ -22,9 +22,7 @@ class _GoalsPageState extends ConsumerState<GoalsPage> {
     final providerOfTasks = ref.watch(goalsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Goals"),
-      ),
+      appBar: AppBar(title: const Text("Goals")),
       body: providerOfTasks.when(
         data: (List<Task> tasks) {
           return RefreshIndicator(
@@ -36,16 +34,15 @@ class _GoalsPageState extends ConsumerState<GoalsPage> {
             child: ListView.separated(
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                if (index + 1 == tasks.length + 1) {
-                  return const SizedBox(height: 70);
-                } else {
-                  return TaskTile(
-                    task: tasks[index],
-                    onDismissed:
-                        (DismissDirection direction, Task dismissedTask) {
-                      Task task = tasks[index];
-                      setState(() {
-                        tasks.remove(task);
+                return TaskTile(
+                  isProjectType: true,
+                  task: tasks[index],
+                  onDismissed:
+                      (DismissDirection direction, Task dismissedTask) {
+                    Task task = tasks[index];
+
+                    setState(
+                      () {
                         if (direction == DismissDirection.startToEnd) {
                           ref
                               .read(taskRepositoryProvider.notifier)
@@ -93,12 +90,13 @@ class _GoalsPageState extends ConsumerState<GoalsPage> {
                                       : dismissedTask.date);
                           }
                         }
-                      });
-                    },
-                  ).padding(horizontal: 10);
-                }
+                      },
+                    );
+                    tasks.remove(task);
+                  },
+                ).padding(horizontal: 10);
               },
-              itemCount: tasks.length + 1,
+              itemCount: tasks.length,
             ),
           );
         },

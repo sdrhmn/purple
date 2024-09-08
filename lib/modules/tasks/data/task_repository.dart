@@ -37,7 +37,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
                 .and(DataTask_.completed.equals(false)))
             .or(DataTask_.dateTime.betweenDate(
                 DateTime(now.year, now.month, now.day, 0, 0),
-                DateTime(now.year, now.month, now.day, 23, 59)))))
+                DateTime(now.year, now.month, now.day, 23, 59)))
+            .and(DataTask_.type.notEquals("project"))))
         .build();
 
     List<DataTask> dataTasks = await query.findAsync();
@@ -64,7 +65,8 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   Future<Map<DateTime, List<Task>>> getUpcomingTasks() async {
     DateTime now = DateTime.now();
     final query = (taskBox.query(DataTask_.dateTime
-            .greaterThanDate(DateTime(now.year, now.month, now.day, 23, 59))))
+            .greaterThanDate(DateTime(now.year, now.month, now.day, 23, 59))
+            .and(DataTask_.type.notEquals("project"))))
         .build();
 
     List<DataTask> dataTasks = await query.findAsync();
@@ -87,7 +89,10 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   Future<Map<DateTime?, List<Task>>> getCompletedTasks() async {
-    final query = (taskBox.query(DataTask_.completed.equals(true))).build();
+    final query = (taskBox.query(DataTask_.completed
+            .equals(true)
+            .and(DataTask_.type.notEquals("project"))))
+        .build();
 
     List<DataTask> dataTasks = await query.findAsync();
 

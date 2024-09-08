@@ -4,8 +4,8 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/inputs.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/lifestyle/controls/controls_model.dart';
-import 'package:timely/modules/lifestyle/controls/controls_repository.dart';
-import 'package:timely/modules/lifestyle/controls/controls_models_provider.dart';
+import 'package:timely/modules/lifestyle/controls/data/controls_repository.dart';
+import 'package:timely/modules/lifestyle/controls/data/controls_models_provider.dart';
 
 class ControlsFormPage extends ConsumerStatefulWidget {
   const ControlsFormPage({super.key});

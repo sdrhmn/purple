@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/lifestyle/kpi/kpi_form_page.dart';
-import 'package:timely/modules/lifestyle/kpi/kpi_models_provider.dart';
+import 'package:timely/modules/lifestyle/kpi/ui/kpi_form_page.dart';
+import 'package:timely/modules/lifestyle/kpi/data/kpi_models_provider.dart';
 
 class KPITablePage extends ConsumerWidget {
   const KPITablePage({super.key});

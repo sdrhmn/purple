@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/lifestyle/controls/controls_form_page.dart';
-import 'package:timely/modules/lifestyle/controls/controls_models_provider.dart';
+import 'package:timely/modules/lifestyle/controls/ui/controls_form_page.dart';
+import 'package:timely/modules/lifestyle/controls/data/controls_models_provider.dart';
 
 class ControlsTablePage extends ConsumerWidget {
   const ControlsTablePage({super.key});

@@ -4,8 +4,8 @@ import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/inputs.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_model.dart';
-import 'package:timely/modules/lifestyle/kpi/kpi_models_provider.dart';
-import 'package:timely/modules/lifestyle/kpi/kpi_repository.dart';
+import 'package:timely/modules/lifestyle/kpi/data/kpi_models_provider.dart';
+import 'package:timely/modules/lifestyle/kpi/data/kpi_repository.dart';
 
 class KPIFormPage extends ConsumerStatefulWidget {
   const KPIFormPage({super.key});

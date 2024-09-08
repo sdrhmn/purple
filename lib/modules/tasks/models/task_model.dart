@@ -201,11 +201,13 @@ class DataTask {
   bool completed;
   String data;
   final repetitionData = ToOne<RepetitionData>();
+  final String type;
 
   DataTask({
     this.id = 0,
     required this.dateTime,
     required this.data,
     this.completed = false,
+    this.type = "",
   });
 }

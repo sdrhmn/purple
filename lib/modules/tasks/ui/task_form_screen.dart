@@ -9,6 +9,7 @@ import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/common/scheduling/duration_selection.dart';
 import 'package:timely/common/scheduling/repeats_template.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/lifestyle/goals/data/goals_provider.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/data/task_providers/upcoming_tasks_provider.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
@@ -20,7 +21,12 @@ import 'package:timely/reusables.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
   final Task? task;
-  const TaskFormScreen({super.key, this.task});
+  final bool allowProjectType;
+  const TaskFormScreen({
+    super.key,
+    this.task,
+    this.allowProjectType = false,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskFormState();
@@ -35,6 +41,10 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
   void initState() {
     task = widget.task ?? Task.empty();
     repeatRule = task.repeatRule;
+
+    if (widget.allowProjectType) {
+      task.type = "project";
+    }
     super.initState();
   }
 
@@ -152,10 +162,13 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 },
                 width: 190,
                 dropdownMenuEntries: [
-                  for (int i in Iterable.generate(types.length))
+                  for (int i in Iterable.generate(
+                      widget.allowProjectType ? 1 : types.length - 1))
                     DropdownMenuEntry(
-                      value: types.keys.toList()[i],
-                      label: types.values.toList()[i],
+                      value: types.keys.toList()[
+                          widget.allowProjectType ? types.length - 1 : i],
+                      label: types.values.toList()[
+                          widget.allowProjectType ? types.length - 1 : i],
                     )
                 ]),
           ]
@@ -418,7 +431,8 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
                 ref.invalidate(todaysTasksProvider);
                 ref.invalidate(upcomingTasksProvider);
-                ref.invalidate(completetdTasksProvider);
+                ref.invalidate(completedTasksProvider);
+                ref.invalidate(goalsProvider);
 
                 Navigator.of(context).pop();
               } else

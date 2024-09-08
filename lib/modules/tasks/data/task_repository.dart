@@ -16,6 +16,9 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
   @override
   FutureOr<void> build() {
+    ref.onDispose(
+      () {},
+    );
     taskStore = ref.read(storeProvider).requireValue;
 
     // Boxes
@@ -131,8 +134,11 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         data: jsonEncode(
           task.toJson(),
         ),
+        type: task.type,
       )..repetitionData.target = repetitionData,
     );
+
+    ref.invalidateSelf();
   }
 
   updateTask(Task task) {
@@ -154,13 +160,16 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         data: jsonEncode(
           task.toJson(),
         ),
+        type: task.type,
         completed: task.isComplete,
       )..repetitionData.target = repetitionData,
     );
+    ref.invalidateSelf();
   }
 
   deleteTask(Task task) {
     taskBox.remove(task.id!);
+    ref.invalidateSelf();
   }
 
   completeTask(Task task) {
@@ -185,9 +194,11 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
         completed: task.isComplete,
       )..repetitionData.target = repetitionData,
     );
+    ref.invalidateSelf();
   }
 }
 
 final taskRepositoryProvider =
-    AsyncNotifierProvider<TaskRepositoryNotifier, void>(
-        TaskRepositoryNotifier.new);
+    AsyncNotifierProvider<TaskRepositoryNotifier, void>(() {
+  return TaskRepositoryNotifier();
+});

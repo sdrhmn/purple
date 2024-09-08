@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:4292185959515019916",
-      "lastPropertyId": "7:7659067757784348448",
+      "lastPropertyId": "8:1330686596440144992",
       "name": "DataTask",
       "properties": [
         {
@@ -36,6 +36,11 @@
           "id": "7:7659067757784348448",
           "name": "dateTime",
           "type": 10
+        },
+        {
+          "id": "8:1330686596440144992",
+          "name": "type",
+          "type": 9
         }
       ],
       "relations": []

@@ -35,7 +35,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final providerOfTasks = ref.watch(completetdTasksProvider);
+    final providerOfTasks = ref.watch(completedTasksProvider);
 
     return Column(
       children: [
@@ -75,7 +75,7 @@ class _TaskScreenState extends ConsumerState<CompletedTaskScreen> {
                 return RefreshIndicator(
                     onRefresh: () {
                       return Future.delayed(Duration.zero, () {
-                        ref.invalidate(completetdTasksProvider);
+                        ref.invalidate(completedTasksProvider);
                       });
                     },
                     child: ListView(

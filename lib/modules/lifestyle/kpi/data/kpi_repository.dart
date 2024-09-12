@@ -15,7 +15,6 @@ class KpiRepositoryNotifier extends AsyncNotifier<void> {
     box = store.box<KPIModel>();
   }
 
-  // Methods
   Future<void> write(KPIModel model) async {
     final query = box.query(KPIModel_.date.equalsDate(model.date)).build();
     KPIModel? previous = (await query.findAsync()).firstOrNull;
@@ -23,6 +22,10 @@ class KpiRepositoryNotifier extends AsyncNotifier<void> {
       model.id = previous.id;
     }
     box.put(model);
+  }
+
+  Future<void> delete(int id) async {
+    box.remove(id);
   }
 
   Future<List<KPIModel>> getAll() async {

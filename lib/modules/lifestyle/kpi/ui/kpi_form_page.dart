@@ -8,7 +8,9 @@ import 'package:timely/modules/lifestyle/kpi/data/kpi_models_provider.dart';
 import 'package:timely/modules/lifestyle/kpi/data/kpi_repository.dart';
 
 class KPIFormPage extends ConsumerStatefulWidget {
-  const KPIFormPage({super.key});
+  final KPIModel? kpiModel;
+
+  const KPIFormPage({super.key, this.kpiModel});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _KpiFormPageState();
@@ -19,15 +21,21 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
 
   @override
   void initState() {
-    DateTime now = DateTime.now();
-    kpiModel = KPIModel(
-      date: DateTime(now.year, now.month, now.day),
-      activity: 1,
-      sleep: 1,
-      bowelMovement: 1,
-      weight: 60,
-    );
     super.initState();
+    if (widget.kpiModel != null) {
+      // If a KPIModel is passed, use it to initialize the form.
+      kpiModel = widget.kpiModel!;
+    } else {
+      // Otherwise, initialize with default values.
+      DateTime now = DateTime.now();
+      kpiModel = KPIModel(
+        date: DateTime(now.year, now.month, now.day),
+        activity: 1,
+        sleep: 1,
+        bowelMovement: 1,
+        weight: 60,
+      );
+    }
   }
 
   @override
@@ -88,6 +96,7 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
           ),
           TextFormField(
             maxLines: 3,
+            initialValue: kpiModel.comments,
             onChanged: (value) {
               kpiModel.comments = value;
             },

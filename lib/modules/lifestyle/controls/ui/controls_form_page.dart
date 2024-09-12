@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/common/inputs.dart';
 import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/lifestyle/controls/controls_model.dart';
-import 'package:timely/modules/lifestyle/controls/data/controls_repository.dart';
 import 'package:timely/modules/lifestyle/controls/data/controls_models_provider.dart';
+import 'package:timely/modules/lifestyle/controls/data/controls_repository.dart';
 
 class ControlsFormPage extends ConsumerStatefulWidget {
-  const ControlsFormPage({super.key});
+  final ControlsModel? control;
+
+  const ControlsFormPage({super.key, this.control});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -16,18 +19,36 @@ class ControlsFormPage extends ConsumerStatefulWidget {
 }
 
 class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
-  late ControlsModel controlsModel;
+  late ControlsModel control;
 
   @override
   void initState() {
-    DateTime now = DateTime.now();
-    controlsModel = ControlsModel(
-      date: DateTime(now.year, now.month, now.day),
-      communication: 1,
-      food: 1,
-      spending: 1,
-    );
     super.initState();
+    if (widget.control != null) {
+      control = widget.control!;
+    } else {
+      DateTime now = DateTime.now();
+      control = ControlsModel(
+        date: DateTime(now.year, now.month, now.day),
+        communication: 1,
+        food: 1,
+        spending: 1,
+      );
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: control.date,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != control.date) {
+      setState(() {
+        control.date = picked;
+      });
+    }
   }
 
   @override
@@ -39,6 +60,14 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
       ),
       body: ListView(
         children: [
+          ListTile(
+            title: const Text("Date"),
+            subtitle: Text(DateFormat('yyyy-MM-dd').format(control.date)),
+            trailing: IconButton(
+              icon: const Icon(Icons.calendar_today),
+              onPressed: () => _selectDate(context),
+            ),
+          ).padding(horizontal: 10),
           ...List.generate(indicators.length, (index) {
             return [
               Row(
@@ -48,39 +77,36 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
                     indicators[index],
                     textAlign: TextAlign.center,
                   ),
-                  const Spacer(
-                    flex: 1,
-                  ),
+                  const Spacer(flex: 1),
                   CupertinoPickerAtom(
                     itemExtent: 50,
                     onSelectedItemChanged: (item) {
                       switch (index) {
                         case 0:
-                          controlsModel.communication = item;
+                          control.communication = item;
                           break;
                         case 1:
-                          controlsModel.food = item;
+                          control.food = item;
                           break;
                         case 2:
-                          controlsModel.spending = item;
+                          control.spending = item;
                           break;
                       }
                     },
                     elements: "Fair.Good.Poor".split("."),
-                    initialItemIndex: controlsModel.values[index],
+                    initialItemIndex: control.values[index],
                     size: const Size(200, 100),
                   )
                 ],
               ).padding(all: 10),
             ];
           }).expand((i) => i).toList(),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
             maxLines: 3,
+            initialValue: control.comments,
             onChanged: (value) {
-              controlsModel.comments = value;
+              control.comments = value;
             },
             decoration: InputDecoration(
               hintText: "Comments...",
@@ -96,7 +122,7 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
               Navigator.of(context).pop();
               await ref
                   .read(controlsRepositoryProvider.notifier)
-                  .write(controlsModel);
+                  .write(control);
               ref.invalidate(controlsModelsProvider);
             },
             onCancelPressed: () => Navigator.of(context).pop(),

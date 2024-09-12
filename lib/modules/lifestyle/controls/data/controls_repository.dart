@@ -28,6 +28,10 @@ class ControlsRepositoryNotifier extends AsyncNotifier<void> {
   Future<List<ControlsModel>> getAll() async {
     return await box.getAllAsync();
   }
+
+  Future<void> delete(int id) async {
+    await box.removeAsync(id);
+  }
 }
 
 final controlsRepositoryProvider =

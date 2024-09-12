@@ -6,6 +6,7 @@ import 'package:timely/common/row_column_widgets.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_model.dart';
 import 'package:timely/modules/lifestyle/kpi/data/kpi_models_provider.dart';
 import 'package:timely/modules/lifestyle/kpi/data/kpi_repository.dart';
+import 'package:intl/intl.dart';
 
 class KPIFormPage extends ConsumerStatefulWidget {
   final KPIModel? kpiModel;
@@ -38,6 +39,21 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
     }
   }
 
+  // Function to show the date picker and update the selected date
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: kpiModel.date, // Default to today
+      firstDate: DateTime(2000), // Set minimum selectable date
+      lastDate: DateTime.now(), // Set maximum selectable date to today
+    );
+    if (picked != null && picked != kpiModel.date) {
+      setState(() {
+        kpiModel.date = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> indicators =
@@ -48,6 +64,21 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
       ),
       body: ListView(
         children: [
+          // Date selection button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Date: ${DateFormat('yMMMd').format(kpiModel.date)}',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: const Text('Select Date'),
+              ),
+            ],
+          ).padding(all: 10),
           ...List.generate(4, (index) {
             return [
               Row(

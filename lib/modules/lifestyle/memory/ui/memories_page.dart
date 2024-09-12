@@ -6,11 +6,16 @@ import 'package:timely/modules/lifestyle/memory/data/memory_repository.dart';
 import 'package:timely/modules/lifestyle/memory/memory_model.dart';
 import 'package:timely/modules/lifestyle/memory/ui/memory_form.dart';
 
-class MemoriesPage extends ConsumerWidget {
+class MemoriesPage extends ConsumerStatefulWidget {
   const MemoriesPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MemoriesPage> createState() => _MemoriesPageState();
+}
+
+class _MemoriesPageState extends ConsumerState<MemoriesPage> {
+  @override
+  Widget build(BuildContext context) {
     final memoriesAsyncValue = ref.watch(memoriesProvider);
 
     return Scaffold(
@@ -23,23 +28,59 @@ class MemoriesPage extends ConsumerWidget {
                 itemCount: memories.length,
                 itemBuilder: (context, index) {
                   final memory = memories[index];
-                  return ListTile(
-                    title: Text(memory.title),
-                    subtitle: Text(memory.detail),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => _editMemory(context, ref, memory),
+                  return Dismissible(
+                    key: ValueKey(memory.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      child: const Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.delete, color: Colors.white),
+                              SizedBox(width: 20),
+                              Text('Delete',
+                                  style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _deleteMemory(context, ref, memory),
-                        ),
-                      ],
+                      ),
                     ),
-                  ).padding(all: 8);
+                    confirmDismiss: (direction) async {
+                      if (direction == DismissDirection.endToStart) {
+                        return await _confirmDelete(context, memory);
+                      }
+                      return false;
+                    },
+                    onDismissed: (direction) {
+                      ref
+                          .read(memoryRepositoryProvider.notifier)
+                          .deleteMemory(memory.id);
+                      // Update state after deletion
+                      setState(() {});
+                    },
+                    child: ListTile(
+                      title: Text(memory.title),
+                      subtitle: Text(memory.detail),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(memory.type,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold))
+                              .fontSize(20),
+                          const SizedBox(width: 10),
+                          Text(memory.importance.toString(),
+                                  style: const TextStyle(color: Colors.grey))
+                              .fontSize(20),
+                        ],
+                      ),
+                      onTap: () => _editMemory(context, ref, memory),
+                    ).padding(all: 8),
+                  );
                 },
               )
             : const Center(
@@ -73,6 +114,27 @@ class MemoriesPage extends ConsumerWidget {
     );
   }
 
+  Future<bool> _confirmDelete(BuildContext context, MemoryModel memory) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: Text('Are you sure you want to delete "${memory.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
   void _editMemory(BuildContext context, WidgetRef ref, MemoryModel memory) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
@@ -91,31 +153,6 @@ class MemoriesPage extends ConsumerWidget {
           ),
         );
       }),
-    );
-  }
-
-  void _deleteMemory(BuildContext context, WidgetRef ref, MemoryModel memory) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: Text('Are you sure you want to delete "${memory.title}"?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              ref
-                  .read(memoryRepositoryProvider.notifier)
-                  .deleteMemory(memory.id);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Delete'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
     );
   }
 }

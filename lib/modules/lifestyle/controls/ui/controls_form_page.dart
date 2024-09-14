@@ -103,6 +103,7 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
           }).expand((i) => i).toList(),
           const SizedBox(height: 10),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
             initialValue: control.comments,
             onChanged: (value) {

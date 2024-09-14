@@ -39,6 +39,7 @@ class _MemoryFormState extends State<MemoryForm> {
       child: Column(
         children: [
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             initialValue: memory.title,
             decoration: InputDecoration(
               hintText: "Title",
@@ -57,6 +58,7 @@ class _MemoryFormState extends State<MemoryForm> {
             },
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             initialValue: memory.detail,
             decoration: InputDecoration(
               hintText: "Detail",

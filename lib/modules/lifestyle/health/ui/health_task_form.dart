@@ -65,6 +65,7 @@ class _HealthTaskFormState extends State<HealthTaskForm> {
       child: Column(
         children: [
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             initialValue: _task.task,
             decoration: InputDecoration(
               hintText: "Task",
@@ -83,6 +84,7 @@ class _HealthTaskFormState extends State<HealthTaskForm> {
             },
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             initialValue: _task.update,
             decoration: InputDecoration(
               hintText: "Update",

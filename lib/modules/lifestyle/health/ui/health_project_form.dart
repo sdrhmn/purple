@@ -37,6 +37,7 @@ class HealthProjectFormState extends State<HealthProjectForm> {
       child: Column(
         children: [
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             initialValue: project.condition,
             decoration: InputDecoration(
               hintText: "Condition",

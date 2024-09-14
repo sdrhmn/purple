@@ -126,6 +126,7 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
             height: 10,
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
             initialValue: kpiModel.comments,
             onChanged: (value) {

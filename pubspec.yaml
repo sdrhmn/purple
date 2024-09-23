@@ -76,24 +76,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons/tab_1_icon.png
-    - assets/icons/tab_2_icon.png
-    - assets/icons/tab_3_icon.png
-    - assets/icons/tab_4_icon.png
-    - assets/icons/tab_5_icon.png
-    - assets/icons/tab_6_icon.png
-    - assets/icons/tab_7_icon.png
-    - assets/icons/tab_8_icon.png
-    - assets/icons/tab_9_icon.png
-    - assets/icons/tab_10_icon.png
-    - assets/icons/tab_11_icon.png
-    - assets/icons/food.png
-    - assets/icons/communication.png
-    - assets/icons/time.png
-    - assets/icons/weight.png
-    - assets/icons/bowel.png
-    - assets/icons/sleep.png  
-    - assets/icons/activity.png  
+    - assets/KPI/  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

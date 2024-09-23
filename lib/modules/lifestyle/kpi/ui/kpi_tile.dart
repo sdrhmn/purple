@@ -24,7 +24,7 @@ class KPITile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Date and Comments
+          // Date
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -37,14 +37,6 @@ class KPITile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4.0),
-              Text(
-                kpi.comments,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.0,
-                ),
-              ),
             ],
           ),
 
@@ -52,25 +44,38 @@ class KPITile extends StatelessWidget {
 
           // Images and Values
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                // Activity image
-                _ImageAndValue(
-                    imagePath: "assets/KPI/activity.png",
-                    value: kpi.values[0].toString()),
-                // Sleep image
-                _ImageAndValue(
-                    imagePath: "assets/KPI/sleep.png",
-                    value: kpi.values[1].toString()),
-                // Bowel movement image
-                _ImageAndValue(
-                    imagePath: "assets/KPI/bowel.png",
-                    value: kpi.values[2].toString()),
-                // Weight image
-                _ImageAndValue(
-                    imagePath: "assets/KPI/weight.png",
-                    value: kpi.values[3].toString()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Activity image
+                    _ImageAndValue(
+                        imagePath: "assets/KPI/activity.png",
+                        value: kpi.values[0].toString()),
+                    // Sleep image
+                    _ImageAndValue(
+                        imagePath: "assets/KPI/sleep.png",
+                        value: kpi.values[1].toString()),
+                    // Bowel movement image
+                    _ImageAndValue(
+                        imagePath: "assets/KPI/bowel.png",
+                        value: kpi.values[2].toString()),
+                    // Weight image
+                    _ImageAndValue(
+                        imagePath: "assets/KPI/weight.png",
+                        value: kpi.values[3].toString()),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  kpi.comments,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),

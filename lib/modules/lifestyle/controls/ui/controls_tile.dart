@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/lifestyle/controls/controls_model.dart';
 
 class ControlsTile extends StatelessWidget {
@@ -37,39 +38,44 @@ class ControlsTile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4.0),
-              Text(
-                controls.comments,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.0,
-                ),
-              ),
             ],
           ),
 
           const SizedBox(width: 20),
 
           // Images and Values
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Communication image
-                _ImageAndValue(
-                    imagePath: "assets/Controls/communication.png",
-                    value: controls.values[0].toString()),
-                // Food image
-                _ImageAndValue(
-                    imagePath: "assets/Controls/food.png",
-                    value: controls.values[1].toString()),
-                // Spending image
-                _ImageAndValue(
-                    imagePath: "assets/Controls/spending.png",
-                    value: controls.values[2].toString()),
-              ],
-            ),
-          ),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Communication image
+                  _ImageAndValue(
+                      imagePath: "assets/Controls/communication.png",
+                      value: controls.values[0].toString()),
+                  // Food image
+                  _ImageAndValue(
+                      imagePath: "assets/Controls/food.png",
+                      value: controls.values[1].toString()),
+                  // Spending image
+                  _ImageAndValue(
+                      imagePath: "assets/Controls/spending.png",
+                      value: controls.values[2].toString()),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                controls.comments,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ).expanded(),
 
           // Options (Edit/Delete)
           PopupMenuButton<String>(

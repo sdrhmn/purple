@@ -1,151 +1,223 @@
 import 'package:flutter/material.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:timely/modules/lifestyle/health/health_models.dart';
+import 'package:timely/modules/lifestyle/health/ui/clock.dart'; // Import the clock widget
+import 'package:styled_widget/styled_widget.dart';
 
 class HealthTaskForm extends StatefulWidget {
-  final Function(HealthTask task) onSubmit;
-  final HealthTask? task;
+  final HealthTask? initialTask; // Optional initial task for editing
+  final Function(HealthTask) onSubmit; // Callback for submitting the form
 
   const HealthTaskForm({
-    super.key,
+    Key? key,
+    this.initialTask,
     required this.onSubmit,
-    this.task,
-  });
+  }) : super(key: key);
 
   @override
-  State<HealthTaskForm> createState() => _HealthTaskFormState();
+  // ignore: library_private_types_in_public_api
+  _HealthTaskFormState createState() => _HealthTaskFormState();
 }
 
 class _HealthTaskFormState extends State<HealthTaskForm> {
-  final _formKey = GlobalKey<FormState>();
-  late HealthTask _task;
-  DateTime? _selectedDateTime;
+  late String nextTask;
+  late String update;
+  DateTime? selectedDate;
 
   @override
   void initState() {
-    _task = widget.task ??
-        HealthTask(dateTime: DateTime.now(), task: "", update: "update");
-    _selectedDateTime = _task.dateTime;
     super.initState();
+    if (widget.initialTask != null) {
+      nextTask = widget.initialTask!.task;
+      update = widget.initialTask!.update;
+      selectedDate = widget.initialTask!.dateTime;
+    } else {
+      nextTask = '';
+      update = '';
+    }
   }
 
   Future<void> _selectDateTime() async {
-    DateTime initialDate = _selectedDateTime ?? DateTime.now();
-    DateTime? selectedDate = await showDatePicker(
+    DateTime initialDate = this.selectedDate ?? DateTime.now();
+    DateTime? selectedDate = (await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
+    ))
+        ?.copyWith(
+      hour: DateTime.now().hour,
+      minute: DateTime.now().minute,
     );
 
     if (selectedDate != null) {
-      TimeOfDay? selectedTime = await showTimePicker(
+      DateTime initialTime = selectedDate;
+      DateTime finalSelectedTime = selectedDate;
+
+      await showCupertinoModalPopup(
         // ignore: use_build_context_synchronously
         context: context,
-        initialTime: TimeOfDay.fromDateTime(initialDate),
+        builder: (context) => Container(
+          height: 300, // Height for date picker
+          color: Colors.white,
+          child: Scaffold(
+            body: Column(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 200,
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: initialTime,
+                      onDateTimeChanged: (DateTime newTime) {
+                        // Update the local finalSelectedTime with the new time
+                        finalSelectedTime = DateTime(
+                          selectedDate.year,
+                          selectedDate.month,
+                          selectedDate.day,
+                          newTime.hour,
+                          newTime.minute,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                CupertinoButton(
+                  child: const Text('Done'),
+                  onPressed: () {
+                    // Ensure the state is updated with the selected time
+                    setState(() {
+                      this.selectedDate = finalSelectedTime;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       );
-
-      if (selectedTime != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute,
-          );
-        });
-      }
     }
+  }
+
+  Widget _buildDateTimeField() {
+    return GestureDetector(
+      onTap: _selectDateTime,
+      child: AbsorbPointer(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                color: Colors.grey[900],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    selectedDate != null
+                        ? DateFormat.yMMMd().add_jm().format(selectedDate!)
+                        : 'Select Date and Time',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const Icon(Icons.calendar_today, color: Colors.white),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (selectedDate != null)
+              CustomPaint(
+                size: const Size(120, 120),
+                painter: ClockPainter(dateTime: selectedDate!),
+              ), // Add the clock widget here
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            textCapitalization: TextCapitalization.sentences,
-            initialValue: _task.task,
-            decoration: InputDecoration(
-              hintText: "Task",
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.initialTask != null ? 'Edit Task' : 'New Task'),
+        backgroundColor: Colors.black,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTextField(
+                label: 'Next Task',
+                onChanged: (value) => nextTask = value,
+                initialValue: nextTask,
               ),
-              filled: true,
-              fillColor: Colors.purple[800],
-            ),
-            onSaved: (value) => _task.task = value!,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a task';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            textCapitalization: TextCapitalization.sentences,
-            initialValue: _task.update,
-            decoration: InputDecoration(
-              hintText: "Update",
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
+              _buildTextField(
+                label: 'Update',
+                onChanged: (value) => update = value,
+                initialValue: update,
+                maxLines: 3,
               ),
-              filled: true,
-              fillColor: Colors.purple[800],
-            ),
-            onSaved: (value) => _task.update = value!,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an update';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            readOnly: true,
-            decoration: InputDecoration(
-              hintText: "Date and Time",
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
+              const SizedBox(height: 16.0),
+              _buildDateTimeField(), // Use the new date/time field
+              const SizedBox(height: 20.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (nextTask.isNotEmpty &&
+                        update.isNotEmpty &&
+                        selectedDate != null) {
+                      final task = HealthTask(
+                        id: widget.initialTask?.id ?? 0,
+                        dateTime: selectedDate!,
+                        task: nextTask,
+                        update: update,
+                      );
+                      widget.onSubmit(task);
+                      Navigator.of(context).pop(); // Close the form
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 24),
+                  ),
+                  child: const Text('Submit', style: TextStyle(fontSize: 18)),
+                ),
               ),
-              filled: true,
-              fillColor: Colors.purple[800],
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today),
-                onPressed: _selectDateTime,
-              ),
-            ),
-            controller: TextEditingController(
-              text: _selectedDateTime != null
-                  ? '${_selectedDateTime!.toLocal().toShortDateString()} ${_selectedDateTime!.toLocal().toShortTimeString()}'
-                  : '',
-            ),
-            onSaved: (value) =>
-                _task.dateTime = _selectedDateTime ?? DateTime.now(),
+            ].map((e) => e.padding(all: 8)).toList(),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                widget.onSubmit(_task);
-              }
-            },
-            child: const Text('Submit'),
-          ),
-        ].map((e) => e.padding(all: 2)).toList(),
+        ),
       ),
     );
   }
-}
 
-extension DateTimeFormatting on DateTime {
-  String toShortDateString() {
-    return '${day.toString().padLeft(2, '0')}/${month.toString().padLeft(2, '0')}/$year';
-  }
-
-  String toShortTimeString() {
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  Widget _buildTextField({
+    required String label,
+    required Function(String) onChanged,
+    required String initialValue,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      textCapitalization: TextCapitalization.sentences,
+      onChanged: onChanged,
+      controller: TextEditingController(text: initialValue),
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        hintText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none,
+        ),
+        filled: true,
+        fillColor: Colors.grey[900],
+      ),
+      style: const TextStyle(color: Colors.white),
+    );
   }
 }

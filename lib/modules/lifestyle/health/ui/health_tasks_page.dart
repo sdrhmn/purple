@@ -1,129 +1,133 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/lifestyle/health/data/health_providers.dart';
 import 'package:timely/modules/lifestyle/health/data/health_repository.dart';
 import 'package:timely/modules/lifestyle/health/health_models.dart';
-import 'package:timely/modules/lifestyle/health/ui/health_task_form.dart'; // Adjust as needed
+import 'package:timely/modules/lifestyle/health/ui/health_project_form.dart';
+import 'package:timely/modules/lifestyle/health/ui/health_task_form.dart';
+import 'package:timely/modules/lifestyle/health/ui/tiles/health_task_tile.dart';
 
-class HealthTasksPage extends ConsumerWidget {
-  final HealthProject project; // Required project parameter
+class HealthProjectTasksPage extends ConsumerStatefulWidget {
+  final HealthProject project;
+  final VoidCallback onEdit;
 
-  const HealthTasksPage({
+  const HealthProjectTasksPage(
+    this.project, {
     super.key,
-    required this.project, // Ensure project is passed
+    required this.onEdit,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Pass the project.id to the provider
-    final healthTasksAsync = ref.watch(healthTasksProvider(project.id));
+  // ignore: library_private_types_in_public_api
+  _HealthProjectTasksPageState createState() => _HealthProjectTasksPageState();
+}
+
+class _HealthProjectTasksPageState
+    extends ConsumerState<HealthProjectTasksPage> {
+  late HealthProject project;
+
+  @override
+  void initState() {
+    project = widget.project;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch the healthTasksProvider for this project
+    final healthTasksAsyncValue = ref.watch(healthTasksProvider(project.id));
 
     return Scaffold(
-      appBar: AppBar(title: Text(project.condition)),
-      body: healthTasksAsync.when(
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return HealthTaskForm(
+                onSubmit: (task) async {
+                  await ref
+                      .read(healthRepositoryProvider.notifier)
+                      .writeHealthTask(task, project);
+                  ref.invalidate(healthTasksProvider(project
+                      .id)); // Invalidate the tasks provider for the project
+                },
+              );
+            }));
+          }),
+      appBar: AppBar(
+        title: Text('Tasks for ${project.condition}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Open form to edit the project
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => HealthProjectEditForm(
+                    project: project,
+                    onSubmit: (updatedProject) async {
+                      await ref
+                          .read(healthRepositoryProvider.notifier)
+                          .writeHealthProject(updatedProject);
+
+                      setState(() {
+                        project = updatedProject;
+                      });
+
+                      ref.invalidate(healthProjectsProvider);
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      body: healthTasksAsyncValue.when(
         data: (tasks) {
           if (tasks.isEmpty) {
-            return const Center(child: Text('No health tasks available.'));
+            return const Center(
+              child: Text(
+                "No tasks here... start creating...",
+                textAlign: TextAlign.center,
+              ),
+            );
           }
           return ListView.builder(
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
-              return ListTile(
-                title: Text(task.task),
-                subtitle: Text('Update: ${task.update}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              appBar:
-                                  AppBar(title: const Text('Edit Health Task')),
-                              body: HealthTaskForm(
-                                task: task,
-                                onSubmit: (updatedTask) {
-                                  Navigator.of(context).pop();
-                                  ref
-                                      .read(healthRepositoryProvider.notifier)
-                                      .writeHealthTask(updatedTask, project)
-                                      .then((_) => ref.invalidate(
-                                          healthTasksProvider(project.id)));
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        final shouldDelete = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Confirm Delete'),
-                            content: const Text(
-                                'Are you sure you want to delete this task?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text('Delete'),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (shouldDelete ?? false) {
+              return HealthTaskTile(
+                task: task,
+                onDelete: () async {
+                  final repository =
+                      ref.read(healthRepositoryProvider.notifier);
+                  await repository.deleteHealthTask(task); // Delete the task
+                  ref.invalidate(healthTasksProvider(project
+                      .id)); // Invalidate the tasks provider for the project
+                },
+                onEdit: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => HealthTaskForm(
+                        initialTask: task, // Pass the current task for editing
+                        onSubmit: (updatedTask) async {
+                          // Use the repository's writeHealthTask method to update the task
                           await ref
                               .read(healthRepositoryProvider.notifier)
-                              .deleteHealthTask(task)
-                              .then((_) => ref
-                                  .invalidate(healthTasksProvider(project.id)));
-                        }
-                      },
+                              .writeHealthTask(updatedTask, project);
+                          ref.invalidate(healthTasksProvider(project
+                              .id)); // Invalidate to fetch the updated tasks
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              ).padding(all: 5);
+                  );
+                },
+              );
             },
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text('Error: $error')),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the form page to add a new HealthTask
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Add Health Task')),
-                body: HealthTaskForm(
-                  onSubmit: (task) {
-                    Navigator.of(context).pop();
-                    ref
-                        .read(healthRepositoryProvider.notifier)
-                        .writeHealthTask(task, project)
-                        .then((_) =>
-                            ref.invalidate(healthTasksProvider(project.id)));
-                  },
-                ),
-              ),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
+        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }

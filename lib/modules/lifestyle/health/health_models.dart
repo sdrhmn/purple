@@ -4,10 +4,10 @@ import 'package:objectbox/objectbox.dart';
 class HealthProject {
   @Id()
   int id;
-  String condition;
-  int criticality;
+  String condition; // One-line text field
+  int criticality; // Rating between 1 and 5
   @Backlink()
-  final healthTasks = ToMany<HealthTask>();
+  final healthTasks = ToMany<HealthTask>(); // Stores related tasks
 
   HealthProject({
     this.id = 0,
@@ -21,10 +21,10 @@ class HealthTask {
   @Id()
   int id;
   @Property(type: PropertyType.date)
-  DateTime dateTime;
-  String task;
-  String update;
-  final healthProject = ToOne<HealthProject>();
+  DateTime dateTime; // Date and time fields for task creation
+  String task; // Next task (one-line text)
+  String update; // Multi-line update text
+  final healthProject = ToOne<HealthProject>(); // Link back to parent project
 
   HealthTask({
     this.id = 0,

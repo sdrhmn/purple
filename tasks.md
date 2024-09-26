@@ -610,3 +610,26 @@
 - Add notifs -D
 - Sophistify TaskScreen -D
 - Create repository -D
+
+**Bismillah**
+
+- For health tab
+	- Copy entire code from goals tab. Don't make any changes to goals tab.
+	- Priority -> Criticality
+	- Activity -> Condition
+	- Make the field one-lined
+	- Next Activity -> Next Task
+	- Add new multi-line field
+		- Update
+	- Two fields asked on completion
+		- Next Task
+		- Update
+		- Date and time selection
+	- No changes in the goals tab
+	- Duration and repeats won't be there. Remove them.
+	- Remove Types
+
+**Bismillah**
+
+- Show "Edit Project" instead of "Add Project"
+- Tasks are being added and not edited

@@ -149,31 +149,33 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
           ].toRow(),
 
           // Type
-          [
-            const Text("Type"),
-            DropdownMenu(
-                initialSelection: task.type,
-                onSelected: (value) {
-                  if ((value == "project") ||
-                      (task.type == "project" && value != "project")) {
-                    setState(() {});
-                  }
-                  task.type = value!;
-                },
-                width: 190,
-                dropdownMenuEntries: [
-                  for (int i in Iterable.generate(
-                      widget.allowProjectType ? 1 : types.length - 1))
-                    DropdownMenuEntry(
-                      value: types.keys.toList()[
-                          widget.allowProjectType ? types.length - 1 : i],
-                      label: types.values.toList()[
-                          widget.allowProjectType ? types.length - 1 : i],
-                    )
-                ]),
-          ]
-              .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
-              .padding(vertical: 10),
+          task.type == "project"
+              ? Container()
+              : [
+                  const Text("Type"),
+                  DropdownMenu(
+                      initialSelection: task.type,
+                      onSelected: (value) {
+                        if ((value == "project") ||
+                            (task.type == "project" && value != "project")) {
+                          setState(() {});
+                        }
+                        task.type = value!;
+                      },
+                      width: 190,
+                      dropdownMenuEntries: [
+                        for (int i in Iterable.generate(
+                            widget.allowProjectType ? 1 : types.length - 1))
+                          DropdownMenuEntry(
+                            value: types.keys.toList()[
+                                widget.allowProjectType ? types.length - 1 : i],
+                            label: types.values.toList()[
+                                widget.allowProjectType ? types.length - 1 : i],
+                          )
+                      ]),
+                ]
+                  .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
+                  .padding(vertical: 10),
 
           // NextActivity
           task.type == "project"
@@ -243,29 +245,31 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               : Container(),
 
           // Repeat Rule
-          <Widget>[
-            const Text("Repeats"),
-            Switch(
-              onChanged: (value) {
-                value
-                    ? repeatRule = SchedulingModel(
-                        name: '',
-                        startTime: TimeOfDay.now(),
-                        dur: Duration.zero,
-                        basis: Basis.day,
-                        frequency: "Daily",
-                        every: 1,
-                        repetitions: {},
-                      )
-                    : repeatRule = null;
+          task.type == "project"
+              ? Container()
+              : <Widget>[
+                  const Text("Repeats"),
+                  Switch(
+                    onChanged: (value) {
+                      value
+                          ? repeatRule = SchedulingModel(
+                              name: '',
+                              startTime: TimeOfDay.now(),
+                              dur: Duration.zero,
+                              basis: Basis.day,
+                              frequency: "Daily",
+                              every: 1,
+                              repetitions: {},
+                            )
+                          : repeatRule = null;
 
-                setState(() {});
-              },
-              value: repeatRule != null,
-            ),
-          ]
-              .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
-              .padding(vertical: 10),
+                      setState(() {});
+                    },
+                    value: repeatRule != null,
+                  ),
+                ]
+                  .toRow(mainAxisAlignment: MainAxisAlignment.spaceBetween)
+                  .padding(vertical: 10),
           repeatRule != null
               ? RepeatsTemplate(
                   onFrequencyChanged: (frequency) {
@@ -380,7 +384,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
               : Container(),
 
           // Reminders
-          task.time == null
+          task.time == null || task.type == "project"
               ? Container()
               : ReminderSliders(
                   model: task.copyWith(repeatRule: repeatRule),

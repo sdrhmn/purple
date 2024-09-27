@@ -23,24 +23,13 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
     super.initState();
   }
 
-  void _addOrUpdateProject(HealthProject project, HealthTask? task) async {
+  void _addOrUpdateProject(HealthProject project, HealthTask task) async {
     final repository = ref.read(healthRepositoryProvider.notifier);
-    if (_projects.contains(project)) {
-      // Update existing project
-      final index = _projects.indexOf(project);
-      setState(() {
-        _projects[index] = project;
-      });
-    } else {
-      // Add new project
-      setState(() {
-        _projects.add(project);
-      });
-    }
+    project.healthTasks.add(task);
+
     await repository.writeHealthProject(project);
-    if (task != null) {
-      await repository.writeHealthTask(task, project);
-    }
+
+    ref.invalidate(healthProjectsProvider);
   }
 
   void _deleteProject(HealthProject project) async {
@@ -144,6 +133,8 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
                     });
                   }
                   Navigator.of(context).pop();
+
+                  ref.invalidate(healthProjectsProvider);
                 },
                 child: const Text('Add Task'),
               ),

@@ -90,6 +90,9 @@ class TaskTile extends ConsumerWidget {
                       : null,
                   actions: [
                     TextField(
+                      onTapOutside: (e) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       decoration: InputDecoration(
                         hintText: "Enter your next activity",
                         border: const OutlineInputBorder(

@@ -106,6 +106,9 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
     int maxLines = 1,
   }) {
     return TextField(
+      onTapOutside: (e) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       textCapitalization: TextCapitalization.sentences,
       controller: controller, // Using the passed controller
       maxLines: maxLines,

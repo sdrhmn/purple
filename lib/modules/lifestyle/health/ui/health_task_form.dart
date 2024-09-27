@@ -203,6 +203,9 @@ class _HealthTaskFormState extends State<HealthTaskForm> {
     int maxLines = 1,
   }) {
     return TextField(
+      onTapOutside: (e) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       textCapitalization: TextCapitalization.sentences,
       onChanged: onChanged,
       controller: TextEditingController(text: initialValue),

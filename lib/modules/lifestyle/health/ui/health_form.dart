@@ -30,7 +30,7 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
   @override
   void initState() {
     super.initState();
-    _project = widget.project ?? HealthProject(condition: "", criticality: 0);
+    _project = widget.project ?? HealthProject(condition: "", criticality: 1);
     _task = HealthTask(
       dateTime: DateTime.now(),
       task: "",
@@ -176,6 +176,9 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
     int maxLines = 1,
   }) {
     return TextFormField(
+      onTapOutside: (e) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       textCapitalization: TextCapitalization.sentences,
       initialValue: initialValue,
       maxLines: maxLines,

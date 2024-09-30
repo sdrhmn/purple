@@ -33,61 +33,68 @@ class HealthTaskTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.task,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Update: ${task.update}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Date & Time: $formattedDate',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    task.task,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Update: ${task.update}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Date & Time: $formattedDate',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                    ),
+                  PopupMenuButton(
+                    icon: const Icon(Icons.more_vert, color: Colors.white),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Text('Edit'),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Delete'),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        onEdit(); // Trigger the edit callback
+                      } else if (value == 'delete') {
+                        onDelete(); // Trigger the delete callback
+                      }
+                    },
                   ),
                 ],
               ),
-            ),
-            PopupMenuButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Text('Edit'),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Text('Delete'),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 'edit') {
-                  onEdit(); // Trigger the edit callback
-                } else if (value == 'delete') {
-                  onDelete(); // Trigger the delete callback
-                }
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -54,7 +54,7 @@ class _HealthProjectTasksPageState
             }));
           }),
       appBar: AppBar(
-        title: Text('Tasks for ${project.condition}'),
+        title: Text(project.condition),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -117,6 +117,7 @@ class _HealthProjectTasksPageState
                               .writeHealthTask(updatedTask, project);
                           ref.invalidate(healthTasksProvider(project
                               .id)); // Invalidate to fetch the updated tasks
+                          ref.invalidate(healthProjectsProvider);
                         },
                       ),
                     ),

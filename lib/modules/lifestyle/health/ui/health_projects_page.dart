@@ -197,7 +197,8 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
                   }
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                   child: HealthProjectTile(project: project),
                 ), // Use HealthProjectTile here
               );

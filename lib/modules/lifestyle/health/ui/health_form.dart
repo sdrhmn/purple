@@ -114,13 +114,12 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
                   return null;
                 },
               ),
-              Row(
-                children: [
-                  Text("Criticality"),
-                  Spacer(),
-                  SizedBox(width: 80, child: _buildCriticalityBar()),
-                ],
-              ), // Updated criticality bar
+              GestureDetector(
+                onTap: () => _showCriticalityPicker(),
+                child: _buildDropdownField(
+                  hint: 'Criticality: $_selectedCriticality',
+                ),
+              ),
               _buildTextField(
                 hint: "Next Task",
                 initialValue: _task.task,
@@ -167,6 +166,74 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
     );
   }
 
+  Widget _buildDropdownField({required String hint}) {
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(hint, style: const TextStyle(color: Colors.white)),
+          const Icon(Icons.arrow_drop_down, color: Colors.white),
+        ],
+      ),
+    );
+  }
+
+  void _showCriticalityPicker() {
+    // Use a local variable to hold the selected criticality
+    int selectedCriticality = _selectedCriticality;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Container(
+        height: 250, // Height for the picker
+        color: Colors.white,
+        child: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 200,
+                  child: CupertinoPicker(
+                    scrollController: FixedExtentScrollController(
+                      initialItem: selectedCriticality,
+                    ),
+                    itemExtent: 50.0,
+                    onSelectedItemChanged: (int index) {
+                      // Update the local variable instead of the project's criticality directly
+                      selectedCriticality = index + 1;
+                    },
+                    children: List<Widget>.generate(5, (index) {
+                      return Center(
+                        child: Text(
+                          (index + 1).toString(),
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              CupertinoButton(
+                child: const Text('Done'),
+                onPressed: () {
+                  // Set the project's criticality when the Done button is pressed
+                  setState(() {
+                    _selectedCriticality = selectedCriticality;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTextField({
     required String hint,
     required String initialValue,
@@ -194,53 +261,6 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
       style: const TextStyle(color: Colors.white),
       onSaved: onSaved,
       validator: validator,
-    );
-  }
-
-  Widget _buildCriticalityBar() {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        setState(() {
-          // Ensure dragging from empty space selects bars
-          double newCriticality =
-              ((details.localPosition.dx / 80) * 5).clamp(1, 5);
-          _selectedCriticality = newCriticality.round();
-          _project.criticality = _selectedCriticality;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // Reduced spacing between bars
-          children: List.generate(5, (index) {
-            return _buildBar(index + 1);
-          }),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBar(int index) {
-    double height = 10.0 * index; // Increase height for each bar
-
-    // Set color based on criticality level
-    Color getColor(int index) {
-      if (_selectedCriticality >= index) {
-        if (index <= 2) return Colors.green;
-        if (index <= 4) return Colors.yellow[700]!;
-        return Colors.red;
-      }
-      return Colors.grey;
-    }
-
-    return Container(
-      width: 10, // Set bar width
-      height: height,
-      decoration: BoxDecoration(
-        color: getColor(index),
-        borderRadius: BorderRadius.circular(2),
-      ),
     );
   }
 

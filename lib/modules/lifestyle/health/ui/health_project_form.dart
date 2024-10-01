@@ -137,21 +137,36 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
           children: [
             _buildTextField(
               label: 'Condition',
-              controller: _conditionController,
+              controller:
+                  _conditionController, // Pass the existing controller here
               onChanged: (value) {
                 setState(() {
+                  // Update condition when text changes
                   widget.project.condition = value;
                 });
               },
             ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Text("Criticality"),
-                Spacer(),
-                SizedBox(width: 80, child: _buildCriticalityBar()),
-              ],
-            ), // Added criticality bar here
+            GestureDetector(
+              onTap: _showCriticalityPicker, // Show the picker on tap
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Criticality: $_criticality',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const Icon(Icons.arrow_drop_down, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submit,
@@ -159,51 +174,6 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCriticalityBar() {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        setState(() {
-          double newCriticality =
-              ((details.localPosition.dx / 80) * 5).clamp(1, 5);
-          _criticality = newCriticality.round();
-          widget.project.criticality = _criticality;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(5, (index) {
-            return _buildBar(index + 1);
-          }),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBar(int index) {
-    double height = 10.0 * index; // Increase height for each bar
-
-    // Set color based on criticality level
-    Color getColor(int index) {
-      if (_criticality >= index) {
-        if (index <= 2) return Colors.green;
-        if (index <= 4) return Colors.yellow[700]!;
-        return Colors.red;
-      }
-      return Colors.grey;
-    }
-
-    return Container(
-      width: 10, // Set bar width
-      height: height,
-      decoration: BoxDecoration(
-        color: getColor(index),
-        borderRadius: BorderRadius.circular(2),
       ),
     );
   }

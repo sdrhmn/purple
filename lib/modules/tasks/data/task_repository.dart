@@ -59,6 +59,11 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           .inSeconds;
     });
 
+    tasks.removeWhere((task) => task.activity == "Sleep" && task.date != null
+        ? task.date!
+            .copyWith(hour: task.time?.hour, minute: task.time?.minute)
+            .isBefore(now)
+        : false);
     return tasks;
   }
 

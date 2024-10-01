@@ -5,6 +5,7 @@ import 'package:timely/modules/lifestyle/health/data/health_providers.dart';
 import 'package:timely/modules/lifestyle/health/data/health_repository.dart';
 import 'package:timely/modules/lifestyle/health/health_models.dart';
 import 'package:timely/modules/lifestyle/health/ui/health_form.dart';
+import 'package:timely/modules/lifestyle/health/ui/health_project_form.dart';
 import 'package:timely/modules/lifestyle/health/ui/tiles/health_project_tile.dart'; // Import the HealthProjectTile
 
 class HealthProjectsPage extends ConsumerStatefulWidget {
@@ -32,12 +33,39 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
     ref.invalidate(healthProjectsProvider);
   }
 
-  void _deleteProject(HealthProject project) async {
-    final repository = ref.read(healthRepositoryProvider.notifier);
-    repository.deleteHealthProject(project);
-    setState(() {
-      _projects.remove(project);
-    });
+  Future<void> _deleteProject(
+      BuildContext context, HealthProject project) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Project'),
+          content: const Text('Are you sure you want to delete this project?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      final repository = ref.read(healthRepositoryProvider.notifier);
+      await repository.deleteHealthProject(project);
+
+      setState(() {
+        _projects.remove(project);
+      });
+
+      // Invalidate the provider to update the UI
+      ref.invalidate(healthProjectsProvider);
+    }
   }
 
   Future<void> _promptForNewTask(
@@ -159,47 +187,29 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
             itemBuilder: (context, index) {
               final project = projects[index];
 
-              return Dismissible(
-                key: ValueKey(project.id),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.red.shade400, Colors.red.shade900],
-                    ),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                secondaryBackground: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.green.shade400, Colors.green.shade900],
-                    ),
-                  ),
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.done, color: Colors.white),
-                ),
-                confirmDismiss: (direction) async {
-                  if (direction == DismissDirection.endToStart) {
-                    await _promptForNewTask(
-                        context, project, ref); // Swipe left for new task
-                    return false; // Don't dismiss
-                  } else if (direction == DismissDirection.startToEnd) {
-                    return true; // Swipe right to delete
-                  }
-                  return false;
-                },
-                onDismissed: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    _deleteProject(project); // Delete the project
-                  }
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                  child: HealthProjectTile(project: project),
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                child: HealthProjectTile(
+                  project: project,
+                  onDelete: () => _deleteProject(context, project),
+                  onMarkComplete: () =>
+                      _promptForNewTask(context, project, ref),
+                  onEdit: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => HealthProjectEditForm(
+                            project: project,
+                            onSubmit: (updatedProject) async {
+                              await ref
+                                  .read(healthRepositoryProvider.notifier)
+                                  .writeHealthProject(updatedProject);
+
+                              ref.invalidate(healthProjectsProvider);
+                            }), // Navigate to edit form
+                      ),
+                    );
+                  },
                 ), // Use HealthProjectTile here
               );
             },

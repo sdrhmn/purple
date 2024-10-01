@@ -16,8 +16,8 @@ class HealthTaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat.yMMMd().add_jm().format(task.dateTime);
-
+    final formattedDate = DateFormat.MMMd().format(task.dateTime);
+    final formattedTime = DateFormat.jm().format(task.dateTime);
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -37,6 +37,42 @@ class HealthTaskTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        formattedDate,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12, // Increased font size for date
+                          fontWeight: FontWeight.bold, // Bold text
+                        ),
+                      ),
+                      Divider(
+                        height: 2,
+                      ),
+                      Text(
+                        formattedTime,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12, // Increased font size for time
+                          fontWeight: FontWeight.bold, // Bold text
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,17 +87,9 @@ class HealthTaskTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Update: ${task.update}',
+                      task.update,
                       style: const TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Date & Time: $formattedDate',
-                      style: const TextStyle(
-                        fontSize: 14,
                         color: Colors.white,
                       ),
                     ),

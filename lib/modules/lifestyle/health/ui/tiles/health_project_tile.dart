@@ -28,43 +28,7 @@ class HealthProjectTile extends StatelessWidget {
         ? DateFormat.jm().format(latestTask.dateTime)
         : 'N/A';
 
-    // Method to display non-selectable criticality bar
-    Widget _buildStaticCriticalityBar(int criticality) {
-      return Container(
-        width: 80,
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(5, (index) {
-            double height = 10.0 * (index + 1);
-            Color getColor(int index) {
-              if (criticality >= index + 1) {
-                if (index + 1 <= 2) return Colors.green;
-                if (index + 1 <= 4) return Colors.yellow[700]!;
-                return Colors.red;
-              }
-              return Colors.grey;
-            }
-
-            return Container(
-              width: 10,
-              height: height,
-              decoration: BoxDecoration(
-                color: getColor(index),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            );
-          }),
-        ),
-      );
-    }
-
     // Determine the background color based on criticality
-    Color getBackgroundColor(int criticality) {
-      if (criticality == 5) return Colors.red;
-      if (criticality == 3 || criticality == 4) return Colors.yellow[800]!;
-      return Colors.green;
-    }
 
     return InkWell(
       borderRadius: BorderRadius.circular(15),
@@ -97,6 +61,7 @@ class HealthProjectTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildStaticCriticalityBar(project.criticality),
+                      SizedBox(height: 10),
                       CircleAvatar(
                         radius: 35,
                         backgroundColor: Colors.white,
@@ -114,7 +79,7 @@ class HealthProjectTile extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Divider(height: 2),
+                              const Divider(height: 2),
                               Text(
                                 formattedTime,
                                 textAlign: TextAlign.center,
@@ -171,15 +136,15 @@ class HealthProjectTile extends StatelessWidget {
                       PopupMenuButton(
                         icon: const Icon(Icons.more_vert, color: Colors.white),
                         itemBuilder: (context) => [
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 'edit',
                             child: Text('Edit'),
                           ),
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 'complete',
                             child: Text('Mark Complete'),
                           ),
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 'delete',
                             child: Text('Delete'),
                           ),
@@ -201,6 +166,37 @@ class HealthProjectTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // Method to display non-selectable criticality bar
+  Widget _buildStaticCriticalityBar(int criticality) {
+    return Container(
+      width: 100,
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(5, (index) {
+          double height = 50;
+          Color getColor(int index) {
+            if (criticality >= index + 1) {
+              if (index + 1 <= 2) return Colors.green;
+              if (index + 1 <= 4) return Colors.yellow[700]!;
+              return Colors.red;
+            }
+            return Colors.grey;
+          }
+
+          return Container(
+            width: 15,
+            height: height,
+            decoration: BoxDecoration(
+              color: getColor(index),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          );
+        }),
       ),
     );
   }

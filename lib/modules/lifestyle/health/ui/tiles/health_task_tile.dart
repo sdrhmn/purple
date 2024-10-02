@@ -38,7 +38,7 @@ class HealthTaskTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CircleAvatar(
-                radius: 35,
+                radius: 40,
                 backgroundColor: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -50,11 +50,11 @@ class HealthTaskTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 12, // Increased font size for date
+                          fontSize: 14, // Increased font size for date
                           fontWeight: FontWeight.bold, // Bold text
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         height: 2,
                       ),
                       Text(
@@ -62,7 +62,7 @@ class HealthTaskTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 12, // Increased font size for time
+                          fontSize: 14, // Increased font size for time
                           fontWeight: FontWeight.bold, // Bold text
                         ),
                       ),
@@ -70,7 +70,7 @@ class HealthTaskTile extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Expanded(
@@ -80,6 +80,7 @@ class HealthTaskTile extends StatelessWidget {
                     Text(
                       task.task,
                       style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -102,11 +103,11 @@ class HealthTaskTile extends StatelessWidget {
                   PopupMenuButton(
                     icon: const Icon(Icons.more_vert, color: Colors.white),
                     itemBuilder: (context) => [
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: 'edit',
                         child: Text('Edit'),
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: 'delete',
                         child: Text('Delete'),
                       ),

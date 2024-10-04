@@ -158,9 +158,17 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Criticality: $_criticality',
-                      style: const TextStyle(color: Colors.white),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Criticality"),
+                          Text(
+                            _criticality.toString(),
+                          ),
+                          Container(),
+                        ],
+                      ),
                     ),
                     const Icon(Icons.arrow_drop_down, color: Colors.white),
                   ],

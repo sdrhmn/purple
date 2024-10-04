@@ -27,6 +27,14 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
       const GoalsPage(),
     ];
 
+    List<Image> icons = [
+      Image.asset("assets/LifestyleHome/KPI.png"),
+      Image.asset("assets/LifestyleHome/CONTROLS.png"),
+      Image.asset("assets/LifestyleHome/HEALTH.png"),
+      Image.asset("assets/LifestyleHome/MEMORY.png"),
+      Image.asset("assets/LifestyleHome/GOALS.png"),
+    ];
+
     return Scaffold(
       body: Column(
         children: [
@@ -52,7 +60,15 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
                     ),
                   );
                 },
-                child: Text(controls[index]).fontSize(16),
+                child: Row(
+                  children: [
+                    icons[index].padding(all: 20),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    Text(controls[index]).fontSize(16),
+                  ],
+                ),
               ),
             ).padding(horizontal: 5).expanded();
           }),

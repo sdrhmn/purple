@@ -52,58 +52,60 @@ class HealthProjectTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IntrinsicHeight(
-                child: Row(
-                  children: [
-                    // Circles for Date and Time
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildStaticCriticalityBar(project.criticality),
-                        SizedBox(height: 10),
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  formattedDate,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Divider(height: 2),
-                                Text(
-                                  formattedTime,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 20.0),
-                    // Right side with text, centered and larger font size
-                    Expanded(
+              // Circles for Date and Time
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildStaticCriticalityBar(project.criticality),
+                  const SizedBox(height: 10),
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            formattedDate,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Divider(height: 2),
+                          Text(
+                            formattedTime,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20.0),
+              // Right side with text, centered and larger font size
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
                             project.condition,
                             style: const TextStyle(
                               overflow: TextOverflow.ellipsis,
@@ -112,28 +114,7 @@ class HealthProjectTile extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            latestTask?.task ?? "N/A",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            latestTask?.update ?? "N/A",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Three dots menu
-                    Column(
-                      children: [
+                        ),
                         PopupMenuButton(
                           icon:
                               const Icon(Icons.more_vert, color: Colors.white),
@@ -162,6 +143,22 @@ class HealthProjectTile extends StatelessWidget {
                           },
                         ),
                       ],
+                    ),
+                    const Divider(height: 4),
+                    Text(
+                      latestTask?.task ?? "N/A",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Divider(height: 10),
+                    Text(
+                      latestTask?.update ?? "N/A",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),

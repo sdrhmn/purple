@@ -117,7 +117,8 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
               GestureDetector(
                 onTap: () => _showCriticalityPicker(),
                 child: _buildDropdownField(
-                  hint: 'Criticality: $_selectedCriticality',
+                  prop: 'Criticality',
+                  value: _selectedCriticality.toString(),
                 ),
               ),
               _buildTextField(
@@ -166,7 +167,7 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
     );
   }
 
-  Widget _buildDropdownField({required String hint}) {
+  Widget _buildDropdownField({required String prop, required String value}) {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
@@ -176,7 +177,16 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(hint, style: const TextStyle(color: Colors.white)),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(prop),
+                Text(value),
+                Container(),
+              ],
+            ),
+          ),
           const Icon(Icons.arrow_drop_down, color: Colors.white),
         ],
       ),

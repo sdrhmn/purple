@@ -1,17 +1,22 @@
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
-class MemoryModel {
+class DiaryModel {
   @Id()
   int id = 0;
+  @Property(type: PropertyType.date)
+  DateTime date;
+  String place;
   String title;
-  String detail;
+  String description;
   String type;
   int importance;
 
-  MemoryModel({
+  DiaryModel({
+    required this.date,
+    required this.place,
     required this.title,
-    required this.detail,
+    required this.description,
     required this.type,
     required this.importance,
   });

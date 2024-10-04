@@ -1,35 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:timely/modules/lifestyle/memory/memory_model.dart';
+import 'package:timely/modules/lifestyle/diary/diary_model.dart';
 
-class MemoryForm extends StatefulWidget {
-  final Function(MemoryModel memory) onSubmit;
-  final MemoryModel? memory;
+class DiaryForm extends StatefulWidget {
+  final Function(DiaryModel memory) onSubmit;
+  final DiaryModel? diary;
 
-  const MemoryForm({
+  const DiaryForm({
     super.key,
     required this.onSubmit,
-    this.memory,
+    this.diary,
   });
 
   @override
-  State<MemoryForm> createState() => _MemoryFormState();
+  State<DiaryForm> createState() => _DiaryFormState();
 }
 
-class _MemoryFormState extends State<MemoryForm> {
+class _DiaryFormState extends State<DiaryForm> {
   final _formKey = GlobalKey<FormState>();
-  late MemoryModel memory;
+  late DiaryModel diary;
   int? _selectedImportance;
   String? _selectedType;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    memory = widget.memory ??
-        MemoryModel(title: "", detail: "", type: "", importance: 0);
-    _selectedType = memory.type;
-    _selectedImportance = memory.importance;
+    diary = widget.diary ??
+        DiaryModel(
+          date: DateTime.now(),
+          place: "",
+          title: "",
+          description: "",
+          type: "",
+          importance: 0,
+        );
+    _selectedType = diary.type;
+    _selectedImportance = diary.importance;
+    _selectedDate = diary.date;
   }
 
   @override
@@ -38,18 +48,74 @@ class _MemoryFormState extends State<MemoryForm> {
       key: _formKey,
       child: Column(
         children: [
+          // Date and Place Fields Side by Side
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      controller: TextEditingController(
+                          text: _selectedDate != null
+                              ? DateFormat("dd MMM").format(_selectedDate!)
+                              : ''),
+                      decoration: InputDecoration(
+                        hintText: "Date",
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[850],
+                      ),
+                      readOnly: true,
+                      validator: (value) {
+                        if (_selectedDate == null) {
+                          return 'Please select a date';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
+                  initialValue: diary.place,
+                  decoration: InputDecoration(
+                    hintText: "Place",
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[850],
+                  ),
+                  onSaved: (value) => diary.place = value!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a place';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
+          ),
           TextFormField(
             textCapitalization: TextCapitalization.sentences,
-            initialValue: memory.title,
+            initialValue: diary.title,
             decoration: InputDecoration(
               hintText: "Title",
               border: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: Colors.purple[800],
+              fillColor: Colors.grey[850],
             ),
-            onSaved: (value) => memory.title = value!,
+            onSaved: (value) => diary.title = value!,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a title';
@@ -59,19 +125,20 @@ class _MemoryFormState extends State<MemoryForm> {
           ),
           TextFormField(
             textCapitalization: TextCapitalization.sentences,
-            initialValue: memory.detail,
+            maxLines: 4,
+            initialValue: diary.description,
             decoration: InputDecoration(
-              hintText: "Detail",
+              hintText: "Description",
               border: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor: Colors.purple[800],
+              fillColor: Colors.grey[850],
             ),
-            onSaved: (value) => memory.detail = value!,
+            onSaved: (value) => diary.description = value!,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a detail';
+                return 'Please enter a description';
               }
               return null;
             },
@@ -87,10 +154,10 @@ class _MemoryFormState extends State<MemoryForm> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.purple[800],
+                  fillColor: Colors.grey[850],
                 ),
                 readOnly: true,
-                onSaved: (value) => memory.type = _selectedType ?? '',
+                onSaved: (value) => diary.type = _selectedType ?? '',
                 validator: (value) {
                   if (_selectedType == null || _selectedType!.isEmpty) {
                     return 'Please select a type';
@@ -114,11 +181,10 @@ class _MemoryFormState extends State<MemoryForm> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.purple[800],
+                  fillColor: Colors.grey[850],
                 ),
                 readOnly: true,
-                onSaved: (value) =>
-                    memory.importance = _selectedImportance ?? 0,
+                onSaved: (value) => diary.importance = _selectedImportance ?? 0,
                 validator: (value) {
                   if (_selectedImportance == null) {
                     return 'Please select an importance level';
@@ -132,7 +198,7 @@ class _MemoryFormState extends State<MemoryForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                widget.onSubmit(memory);
+                widget.onSubmit(diary);
               }
             },
             child: const Text('Submit'),
@@ -140,6 +206,20 @@ class _MemoryFormState extends State<MemoryForm> {
         ].map((e) => e.padding(all: 5)).toList(),
       ),
     );
+  }
+
+  void _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
   }
 
   void _showImportancePicker() {

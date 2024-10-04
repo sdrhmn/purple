@@ -5,7 +5,7 @@ import 'package:timely/modules/lifestyle/controls/ui/controls_table_page.dart';
 import 'package:timely/modules/lifestyle/goals/ui/goals_page.dart';
 import 'package:timely/modules/lifestyle/health/ui/health_projects_page.dart';
 import 'package:timely/modules/lifestyle/kpi/ui/kpi_table_page.dart';
-import 'package:timely/modules/lifestyle/memory/ui/memories_page.dart';
+import 'package:timely/modules/lifestyle/diary/ui/diary_page.dart';
 
 class LifestyleTab extends ConsumerStatefulWidget {
   const LifestyleTab({super.key});
@@ -23,7 +23,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
       const KPITablePage(),
       const ControlsTablePage(),
       const HealthProjectsPage(),
-      const MemoriesPage(),
+      const DiaryPage(),
       const GoalsPage(),
     ];
 

@@ -18,7 +18,7 @@ class LifestyleTab extends ConsumerStatefulWidget {
 class _LifestyleTabState extends ConsumerState<LifestyleTab> {
   Future<void> _refreshData() async {
     // Invalidate the provider to refresh its data
-    ref.refresh(lifestyleStatusInfoProvider);
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   @override

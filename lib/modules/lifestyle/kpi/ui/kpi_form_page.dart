@@ -30,7 +30,14 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
       // Otherwise, initialize with default values.
       DateTime now = DateTime.now();
       kpiModel = KPIModel(
-        date: DateTime(now.year, now.month, now.day),
+        date: DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).copyWith(
+          hour: DateTime.now().hour,
+          minute: DateTime.now().minute,
+        ),
         activity: 1,
         sleep: 1,
         bowelMovement: 1,
@@ -49,7 +56,10 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
     );
     if (picked != null && picked != kpiModel.date) {
       setState(() {
-        kpiModel.date = picked;
+        kpiModel.date = picked.copyWith(
+          hour: DateTime.now().hour,
+          minute: DateTime.now().minute,
+        );
       });
     }
   }

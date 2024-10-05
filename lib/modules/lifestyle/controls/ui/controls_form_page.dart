@@ -29,7 +29,10 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
     } else {
       DateTime now = DateTime.now();
       control = ControlsModel(
-        date: DateTime(now.year, now.month, now.day),
+        date: DateTime(now.year, now.month, now.day).copyWith(
+          hour: DateTime.now().hour,
+          minute: DateTime.now().minute,
+        ),
         communication: 1,
         food: 1,
         spending: 1,
@@ -46,7 +49,10 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
     );
     if (picked != null && picked != control.date) {
       setState(() {
-        control.date = picked;
+        control.date = picked.copyWith(
+          hour: DateTime.now().hour,
+          minute: DateTime.now().minute,
+        );
       });
     }
   }

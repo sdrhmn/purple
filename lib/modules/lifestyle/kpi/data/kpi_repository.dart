@@ -16,11 +16,23 @@ class KpiRepositoryNotifier extends AsyncNotifier<void> {
   }
 
   Future<void> write(KPIModel model) async {
-    final query = box.query(KPIModel_.date.equalsDate(model.date)).build();
-    KPIModel? previous = (await query.findAsync()).firstOrNull;
-    if (previous != null) {
-      model.id = previous.id;
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+
+    // Find a matching model with the same date using a more efficient single lookup
+    final previousId = box
+        .query(KPIModel_.date.between(
+            startOfDay.millisecondsSinceEpoch, now.millisecondsSinceEpoch))
+        .build()
+        .findFirst()
+        ?.id;
+
+    // If a previous model exists, use its ID to update the existing record
+    if (previousId != null) {
+      model.id = previousId;
     }
+
+    // Put will insert or update the model based on the ID (existing or new)
     box.put(model);
   }
 
@@ -30,6 +42,28 @@ class KpiRepositoryNotifier extends AsyncNotifier<void> {
 
   Future<List<KPIModel>> getAll() async {
     return await box.getAllAsync();
+  }
+
+  // Get Status Info for KPI
+  Future<List<dynamic>> getStatusInfo() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final query = box
+        .query(KPIModel_.date.between(
+            startOfDay.millisecondsSinceEpoch, now.millisecondsSinceEpoch))
+        .build();
+
+    final entriesToday = await query.findAsync();
+    final lastEntry = box
+        .query()
+        .order(KPIModel_.date, flags: Order.descending)
+        .build()
+        .findFirst();
+
+    return [
+      entriesToday.isNotEmpty, // Status: true if any entry today
+      lastEntry?.date // Last entry's date
+    ];
   }
 }
 

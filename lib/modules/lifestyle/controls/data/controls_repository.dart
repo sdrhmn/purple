@@ -32,6 +32,28 @@ class ControlsRepositoryNotifier extends AsyncNotifier<void> {
   Future<void> delete(int id) async {
     await box.removeAsync(id);
   }
+
+  // Get Status Info for Controls
+  Future<List<dynamic>> getStatusInfo() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final query = box
+        .query(ControlsModel_.date.between(
+            startOfDay.millisecondsSinceEpoch, now.millisecondsSinceEpoch))
+        .build();
+
+    final entriesToday = await query.findAsync();
+    final lastEntry = box
+        .query()
+        .order(ControlsModel_.date, flags: Order.descending)
+        .build()
+        .findFirst();
+
+    return [
+      entriesToday.isNotEmpty, // Status: true if any entry today
+      lastEntry?.date // Last entry's date
+    ];
+  }
 }
 
 final controlsRepositoryProvider =

@@ -49,6 +49,28 @@ class HealthRepositoryNotifier extends AsyncNotifier<void> {
   Future<void> deleteHealthTask(HealthTask task) async {
     await healthTaskBox.removeAsync(task.id);
   }
+
+  // Get Status Info for Health Tasks
+  Future<List<dynamic>> getStatusInfo() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final query = healthTaskBox
+        .query(HealthTask_.dateTime.between(
+            startOfDay.millisecondsSinceEpoch, now.millisecondsSinceEpoch))
+        .build();
+
+    final entriesToday = await query.findAsync();
+    final lastEntry = healthTaskBox
+        .query()
+        .order(HealthTask_.dateTime, flags: Order.descending)
+        .build()
+        .findFirst();
+
+    return [
+      entriesToday.isNotEmpty, // Status: true if any entry today
+      lastEntry?.dateTime // Last entry's date
+    ];
+  }
 }
 
 final healthRepositoryProvider =

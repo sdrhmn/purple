@@ -13,11 +13,14 @@ Map<String, String> filters = {
 };
 
 Map<String, String> types = {
+  "sleep": "Sleep",
+  "social-event": "Social Event",
   "ad-hoc": "Ad-hoc",
   "exercise": "Exercise",
-  "meal": "Meal / Suppliment",
+  "cooking": "Cooking",
   "shopping": "Shopping",
+  "unscheduled-activity": "Unscheduled Activity",
   "money": "Money",
-  "regular": "Regular Activity",
+  "recurring": "Recurring Activity",
   "project": "Project"
 };

@@ -59,11 +59,6 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
           .inSeconds;
     });
 
-    tasks.removeWhere((task) => task.activity == "Sleep" && task.date != null
-        ? task.date!
-            .copyWith(hour: task.time?.hour, minute: task.time?.minute)
-            .isBefore(now)
-        : false);
     return tasks;
   }
 
@@ -139,6 +134,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
+        name: task.activity,
         dateTime: task.date
             ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         data: jsonEncode(
@@ -164,6 +160,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
+        name: task.activity,
         dateTime: task.date
             ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         id: task.id!,
@@ -195,6 +192,7 @@ class TaskRepositoryNotifier extends AsyncNotifier<void> {
 
     taskBox.put(
       DataTask(
+        name: task.activity,
         dateTime: task.date
             ?.copyWith(hour: task.time?.hour, minute: task.time?.minute),
         id: task.id!,

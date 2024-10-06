@@ -103,6 +103,9 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
                   ),
                   indicators[index] == "Weight"
                       ? TextFormField(
+                          onTapOutside: (e) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           initialValue: kpiModel.weight.toString(),
@@ -136,6 +139,9 @@ class _KpiFormPageState extends ConsumerState<KPIFormPage> {
             height: 10,
           ),
           TextFormField(
+            onTapOutside: (e) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
             initialValue: kpiModel.comments,

@@ -86,10 +86,16 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
+                  onTapOutside: (e) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   decoration: const InputDecoration(labelText: 'Next Task'),
                   onChanged: (value) => nextTask = value,
                 ),
                 TextFormField(
+                  onTapOutside: (e) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   decoration: const InputDecoration(labelText: 'Update'),
                   onChanged: (value) => update = value,
                 ),

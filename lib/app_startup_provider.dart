@@ -61,6 +61,7 @@ final appStartupProvider = FutureProvider<void>((ref) async {
         else {
           _.add(
             DataTask(
+                name: task.activity,
                 dateTime: next.copyWith(
                   hour: task.time?.hour,
                   minute: task.time!.minute,
@@ -74,6 +75,19 @@ final appStartupProvider = FutureProvider<void>((ref) async {
     }
 
     await taskBox.putManyAsync(_);
+  }();
+
+  () async {
+    Store taskStore = ref.read(storeProvider).requireValue;
+    Box<DataTask> taskBox = taskStore.box<DataTask>();
+
+    final query = taskBox
+        .query(DataTask_.name
+            .equals("Sleep")
+            .and(DataTask_.dateTime.lessThanDate(DateTime.now())))
+        .build();
+
+    print("DELETED ${await query.removeAsync()} SLEEP TASK(S)");
   }();
 
   return;

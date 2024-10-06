@@ -85,6 +85,9 @@ class TextFormFieldAtom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTapOutside: (e) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       initialValue: initialValue,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(

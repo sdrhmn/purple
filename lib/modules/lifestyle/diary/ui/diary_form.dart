@@ -35,7 +35,7 @@ class _DiaryFormState extends State<DiaryForm> {
           title: "",
           description: "",
           type: "",
-          importance: 0,
+          importance: -1,
         );
     _selectedType = diary.type;
     _selectedImportance = diary.importance;
@@ -46,7 +46,8 @@ class _DiaryFormState extends State<DiaryForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
         children: [
           // Date and Place Fields Side by Side
           Row(
@@ -57,6 +58,9 @@ class _DiaryFormState extends State<DiaryForm> {
                   onTap: () => _selectDate(context),
                   child: AbsorbPointer(
                     child: TextFormField(
+                      onTapOutside: (e) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       controller: TextEditingController(
                           text: _selectedDate != null
                               ? DateFormat("dd MMM").format(_selectedDate!)
@@ -83,6 +87,9 @@ class _DiaryFormState extends State<DiaryForm> {
               const SizedBox(width: 10),
               Expanded(
                 child: TextFormField(
+                  onTapOutside: (e) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   textCapitalization: TextCapitalization.sentences,
                   initialValue: diary.place,
                   decoration: InputDecoration(
@@ -105,6 +112,9 @@ class _DiaryFormState extends State<DiaryForm> {
             ],
           ),
           TextFormField(
+            onTapOutside: (e) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             textCapitalization: TextCapitalization.sentences,
             initialValue: diary.title,
             decoration: InputDecoration(
@@ -124,8 +134,11 @@ class _DiaryFormState extends State<DiaryForm> {
             },
           ),
           TextFormField(
+            onTapOutside: (e) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             textCapitalization: TextCapitalization.sentences,
-            maxLines: 4,
+            maxLines: 6,
             initialValue: diary.description,
             decoration: InputDecoration(
               hintText: "Description",
@@ -143,56 +156,75 @@ class _DiaryFormState extends State<DiaryForm> {
               return null;
             },
           ),
-          GestureDetector(
-            onTap: () => _showTypePicker(),
-            child: AbsorbPointer(
-              child: TextFormField(
-                controller: TextEditingController(text: _selectedType ?? ''),
-                decoration: InputDecoration(
-                  hintText: "Type",
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide.none,
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _showTypePicker(),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      onTapOutside: (e) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      controller:
+                          TextEditingController(text: _selectedType ?? ''),
+                      decoration: InputDecoration(
+                        hintText: "Type",
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[850],
+                      ),
+                      readOnly: true,
+                      onSaved: (value) => diary.type = _selectedType ?? '',
+                      validator: (value) {
+                        if (_selectedType == null || _selectedType!.isEmpty) {
+                          return 'Please select a type';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[850],
                 ),
-                readOnly: true,
-                onSaved: (value) => diary.type = _selectedType ?? '',
-                validator: (value) {
-                  if (_selectedType == null || _selectedType!.isEmpty) {
-                    return 'Please select a type';
-                  }
-                  return null;
-                },
               ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => _showImportancePicker(),
-            child: AbsorbPointer(
-              child: TextFormField(
-                controller: TextEditingController(
-                    text: _selectedImportance != null
-                        ? _selectedImportance.toString()
-                        : ''),
-                decoration: InputDecoration(
-                  hintText: "Importance",
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide.none,
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _showImportancePicker(),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      onTapOutside: (e) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      controller: TextEditingController(
+                          text: _selectedImportance != -1
+                              ? _selectedImportance.toString()
+                              : ''),
+                      decoration: InputDecoration(
+                        hintText: "Importance",
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[850],
+                      ),
+                      readOnly: true,
+                      onSaved: (value) =>
+                          diary.importance = _selectedImportance ?? 0,
+                      validator: (value) {
+                        if (_selectedImportance == null) {
+                          return 'Please select an importance level';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[850],
                 ),
-                readOnly: true,
-                onSaved: (value) => diary.importance = _selectedImportance ?? 0,
-                validator: (value) {
-                  if (_selectedImportance == null) {
-                    return 'Please select an importance level';
-                  }
-                  return null;
-                },
               ),
-            ),
+            ],
           ),
           ElevatedButton(
             onPressed: () {
@@ -254,6 +286,15 @@ class _DiaryFormState extends State<DiaryForm> {
       builder: (context) => CupertinoActionSheet(
         title: const Text('Select Type'),
         actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              setState(() {
+                _selectedType = 'Memoir';
+              });
+              Navigator.of(context).pop();
+            },
+            child: const Text('Memoir'),
+          ),
           CupertinoActionSheetAction(
             onPressed: () {
               setState(() {

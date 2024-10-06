@@ -109,6 +109,9 @@ class _ControlsFormPageState extends ConsumerState<ControlsFormPage> {
           }).expand((i) => i).toList(),
           const SizedBox(height: 10),
           TextFormField(
+            onTapOutside: (e) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
             initialValue: control.comments,

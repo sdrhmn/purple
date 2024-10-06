@@ -122,8 +122,8 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
               Expanded(
                 child: DropdownButton<String>(
                   value: selectedType,
-                  items:
-                      <String>['Learning', 'Story', 'Joke'].map((String value) {
+                  items: <String>['Memoir', 'Learning', 'Story', 'Joke']
+                      .map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),

@@ -24,7 +24,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
   @override
   Widget build(BuildContext context) {
     List<String> controls =
-        'Lifestyle KPI.Main Controls.Health.Diary.Goals'.split(".");
+        'Lifestyle KPI.Main Controls.Health Update.Diary.Goals'.split(".");
     List<Widget> pages = [
       const KPITablePage(),
       const ControlsTablePage(),
@@ -33,11 +33,14 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
       const GoalsPage(),
     ];
 
-    List<Image> icons = [
+    List<Widget> icons = [
       Image.asset("assets/LifestyleHome/KPI.png"),
       Image.asset("assets/LifestyleHome/CONTROLS.png"),
       Image.asset("assets/LifestyleHome/HEALTH.png"),
-      Image.asset("assets/LifestyleHome/MEMORY.png"),
+      ClipRRect(
+        child: Image.asset("assets/LifestyleHome/DIARY.png"),
+        borderRadius: BorderRadius.circular(200),
+      ),
       Image.asset("assets/LifestyleHome/GOALS.png"),
     ];
 
@@ -92,7 +95,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
 
   Widget _buildTile({
     required String title,
-    required Image icon,
+    required Widget icon,
     bool? isUpToDate,
     DateTime? lastEntry,
     required VoidCallback onTap,

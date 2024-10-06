@@ -56,11 +56,11 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
         children: [
           // Activity
           TextFormField(
-              maxLines: 3,
-              textCapitalization: TextCapitalization.sentences,
-              onTapOutside: (PointerDownEvent event) {
+              onTapOutside: (e) {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
+              maxLines: 3,
+              textCapitalization: TextCapitalization.sentences,
               initialValue: task.activity,
               decoration: InputDecoration(
                 hintText: "Activity",
@@ -180,11 +180,11 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
           // NextActivity
           task.type == "project"
               ? TextFormField(
-                  maxLines: 2,
-                  textCapitalization: TextCapitalization.sentences,
-                  onTapOutside: (PointerDownEvent event) {
+                  onTapOutside: (e) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
+                  maxLines: 2,
+                  textCapitalization: TextCapitalization.sentences,
                   initialValue: task.nextActivity,
                   decoration: InputDecoration(
                     hintText: "Next Activity",

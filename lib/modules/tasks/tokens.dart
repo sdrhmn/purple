@@ -4,7 +4,6 @@
 Map<String, String> filters = {
   "all": "All Tasks",
   "ad-hoc": "Ad-hoc Tasks",
-  "exercise": "Exercises",
   "meal": "Meals / Suppliments",
   "shopping": "Shopping",
   "money": "Money",
@@ -16,7 +15,6 @@ Map<String, String> types = {
   "sleep": "Sleep",
   "social-event": "Social Event",
   "ad-hoc": "Ad-hoc",
-  "exercise": "Exercise",
   "cooking": "Cooking",
   "shopping": "Shopping",
   "unscheduled-activity": "Unscheduled Activity",

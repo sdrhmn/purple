@@ -24,13 +24,15 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
   @override
   Widget build(BuildContext context) {
     List<String> controls =
-        'Lifestyle KPI.Main Controls.Health Update.Diary.Goals'.split(".");
+        'Lifestyle KPI.Main Controls.Health Update.Diary.Goals.Exercise'
+            .split(".");
     List<Widget> pages = [
       const KPITablePage(),
       const ControlsTablePage(),
       const HealthProjectsPage(),
       const DiaryPage(),
       const GoalsPage(),
+      Container(),
     ];
 
     List<Widget> icons = [
@@ -38,10 +40,13 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
       Image.asset("assets/LifestyleHome/CONTROLS.png"),
       Image.asset("assets/LifestyleHome/HEALTH.png"),
       ClipRRect(
-        child: Image.asset("assets/LifestyleHome/DIARY.png"),
         borderRadius: BorderRadius.circular(200),
+        child: Image.asset("assets/LifestyleHome/DIARY.png"),
       ),
       Image.asset("assets/LifestyleHome/GOALS.png"),
+      Container(
+        width: 90,
+      ),
     ];
 
     final provider = ref.watch(lifestyleStatusInfoProvider);

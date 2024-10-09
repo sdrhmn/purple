@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:timely/modules/lifestyle/diary/data/diaries_provider.dart';
 import 'package:timely/modules/lifestyle/diary/diary_model.dart';
+import 'package:timely/modules/tasks/ui/tabs/lifestyle_status_info_provider.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
@@ -21,6 +22,8 @@ class DiaryRepositoryNotifier extends AsyncNotifier<void> {
   Future<int> createOrUpdateDiary(DiaryModel memory) async {
     int id = await box.putAsync(memory);
     ref.invalidate(diariesProvider);
+    ref.invalidate(lifestyleStatusInfoProvider);
+
     return id; // If the memory has an ID, it updates, otherwise creates
   }
 
@@ -38,6 +41,8 @@ class DiaryRepositoryNotifier extends AsyncNotifier<void> {
   Future<bool> deleteDiary(int id) async {
     bool removed = await box.removeAsync(id);
     ref.invalidate(diariesProvider);
+    ref.invalidate(lifestyleStatusInfoProvider);
+
     return removed;
   }
 

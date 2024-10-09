@@ -37,6 +37,16 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
   SchedulingModel? repeatRule;
   final _formKey = GlobalKey<FormState>();
 
+  List<Widget> icons = [
+    Image.asset("assets/type_icons/sleep.jpeg"),
+    Image.asset("assets/type_icons/event.jpeg"),
+    Image.asset("assets/type_icons/shopping.jpeg"),
+    Image.asset("assets/type_icons/money.jpeg"),
+    Image.asset("assets/type_icons/recurring.jpeg"),
+    Image.asset("assets/type_icons/other.jpeg"),
+    Container(),
+  ];
+
   @override
   void initState() {
     task = widget.task ?? Task.empty();
@@ -171,6 +181,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                                 widget.allowProjectType ? types.length - 1 : i],
                             label: types.values.toList()[
                                 widget.allowProjectType ? types.length - 1 : i],
+                            leadingIcon: icons[i]
+                                .constrained(width: 30)
+                                .clipRRect(all: 999),
                           )
                       ]),
                 ]

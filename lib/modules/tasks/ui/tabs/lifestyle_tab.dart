@@ -44,8 +44,9 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
         child: Image.asset("assets/LifestyleHome/DIARY.png"),
       ),
       Image.asset("assets/LifestyleHome/GOALS.png"),
-      Container(
-        width: 90,
+      ClipRRect(
+        borderRadius: BorderRadius.circular(200),
+        child: Image.asset("assets/LifestyleHome/EXERCISE.jpeg"),
       ),
     ];
 

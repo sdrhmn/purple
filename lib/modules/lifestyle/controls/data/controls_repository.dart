@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/lifestyle/controls/controls_model.dart';
+import 'package:timely/modules/tasks/ui/tabs/lifestyle_status_info_provider.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
@@ -23,6 +24,8 @@ class ControlsRepositoryNotifier extends AsyncNotifier<void> {
       model.id = previous.id;
     }
     box.put(model);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<List<ControlsModel>> getAll() async {
@@ -31,6 +34,8 @@ class ControlsRepositoryNotifier extends AsyncNotifier<void> {
 
   Future<void> delete(int id) async {
     await box.removeAsync(id);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   // Get Status Info for Controls

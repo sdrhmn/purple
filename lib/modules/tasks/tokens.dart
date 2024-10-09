@@ -3,22 +3,21 @@
 // For example, {"ad-hoc":"All ad-hoc tasks"}
 Map<String, String> filters = {
   "all": "All Tasks",
-  "ad-hoc": "Ad-hoc Tasks",
-  "meal": "Meals / Suppliments",
+  "sleep": "Sleep",
+  "social-event": "Social Event",
   "shopping": "Shopping",
   "money": "Money",
-  "regular": "Regular Activities",
+  "recurring": "Recurring Activity",
+  "ad-hoc": "Others (Ad-hoc)",
   "project": "Projects"
 };
 
 Map<String, String> types = {
   "sleep": "Sleep",
   "social-event": "Social Event",
-  "ad-hoc": "Ad-hoc",
-  "cooking": "Cooking",
   "shopping": "Shopping",
-  "unscheduled-activity": "Unscheduled Activity",
-  "money": "Money",
+  "money": "Money (Pay/Receive)",
   "recurring": "Recurring Activity",
+  "ad-hoc": "Others (Ad-hoc)",
   "project": "Project"
 };

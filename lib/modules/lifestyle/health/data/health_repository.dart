@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/lifestyle/health/health_models.dart';
+import 'package:timely/modules/tasks/ui/tabs/lifestyle_status_info_provider.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
@@ -36,18 +37,26 @@ class HealthRepositoryNotifier extends AsyncNotifier<void> {
 
   Future<void> writeHealthProject(HealthProject project) async {
     await healthProjectBox.putAsync(project);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<void> writeHealthTask(HealthTask task, HealthProject project) async {
     await healthTaskBox.putAsync(task..healthProject.target = project);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<void> deleteHealthProject(HealthProject project) async {
     await healthProjectBox.removeAsync(project.id);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<void> deleteHealthTask(HealthTask task) async {
     await healthTaskBox.removeAsync(task.id);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   // Get Status Info for Health Tasks

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timely/modules/lifestyle/kpi/kpi_model.dart';
+import 'package:timely/modules/tasks/ui/tabs/lifestyle_status_info_provider.dart';
 import 'package:timely/objectbox.g.dart';
 import 'package:timely/reusables.dart';
 
@@ -34,10 +35,14 @@ class KpiRepositoryNotifier extends AsyncNotifier<void> {
 
     // Put will insert or update the model based on the ID (existing or new)
     box.put(model);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<void> delete(int id) async {
     box.remove(id);
+
+    ref.invalidate(lifestyleStatusInfoProvider);
   }
 
   Future<List<KPIModel>> getAll() async {

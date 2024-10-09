@@ -57,8 +57,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
         onRefresh: _refreshData,
         child: provider.when(
           data: (statusInfoList) {
-            return ListView(
-              shrinkWrap: true,
+            return Column(
               children: [
                 ...List.generate(controls.length, (index) {
                   // Get status and last entry for the current component
@@ -69,20 +68,22 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
                       ? statusInfoList[index][1]
                       : null;
 
-                  return _buildTile(
-                    title: controls[index],
-                    icon: icons[index],
-                    isUpToDate: isUpToDate,
-                    lastEntry: lastEntry,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return pages[index];
-                          },
-                        ),
-                      );
-                    },
+                  return Expanded(
+                    child: _buildTile(
+                      title: controls[index],
+                      icon: icons[index],
+                      isUpToDate: isUpToDate,
+                      lastEntry: lastEntry,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return pages[index];
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }),
               ]
@@ -106,44 +107,41 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
     DateTime? lastEntry,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
-      height: 130,
-      child: TextButton(
-        style: ButtonStyle(
-          shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-          backgroundColor: WidgetStatePropertyAll(
-              Colors.purple[700]!.withBlue((255 * (4 / (5))).round())),
-          foregroundColor: const WidgetStatePropertyAll(Colors.white),
-        ),
-        onPressed: onTap,
-        child: Row(
-          children: [
-            icon.padding(all: 20),
-            const SizedBox(width: 40),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title).fontSize(16),
-                  // Display the status and last entry if applicable
-                  if (isUpToDate != null) ...[
+    return TextButton(
+      style: ButtonStyle(
+        shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+        backgroundColor: WidgetStatePropertyAll(
+            Colors.purple[700]!.withBlue((255 * (4 / (5))).round())),
+        foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      ),
+      onPressed: onTap,
+      child: Row(
+        children: [
+          icon.padding(all: 10),
+          const SizedBox(width: 40),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title).fontSize(16),
+                // Display the status and last entry if applicable
+                if (isUpToDate != null) ...[
+                  Text(
+                    isUpToDate ? "Status: Up-to-date" : "Status: Not updated",
+                    style: TextStyle(fontSize: 12, color: Colors.white70),
+                  ),
+                  if (lastEntry != null)
                     Text(
-                      isUpToDate ? "Status: Up-to-date" : "Status: Not updated",
+                      "Last entry: ${formatDateTime(lastEntry)}",
                       style: TextStyle(fontSize: 12, color: Colors.white70),
                     ),
-                    if (lastEntry != null)
-                      Text(
-                        "Last entry: ${formatDateTime(lastEntry)}",
-                        style: TextStyle(fontSize: 12, color: Colors.white70),
-                      ),
-                  ]
-                ],
-              ),
+                ]
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ).padding(horizontal: 5);
   }

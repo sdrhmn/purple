@@ -48,7 +48,7 @@ class Task {
       activity: "",
       description: "",
       type: "ad-hoc",
-      priority: "high",
+      priority: "medium",
       reminders: {},
     );
   }

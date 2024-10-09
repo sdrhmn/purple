@@ -130,12 +130,13 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
                 if (isUpToDate != null) ...[
                   Text(
                     isUpToDate ? "Status: Up-to-date" : "Status: Not updated",
-                    style: TextStyle(fontSize: 12, color: Colors.white70),
+                    style: const TextStyle(fontSize: 12, color: Colors.white70),
                   ),
                   if (lastEntry != null)
                     Text(
                       "Last entry: ${formatDateTime(lastEntry)}",
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                 ]
               ],

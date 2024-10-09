@@ -188,7 +188,7 @@ class _DiaryFormState extends State<DiaryForm> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Expanded(

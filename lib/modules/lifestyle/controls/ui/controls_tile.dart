@@ -63,7 +63,7 @@ class ControlsTile extends StatelessWidget {
                       value: controls.values[2].toString()),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(

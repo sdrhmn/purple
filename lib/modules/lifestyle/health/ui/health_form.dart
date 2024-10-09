@@ -51,6 +51,7 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
 
     if (selectedDate != null) {
       showCupertinoModalPopup(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (context) => Container(
           height: 250, // Height for date picker
@@ -59,7 +60,7 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
             body: Column(
               children: [
                 Expanded(
-                  child: Container(
+                  child: SizedBox(
                     height: 200,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.time,
@@ -205,7 +206,7 @@ class HealthProjectWithTaskFormState extends State<HealthProjectWithTaskForm> {
           body: Column(
             children: [
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   child: CupertinoPicker(
                     scrollController: FixedExtentScrollController(

@@ -56,7 +56,7 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
           body: Column(
             children: [
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   child: CupertinoPicker(
                     scrollController: FixedExtentScrollController(
@@ -162,7 +162,7 @@ class _HealthProjectEditFormState extends State<HealthProjectEditForm> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Criticality"),
+                          const Text("Criticality"),
                           Text(
                             _criticality.toString(),
                           ),

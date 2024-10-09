@@ -166,7 +166,7 @@ class _HealthProjectsPageState extends ConsumerState<HealthProjectsPage> {
                           .add(newTask); // Add task to the project
                     });
                   }
-                  Navigator.of(context).pop();
+                  if (context.mounted) Navigator.of(context).pop();
 
                   ref.invalidate(healthProjectsProvider);
                 },

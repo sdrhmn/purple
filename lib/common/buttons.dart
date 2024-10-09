@@ -1,3 +1,4 @@
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ class DateButtonAtom extends StatelessWidget {
   final Function(DateTime date) onDateChanged;
   final Size buttonSize;
   final String? defaultText;
+  final Icon? icon;
 
   const DateButtonAtom({
     super.key,
@@ -14,6 +16,7 @@ class DateButtonAtom extends StatelessWidget {
     required this.onDateChanged,
     this.buttonSize = const Size(70, 20),
     this.defaultText,
+    this.icon,
   });
   const DateButtonAtom.large({
     super.key,
@@ -21,6 +24,7 @@ class DateButtonAtom extends StatelessWidget {
     required this.onDateChanged,
     this.buttonSize = const Size(170, 50),
     this.defaultText,
+    this.icon,
   });
 
   @override
@@ -50,11 +54,18 @@ class DateButtonAtom extends StatelessWidget {
             ),
           ),
         ),
-        child: Text(
-          currentDate != null
-              ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(currentDate!)
-              : defaultText ?? "Select Date",
-          style: Theme.of(context).textTheme.titleSmall,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              currentDate != null
+                  ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY)
+                      .format(currentDate!)
+                  : defaultText ?? "Select Date",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            if (icon != null) icon!.padding(),
+          ],
         ),
       ),
     );
@@ -87,6 +98,7 @@ class TextButtonAtom extends StatelessWidget {
   final String text;
   final Color? color;
   final Size buttonSize;
+  final Icon? icon;
 
   const TextButtonAtom({
     super.key,
@@ -94,6 +106,7 @@ class TextButtonAtom extends StatelessWidget {
     required this.text,
     this.color,
     this.buttonSize = const Size(120, 30),
+    this.icon,
   });
 
   const TextButtonAtom.large({
@@ -102,6 +115,7 @@ class TextButtonAtom extends StatelessWidget {
     required this.text,
     this.color,
     this.buttonSize = const Size(170, 50),
+    this.icon,
   });
 
   @override
@@ -117,9 +131,15 @@ class TextButtonAtom extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.r_8),
           ),
         ),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.titleSmall,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              text,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            if (icon != null) icon!,
+          ],
         ),
       ),
     );
@@ -130,18 +150,21 @@ class TimeButtonAtom extends StatelessWidget {
   final TimeOfDay? initialTime;
   final Function(TimeOfDay time) onTimeChanged;
   final Size buttonSize;
+  final Icon? icon;
 
   const TimeButtonAtom({
     super.key,
     this.initialTime,
     required this.onTimeChanged,
     this.buttonSize = const Size(120, 30),
+    this.icon,
   });
   const TimeButtonAtom.large({
     super.key,
     required this.initialTime,
     required this.onTimeChanged,
     this.buttonSize = const Size(170, 50),
+    this.icon,
   });
 
   @override
@@ -167,9 +190,17 @@ class TimeButtonAtom extends StatelessWidget {
             ),
           ),
         ),
-        child: Text(
-          initialTime != null ? initialTime!.format(context) : "Select Time",
-          style: Theme.of(context).textTheme.titleSmall,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              initialTime != null
+                  ? initialTime!.format(context)
+                  : "Select Time",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            if (icon != null) icon!,
+          ],
         ),
       ),
     );

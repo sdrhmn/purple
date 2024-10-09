@@ -67,7 +67,7 @@ class KPITile extends StatelessWidget {
                         value: kpi.values[3].toString()),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   kpi.comments,
                   style: const TextStyle(

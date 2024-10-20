@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rrule/rrule.dart';
 import 'package:timely/common/scheduling/scheduling_model.dart';
+import 'package:timely/modules/lifestyle/exercise/data/exercise_model.dart';
 import 'package:timely/modules/notifs/notif_service.dart';
 import 'package:timely/modules/tasks/models/repetition_data_model.dart';
 import 'package:timely/modules/tasks/models/task_model.dart';
@@ -88,6 +90,66 @@ final appStartupProvider = FutureProvider<void>((ref) async {
         .build();
 
     print("DELETED ${await query.removeAsync()} SLEEP TASK(S)");
+  }();
+
+  () async {
+    Store store = ref.read(storeProvider).requireValue;
+    Box<DataRepeatExercise> dataRepeatExerciseBox =
+        store.box<DataRepeatExercise>();
+    Box<Exercise> exerciseBox = store.box<Exercise>();
+
+    List<DataRepeatExercise> allDataRepeatExercises =
+        await dataRepeatExerciseBox.getAllAsync();
+
+    DateTime today = DateTime.now();
+
+    for (var dataRepeatExercise in allDataRepeatExercises) {
+      Exercise exercise =
+          Exercise.fromJson(jsonDecode(dataRepeatExercise.data));
+
+      if (exercise.repeats.isNotEmpty) {
+        RecurrenceRule rrule = RecurrenceRule.fromString(exercise.repeats);
+        DateTime? nextOccurrence = rrule
+            .getInstances(
+              start: today.copyWith(isUtc: true),
+            )
+            .take(1)
+            .firstOrNull;
+
+        if (nextOccurrence != null &&
+            nextOccurrence.year == today.year &&
+            nextOccurrence.month == today.month &&
+            nextOccurrence.day == today.day) {
+          // Check if the exercise already exists for today
+          final query = exerciseBox
+              .query(Exercise_.date.betweenDate(
+                      today.copyWith(
+                          hour: 0, minute: 0, second: 0, millisecond: 0),
+                      today.copyWith(
+                          hour: 23, minute: 59, second: 59, millisecond: 999)) &
+                  Exercise_.dataRepeatExercise.equals(dataRepeatExercise.id))
+              .build();
+
+          if (query.count() == 0) {
+            // Create a new exercise for today
+            Exercise newExercise = Exercise(
+              purpose: exercise.purpose,
+              data: exercise.data,
+              date: today,
+              time: DateTime(today.year, today.month, today.day,
+                  exercise.time.hour, exercise.time.minute),
+              duration: exercise.duration,
+              repeats: exercise.repeats,
+            );
+            newExercise.dataRepeatExercise.targetId = dataRepeatExercise.id;
+
+            await exerciseBox.putAsync(newExercise);
+          }
+
+          query.close();
+        }
+      }
+    }
   }();
 
   return;

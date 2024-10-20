@@ -680,6 +680,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.1"
+  rrule:
+    dependency: "direct main"
+    description:
+      name: rrule
+      sha256: "74a11d8b62bfe491340ccc2f0d19a0369402a92952180a090bb8ac865d024904"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.16"
   shelf:
     dependency: transitive
     description:
@@ -797,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  time:
+    dependency: transitive
+    description:
+      name: time
+      sha256: ad8e018a6c9db36cb917a031853a1aae49467a93e0d464683e029537d848c221
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.4"
   timezone:
     dependency: "direct main"
     description:

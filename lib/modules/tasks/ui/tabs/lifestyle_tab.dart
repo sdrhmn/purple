@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/lifestyle/controls/ui/controls_table_page.dart';
+import 'package:timely/modules/lifestyle/exercise/ui/exercises_page.dart';
 import 'package:timely/modules/lifestyle/goals/ui/goals_page.dart';
 import 'package:timely/modules/lifestyle/health/ui/health_projects_page.dart';
 import 'package:timely/modules/lifestyle/kpi/ui/kpi_table_page.dart';
@@ -16,15 +17,10 @@ class LifestyleTab extends ConsumerStatefulWidget {
 }
 
 class _LifestyleTabState extends ConsumerState<LifestyleTab> {
-  Future<void> _refreshData() async {
-    // Invalidate the provider to refresh its data
-    ref.invalidate(lifestyleStatusInfoProvider);
-  }
-
   @override
   Widget build(BuildContext context) {
     List<String> controls =
-        'Lifestyle KPI.Main Controls.Health Update.Diary.Goals.Exercise'
+        'Lifestyle KPI.Main Controls.Health Update.Diary.Goals.Physical Fitness'
             .split(".");
     List<Widget> pages = [
       const KPITablePage(),
@@ -32,7 +28,7 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
       const HealthProjectsPage(),
       const DiaryPage(),
       const GoalsPage(),
-      Container(),
+      const ExercisesPage(),
     ];
 
     List<Widget> icons = [
@@ -53,49 +49,46 @@ class _LifestyleTabState extends ConsumerState<LifestyleTab> {
     final provider = ref.watch(lifestyleStatusInfoProvider);
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: provider.when(
-          data: (statusInfoList) {
-            return Column(
-              children: [
-                ...List.generate(controls.length, (index) {
-                  // Get status and last entry for the current component
-                  final bool? isUpToDate = index < statusInfoList.length
-                      ? statusInfoList[index][0]
-                      : null;
-                  final DateTime? lastEntry = index < statusInfoList.length
-                      ? statusInfoList[index][1]
-                      : null;
+      body: provider.when(
+        data: (statusInfoList) {
+          return Column(
+            children: [
+              ...List.generate(controls.length, (index) {
+                // Get status and last entry for the current component
+                final bool? isUpToDate = index < statusInfoList.length
+                    ? statusInfoList[index][0]
+                    : null;
+                final DateTime? lastEntry = index < statusInfoList.length
+                    ? statusInfoList[index][1]
+                    : null;
 
-                  return Expanded(
-                    child: _buildTile(
-                      title: controls[index],
-                      icon: icons[index],
-                      isUpToDate: isUpToDate,
-                      lastEntry: lastEntry,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return pages[index];
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-              ]
-                  .map((e) => [const SizedBox(height: 2), e])
-                  .expand((e) => e)
-                  .skip(1)
-                  .toList(),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
-        ),
+                return Expanded(
+                  child: _buildTile(
+                    title: controls[index],
+                    icon: icons[index],
+                    isUpToDate: isUpToDate,
+                    lastEntry: lastEntry,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return pages[index];
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }),
+            ]
+                .map((e) => [const SizedBox(height: 2), e])
+                .expand((e) => e)
+                .skip(1)
+                .toList(),
+          ).padding(vertical: 5);
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }

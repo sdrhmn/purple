@@ -46,6 +46,7 @@ dependencies:
   objectbox: ^4.0.1
   objectbox_flutter_libs: any
   path: ^1.9.0
+  rrule: ^0.2.16
   
 dev_dependencies:
   flutter_test:

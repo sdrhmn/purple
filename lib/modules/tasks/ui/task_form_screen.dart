@@ -67,7 +67,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                         setState(() {});
                         task.type = value!;
                       },
-                      width: 190,
+                      width: 210,
                       dropdownMenuEntries: [
                         for (int i in Iterable.generate(
                             widget.allowProjectType ? 1 : types.length - 1))
@@ -77,8 +77,9 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                             label: types.values.toList()[
                                 widget.allowProjectType ? types.length - 1 : i],
                             leadingIcon: icons[i]
-                                .constrained(width: 40)
-                                .clipRRect(all: 999),
+                                .constrained(width: 50)
+                                .clipRRect(all: 999)
+                                .padding(all: 5),
                           )
                       ]),
                 ]
@@ -91,7 +92,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
             DropdownMenu(
               initialSelection: task.priority,
               onSelected: (value) => task.priority = value!,
-              width: 190,
+              width: 210,
               dropdownMenuEntries: [
                 for (String difficulty
                     in 'Critical,High,Medium,Low,Lowest'.split(","))
@@ -107,6 +108,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
 
           // Activity
           TextFormField(
+            style: const TextStyle(color: Colors.black),
             enabled: task.type != "sleep",
             onTapOutside: (e) {
               FocusManager.instance.primaryFocus?.unfocus();
@@ -120,8 +122,7 @@ class _TaskFormState extends ConsumerState<TaskFormScreen> {
                 borderSide: BorderSide.none,
               ),
               filled: true,
-              fillColor:
-                  task.type == "sleep" ? Colors.grey[400] : Colors.purple[800],
+              fillColor: task.type == "sleep" ? Colors.grey[400] : Colors.white,
             ),
             onChanged: (value) {
               task.activity = value;

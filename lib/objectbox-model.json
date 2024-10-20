@@ -261,10 +261,81 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "12:2786300203262396914",
+      "lastPropertyId": "8:4003587721230032578",
+      "name": "Exercise",
+      "properties": [
+        {
+          "id": "1:1251983289625919278",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6984370520294560540",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "3:1000612169061870271",
+          "name": "time",
+          "type": 10
+        },
+        {
+          "id": "4:9001327095178210267",
+          "name": "repeats",
+          "type": 9
+        },
+        {
+          "id": "5:8022467517318300607",
+          "name": "dbPurpose",
+          "type": 6
+        },
+        {
+          "id": "6:5337140798329759930",
+          "name": "dbData",
+          "type": 9
+        },
+        {
+          "id": "7:5992932180549104497",
+          "name": "durationSeconds",
+          "type": 6
+        },
+        {
+          "id": "8:4003587721230032578",
+          "name": "dataRepeatExerciseId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "3:3237517120474501480",
+          "relationTarget": "DataRepeatExercise"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "13:134764082071943027",
+      "lastPropertyId": "2:8096267785597493208",
+      "name": "DataRepeatExercise",
+      "properties": [
+        {
+          "id": "1:1594295297348352020",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8096267785597493208",
+          "name": "data",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "11:8640812233055127975",
-  "lastIndexId": "2:55001190194957372",
+  "lastEntityId": "13:134764082071943027",
+  "lastIndexId": "3:3237517120474501480",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

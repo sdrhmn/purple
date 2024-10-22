@@ -361,7 +361,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         style: const TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: Colors.grey[850], // Light black color
                         padding: const EdgeInsets.symmetric(vertical: 24.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -391,7 +391,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         style: const TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purpleAccent,
+                        backgroundColor: Colors.grey[850], // Light black color
                         padding: const EdgeInsets.symmetric(vertical: 24.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

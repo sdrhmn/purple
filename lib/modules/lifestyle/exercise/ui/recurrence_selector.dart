@@ -477,6 +477,6 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
 // Add this extension method at the end of the file
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

@@ -152,7 +152,7 @@ class ExerciseTile extends StatelessWidget {
                 ),
               if (exercise.purpose == ExercisePurpose.evaluation)
                 Text(
-                  '${exercise.data[i][1]}s',
+                  '${exercise.data[i][1]}',
                   style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
             ],

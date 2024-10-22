@@ -35,11 +35,47 @@ class ExercisesPage extends ConsumerWidget {
                       return ExerciseForm(
                         exercise: exercises[index],
                         onSubmit: (exercise) async {
-                          await ref
-                              .read(exerciseRepositoryProvider.notifier)
-                              .updateExercise(exercise);
-                          if (context.mounted) Navigator.of(context).pop();
+                          if (exercises[index].repeats.isNotEmpty) {
+                            final updateRepeat = await showDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Update Repeat'),
+                                  content: const Text(
+                                      'This exercise also has a repeat feature. Do you want to update the corresponding repeat exercise?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('No'),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                    ),
+                                    TextButton(
+                                      child: const Text('Yes'),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (updateRepeat == true) {
+                              await ref
+                                  .read(exerciseRepositoryProvider.notifier)
+                                  .updateExerciseAndDataRepeatExercise(
+                                      exercise);
+                            } else {
+                              await ref
+                                  .read(exerciseRepositoryProvider.notifier)
+                                  .updateExercise(exercise);
+                            }
+                          } else {
+                            await ref
+                                .read(exerciseRepositoryProvider.notifier)
+                                .updateExercise(exercise);
+                          }
                           ref.invalidate(exerciseProvider);
+                          if (context.mounted) Navigator.of(context).pop();
                         },
                       );
                     },
@@ -74,6 +110,7 @@ class ExercisesPage extends ConsumerWidget {
             MaterialPageRoute(
               builder: (context) => ExerciseForm(
                 onSubmit: (exercise) async {
+                  if (context.mounted) Navigator.of(context).pop();
                   await ref
                       .read(exerciseRepositoryProvider.notifier)
                       .createExercise(exercise);

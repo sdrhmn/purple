@@ -39,7 +39,23 @@ class _ExerciseFormState extends State<ExerciseForm> {
           widget.exercise!.repeats.isNotEmpty ? widget.exercise!.repeats : null;
     } else {
       purpose = ExercisePurpose.evaluation;
-      addNewRow();
+      setDefaultData();
+    }
+  }
+
+  void setDefaultData() {
+    if (purpose == ExercisePurpose.workout) {
+      data = [
+        ['Biceps', 15, 3],
+        ['Triceps', 15, 3],
+        ['Shoulders', 10, 2],
+      ];
+    } else {
+      data = [
+        ['100m Sprint', '15s'],
+        ['200m Sprint', '31s'],
+        ['Chinups', '10'],
+      ];
     }
   }
 
@@ -51,6 +67,73 @@ class _ExerciseFormState extends State<ExerciseForm> {
         data.add(['', 0, 0]);
       }
     });
+  }
+
+  Widget _buildDurationPicker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text('Duration', style: TextStyle(fontSize: 16)),
+        const SizedBox(width: 10),
+        Switch(
+          value: duration != null,
+          onChanged: (value) {
+            setState(() {
+              duration = value ? const Duration(hours: 0, minutes: 0) : null;
+            });
+          },
+        ),
+        if (duration != null)
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 64.0,
+                    child: CupertinoPicker(
+                      scrollController: FixedExtentScrollController(
+                        initialItem: duration!.inHours,
+                      ),
+                      itemExtent: 32.0,
+                      onSelectedItemChanged: (value) {
+                        duration = Duration(
+                          hours: value,
+                          minutes: duration!.inMinutes % 60,
+                        );
+                      },
+                      children: List<Widget>.generate(
+                        24,
+                        (index) => Center(child: Text('$index hr')),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: 64.0,
+                    child: CupertinoPicker(
+                      scrollController: FixedExtentScrollController(
+                        initialItem: duration!.inMinutes % 60,
+                      ),
+                      itemExtent: 32.0,
+                      onSelectedItemChanged: (value) {
+                        duration = Duration(
+                          hours: duration!.inHours,
+                          minutes: value,
+                        );
+                      },
+                      children: List<Widget>.generate(
+                        60,
+                        (index) => Center(child: Text('$index min')),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
   }
 
   @override
@@ -76,8 +159,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         if (value != null) {
                           setState(() {
                             purpose = value;
-                            data = [];
-                            addNewRow();
+                            setDefaultData();
                           });
                         }
                       },
@@ -104,21 +186,71 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 ],
               ),
               const SizedBox(height: 20),
+              // Column headings
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 30), // Space for row numbers
+                    const Expanded(
+                      flex: 3,
+                      child: Text(
+                        'Element',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    if (purpose == ExercisePurpose.evaluation)
+                      const Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Target',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    else if (purpose == ExercisePurpose.workout) ...[
+                      const Expanded(
+                        child: Text(
+                          'Reps',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const Expanded(
+                        child: Text(
+                          'Sets',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(width: 48), // Space for the remove button
+                  ],
+                ),
+              ),
               // Form Fields for Data
               ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       children: [
+                        // Row number
+                        SizedBox(
+                          width: 30,
+                          child: Text(
+                            '${index + 1}.',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        // Element field
                         Expanded(
+                          flex: 3,
                           child: TextFormField(
                             controller:
                                 TextEditingController(text: data[index][0]),
                             decoration: InputDecoration(
-                              hintText: 'Element',
                               filled: true,
                               fillColor: Colors.grey[800],
                               border: OutlineInputBorder(
@@ -134,11 +266,11 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         const SizedBox(width: 8),
                         if (purpose == ExercisePurpose.evaluation)
                           Expanded(
+                            flex: 1,
                             child: TextFormField(
                               controller:
                                   TextEditingController(text: data[index][1]),
                               decoration: InputDecoration(
-                                hintText: 'Target',
                                 filled: true,
                                 fillColor: Colors.grey[800],
                                 border: OutlineInputBorder(
@@ -157,7 +289,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                               controller: TextEditingController(
                                   text: data[index][1].toString()),
                               decoration: InputDecoration(
-                                hintText: 'Reps',
                                 filled: true,
                                 fillColor: Colors.grey[800],
                                 border: OutlineInputBorder(
@@ -177,7 +308,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                               controller: TextEditingController(
                                   text: data[index][2].toString()),
                               decoration: InputDecoration(
-                                hintText: 'Sets',
                                 filled: true,
                                 fillColor: Colors.grey[800],
                                 border: OutlineInputBorder(
@@ -207,19 +337,29 @@ class _ExerciseFormState extends State<ExerciseForm> {
                   );
                 },
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              IconButton(
-                icon: const Icon(Icons.add_circle, color: Colors.blue),
-                onPressed: addNewRow,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.blue),
+                    onPressed: addNewRow,
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               // Date and Time Pickers
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
+                      icon:
+                          const Icon(Icons.calendar_today, color: Colors.white),
+                      label: Text(
+                        date != null
+                            ? DateFormat("EEE, dd MMM").format(date!)
+                            : 'Select Date',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent,
                         padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -240,17 +380,16 @@ class _ExerciseFormState extends State<ExerciseForm> {
                           });
                         }
                       },
-                      child: Text(
-                        date != null
-                            ? DateFormat("EEE, dd MMM").format(date!)
-                            : 'Select Date',
-                        style: const TextStyle(color: Colors.white),
-                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.access_time, color: Colors.white),
+                      label: Text(
+                        time != null ? time!.format(context) : 'Select Time',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purpleAccent,
                         padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -258,90 +397,72 @@ class _ExerciseFormState extends State<ExerciseForm> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () async {
-                        TimeOfDay? pickedTime = await showTimePicker(
-                          context: context,
-                          initialTime: time ?? TimeOfDay.now(),
+                      onPressed: () {
+                        DateTime tempTime = DateTime(
+                          DateTime.now().year,
+                          DateTime.now().month,
+                          DateTime.now().day,
+                          time?.hour ?? 0,
+                          time?.minute ?? 0,
                         );
-                        if (pickedTime != null) {
-                          setState(() {
-                            time = pickedTime;
-                          });
-                        }
+
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              color: Colors.black,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 250,
+                                    child: CupertinoDatePicker(
+                                      mode: CupertinoDatePickerMode.time,
+                                      initialDateTime: tempTime,
+                                      onDateTimeChanged: (DateTime newTime) {
+                                        tempTime = newTime;
+                                      },
+                                      use24hFormat: false,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      CupertinoButton(
+                                        child: const Icon(
+                                            CupertinoIcons.clear_circled,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      CupertinoButton(
+                                        child: const Icon(
+                                            CupertinoIcons.check_mark_circled,
+                                            color: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            time = TimeOfDay(
+                                                hour: tempTime.hour,
+                                                minute: tempTime.minute);
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
                       },
-                      child: Text(
-                        time != null ? time!.format(context) : 'Select Time',
-                        style: const TextStyle(color: Colors.white),
-                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-              // Duration Toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Duration', style: TextStyle(fontSize: 16)),
-                  const SizedBox(width: 10),
-                  Switch(
-                    value: duration != null,
-                    onChanged: (value) {
-                      setState(() {
-                        duration =
-                            value ? const Duration(hours: 0, minutes: 0) : null;
-                      });
-                    },
-                  ),
-                  if (duration != null)
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CupertinoPicker(
-                              scrollController: FixedExtentScrollController(
-                                initialItem: duration!.inHours,
-                              ),
-                              itemExtent: 32.0,
-                              onSelectedItemChanged: (value) {
-                                setState(() {
-                                  duration = Duration(
-                                    hours: value,
-                                    minutes: duration!.inMinutes % 60,
-                                  );
-                                });
-                              },
-                              children: List<Widget>.generate(
-                                24,
-                                (index) => Center(child: Text('$index hr')),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: CupertinoPicker(
-                              scrollController: FixedExtentScrollController(
-                                initialItem: duration!.inMinutes % 60,
-                              ),
-                              itemExtent: 32.0,
-                              onSelectedItemChanged: (value) {
-                                setState(() {
-                                  duration = Duration(
-                                    hours: duration!.inHours,
-                                    minutes: value,
-                                  );
-                                });
-                              },
-                              children: List<Widget>.generate(
-                                60,
-                                (index) => Center(child: Text('$index min')),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
+              _buildDurationPicker(),
               const SizedBox(height: 10),
               // Repeats Toggle
               Row(
@@ -418,7 +539,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                           repeats: repeats ?? "",
                         )..id = widget.exercise?.id ?? 0;
                         widget.onSubmit(newExercise);
-                        Navigator.of(context).pop();
                       }
                     },
                     child: const Text('Submit',

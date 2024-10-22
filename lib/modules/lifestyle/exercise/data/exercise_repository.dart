@@ -19,10 +19,10 @@ class ExerciseRepository extends AsyncNotifier<void> {
 
   // Create a new exercise
   Future<void> createExercise(Exercise exercise) async {
-    final dataRepeatExercise = DataRepeatExercise(
-      data: jsonEncode(exercise.toJson()),
-    );
     if (exercise.repeats.isNotEmpty) {
+      final dataRepeatExercise = DataRepeatExercise(
+        data: jsonEncode(exercise.toJson()),
+      );
       exercise.dataRepeatExercise.target = dataRepeatExercise;
     }
 
@@ -31,7 +31,14 @@ class ExerciseRepository extends AsyncNotifier<void> {
 
   // Read all exercises
   Future<List<Exercise>> readAllExercises() async {
-    return await _exerciseBox.getAllAsync();
+    return await _exerciseBox
+        .query()
+        .order(
+          Exercise_.date,
+          flags: Order.descending,
+        )
+        .build()
+        .findAsync();
   }
 
   // Read a specific exercise by ID
@@ -41,6 +48,18 @@ class ExerciseRepository extends AsyncNotifier<void> {
 
   // Update an exercise
   Future<void> updateExercise(Exercise exercise) async {
+    await _exerciseBox.putAsync(exercise);
+  }
+
+  // Update an exercise and also its dataRepeatExercise
+  Future<void> updateExerciseAndDataRepeatExercise(Exercise exercise) async {
+    if (exercise.repeats.isNotEmpty) {
+      final dataRepeatExercise = DataRepeatExercise(
+        data: jsonEncode(exercise.toJson()),
+      );
+      exercise.dataRepeatExercise.target = dataRepeatExercise;
+    }
+
     await _exerciseBox.putAsync(exercise);
   }
 

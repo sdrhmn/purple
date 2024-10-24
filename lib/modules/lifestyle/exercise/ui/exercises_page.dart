@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:timely/modules/lifestyle/exercise/data/exercise_model.dart';
 import 'package:timely/modules/lifestyle/exercise/data/exercise_provider.dart';
 import 'package:timely/modules/lifestyle/exercise/data/exercise_repository.dart';
@@ -154,7 +155,8 @@ class ExercisesPage extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () =>
                     Navigator.of(context).pop(DeleteOption.withoutRepeat),
-                child: const Text('Delete Exercise Only'),
+                child:
+                    const Text('Delete this occurrence only').padding(all: 8),
               ),
               const SizedBox(height: 8),
             ],
@@ -165,9 +167,11 @@ class ExercisesPage extends ConsumerWidget {
                       : DeleteOption.withoutRepeat),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: Text(
-                exercise.repeats.isNotEmpty ? 'Delete Both' : 'Delete',
+                exercise.repeats.isNotEmpty
+                    ? 'Delete all occurrences'
+                    : 'Delete',
                 style: const TextStyle(color: Colors.white),
-              ),
+              ).padding(all: 8),
             ),
           ],
         );

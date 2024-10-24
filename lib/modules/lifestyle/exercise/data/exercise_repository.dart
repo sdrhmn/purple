@@ -56,7 +56,7 @@ class ExerciseRepository extends AsyncNotifier<void> {
     if (exercise.repeats.isNotEmpty) {
       final dataRepeatExercise = DataRepeatExercise(
         data: jsonEncode(exercise.toJson()),
-      );
+      )..id = exercise.dataRepeatExercise.targetId;
       exercise.dataRepeatExercise.target = dataRepeatExercise;
     }
 

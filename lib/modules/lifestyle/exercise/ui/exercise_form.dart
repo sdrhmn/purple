@@ -24,7 +24,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
   DateTime? date;
   TimeOfDay? time;
   Duration? duration;
-  String? repeats;
+  String? repeats = 'RRULE:FREQ=DAILY'; // Default rrule to repeat daily
 
   @override
   void initState() {
@@ -46,15 +46,15 @@ class _ExerciseFormState extends State<ExerciseForm> {
   void setDefaultData() {
     if (purpose == ExercisePurpose.workout) {
       data = [
-        ['Biceps', 15, 3],
-        ['Triceps', 15, 3],
-        ['Shoulders', 10, 2],
+        ['', null, null],
+        ['', null, null],
+        ['', null, null],
       ];
     } else {
       data = [
-        ['100m Sprint', '15s'],
-        ['200m Sprint', '31s'],
-        ['Chinups', '10'],
+        ['', ''],
+        ['', ''],
+        ['', ''],
       ];
     }
   }
@@ -248,8 +248,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         Expanded(
                           flex: 3,
                           child: TextFormField(
-                            controller:
-                                TextEditingController(text: data[index][0]),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey[800],
@@ -257,6 +255,17 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
                               ),
+                              hintText: purpose == ExercisePurpose.workout
+                                  ? index == 0
+                                      ? 'Biceps'
+                                      : index == 1
+                                          ? 'Triceps'
+                                          : 'Calf'
+                                  : index == 0
+                                      ? '100m Sprint'
+                                      : index == 1
+                                          ? '200m Sprint'
+                                          : 'Chinups',
                             ),
                             onChanged: (value) {
                               data[index][0] = value;
@@ -268,8 +277,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                           Expanded(
                             flex: 1,
                             child: TextFormField(
-                              controller:
-                                  TextEditingController(text: data[index][1]),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[800],
@@ -277,6 +284,11 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide.none,
                                 ),
+                                hintText: index == 0
+                                    ? '15s'
+                                    : index == 1
+                                        ? '31s'
+                                        : '10',
                               ),
                               onChanged: (value) {
                                 data[index][1] = value;
@@ -286,8 +298,6 @@ class _ExerciseFormState extends State<ExerciseForm> {
                         else if (purpose == ExercisePurpose.workout) ...[
                           Expanded(
                             child: TextFormField(
-                              controller: TextEditingController(
-                                  text: data[index][1].toString()),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[800],
@@ -295,18 +305,17 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide.none,
                                 ),
+                                hintText: index == 2 ? '50r' : '15r',
                               ),
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.text,
                               onChanged: (value) {
-                                data[index][1] = int.tryParse(value) ?? 0;
+                                data[index][1] = value;
                               },
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextFormField(
-                              controller: TextEditingController(
-                                  text: data[index][2].toString()),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[800],
@@ -314,10 +323,11 @@ class _ExerciseFormState extends State<ExerciseForm> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide.none,
                                 ),
+                                hintText: '2s',
                               ),
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.text,
                               onChanged: (value) {
-                                data[index][2] = int.tryParse(value) ?? 0;
+                                data[index][2] = value;
                               },
                             ),
                           ),
@@ -357,7 +367,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                       label: Text(
                         date != null
                             ? DateFormat("EEE, dd MMM").format(date!)
-                            : 'Select Date',
+                            : 'Date',
                         style: const TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -387,7 +397,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.access_time, color: Colors.white),
                       label: Text(
-                        time != null ? time!.format(context) : 'Select Time',
+                        time != null ? time!.format(context) : 'Time',
                         style: const TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -402,8 +412,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
                           DateTime.now().year,
                           DateTime.now().month,
                           DateTime.now().day,
-                          time?.hour ?? 0,
-                          time?.minute ?? 0,
+                          time?.hour ?? DateTime.now().hour,
+                          time?.minute ?? DateTime.now().minute,
                         );
 
                         showModalBottomSheet(
@@ -489,12 +499,10 @@ class _ExerciseFormState extends State<ExerciseForm> {
                 RecurrenceSelector(
                   initialRecurrenceRule: repeats!,
                   onRecurrenceSelected: (String rrule) {
-                    setState(() {
-                      repeats = rrule; // Set the selected rrule
-                    });
+                    repeats = rrule; // Set the selected rrule
                   },
                 ),
-              Text(repeats ?? ""),
+              // Removed the Text widget displaying the raw repeats string
               const SizedBox(height: 40),
               // Submit and Cancel Buttons
               Row(

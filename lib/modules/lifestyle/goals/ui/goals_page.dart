@@ -112,7 +112,7 @@ class _GoalsPageState extends ConsumerState<GoalsPage> {
           MaterialPageRoute(
             builder: (context) => Scaffold(
               appBar: AppBar(
-                title: const Text("Create Task"),
+                title: const Text("Create Goal"),
               ),
               body: const TaskFormScreen(
                 allowProjectType: true,

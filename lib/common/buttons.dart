@@ -57,6 +57,7 @@ class DateButtonAtom extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            if (icon != null) icon!.padding(),
             Text(
               currentDate != null
                   ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY)
@@ -64,7 +65,6 @@ class DateButtonAtom extends StatelessWidget {
                   : defaultText ?? "Select Date",
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            if (icon != null) icon!.padding(),
           ],
         ),
       ),
@@ -134,11 +134,11 @@ class TextButtonAtom extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            if (icon != null) icon!,
             Text(
               text,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            if (icon != null) icon!,
           ],
         ),
       ),

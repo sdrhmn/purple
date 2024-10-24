@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timely/modules/lifestyle/exercise/data/exercise_model.dart';
+import 'package:rrule/rrule.dart';
 
 class ExerciseTile extends StatelessWidget {
   final Exercise exercise;
@@ -83,6 +84,9 @@ class ExerciseTile extends StatelessWidget {
                     const SizedBox(height: 10),
                     // Exercise Details
                     ..._buildExerciseDetails(),
+                    const SizedBox(height: 10),
+                    // Add this new widget to display the recurring rule
+                    _buildRecurringRuleText(),
                   ],
                 ),
               ),
@@ -161,5 +165,32 @@ class ExerciseTile extends StatelessWidget {
       );
     }
     return details;
+  }
+
+  // New method to build the recurring rule text
+  Widget _buildRecurringRuleText() {
+    if (exercise.repeats.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return FutureBuilder<String>(
+      future: _getHumanReadableRecurringRule(exercise.repeats),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return Text(
+            'Repeats: ${snapshot.data}',
+            style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Future<String> _getHumanReadableRecurringRule(String rruleString) async {
+    final rrule = RecurrenceRule.fromString(rruleString);
+    final l10n = await RruleL10nEn.create();
+    return rrule.toText(l10n: l10n);
   }
 }

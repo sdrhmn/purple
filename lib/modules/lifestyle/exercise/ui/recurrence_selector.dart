@@ -102,6 +102,50 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
     }
   }
 
+  void _updateRecurrenceRule() {
+    RecurrenceRule rrule;
+    if (_frequency == Frequency.daily) {
+      rrule = RecurrenceRule(frequency: Frequency.daily, interval: _interval);
+    } else if (_frequency == Frequency.weekly) {
+      rrule = RecurrenceRule(
+        frequency: Frequency.weekly,
+        interval: _interval,
+        byWeekDays: _selectedWeekdays
+            .map((dayIndex) => ByWeekDayEntry(dayIndex))
+            .toSet()
+            .toList(),
+      );
+    } else if (_frequency == Frequency.monthly) {
+      rrule = RecurrenceRule(
+        frequency: Frequency.monthly,
+        interval: _interval,
+        byMonthDays: _eachSelected ? _selectedMonthDays : [],
+        bySetPositions: !_eachSelected
+            ? [_weekdayPositions.indexOf(_weekdayPosition) + 1]
+            : [],
+        byWeekDays: !_eachSelected
+            ? {ByWeekDayEntry(_daysOfWeek.indexOf(_selectedDayOfWeek) % 7 + 1)}
+                .toList()
+            : [],
+      );
+    } else {
+      rrule = RecurrenceRule(
+        frequency: Frequency.yearly,
+        interval: _interval,
+        byMonths: _selectedMonths,
+        bySetPositions: _showYearlyAdvancedOption
+            ? [_weekdayPositions.indexOf(_weekdayPosition) + 1]
+            : [],
+        byWeekDays: _showYearlyAdvancedOption
+            ? {ByWeekDayEntry(_daysOfWeek.indexOf(_selectedDayOfWeek) % 7 + 1)}
+                .toList()
+            : [],
+      );
+    }
+
+    widget.onRecurrenceSelected(rrule.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -131,6 +175,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                       _selectedMonths.clear();
                       _showYearlyAdvancedOption = false;
                     });
+                    _updateRecurrenceRule();
                   }
                 },
                 items: [
@@ -172,6 +217,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
               itemExtent: 40.0,
               onSelectedItemChanged: (index) {
                 _interval = index + 1;
+                _updateRecurrenceRule();
               },
               children: List.generate(
                 _frequency == Frequency.yearly ? 10 : 31,
@@ -215,6 +261,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         _selectedWeekdays.remove(dayIndex);
                       }
                     });
+                    _updateRecurrenceRule();
                   },
                 );
               }).toList(),
@@ -239,6 +286,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                     setState(() {
                       _eachSelected = value;
                     });
+                    _updateRecurrenceRule();
                   },
                 ),
                 const SizedBox(width: 16),
@@ -263,6 +311,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                           _selectedMonthDays.remove(index + 1);
                         }
                       });
+                      _updateRecurrenceRule();
                     },
                   );
                 }),
@@ -280,6 +329,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         itemExtent: 40.0,
                         onSelectedItemChanged: (index) {
                           _weekdayPosition = _weekdayPositions[index];
+                          _updateRecurrenceRule();
                         },
                         children: _weekdayPositions
                             .map((pos) => Center(
@@ -297,6 +347,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         itemExtent: 40.0,
                         onSelectedItemChanged: (index) {
                           _selectedDayOfWeek = _daysOfWeek[index];
+                          _updateRecurrenceRule();
                         },
                         children: _daysOfWeek
                             .map((day) => Center(
@@ -336,6 +387,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         _selectedMonths.remove(monthIndex);
                       }
                     });
+                    _updateRecurrenceRule();
                   },
                 );
               }).toList(),
@@ -355,6 +407,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                     setState(() {
                       _showYearlyAdvancedOption = value;
                     });
+                    _updateRecurrenceRule();
                   },
                 ),
               ],
@@ -373,6 +426,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         itemExtent: 40.0,
                         onSelectedItemChanged: (index) {
                           _weekdayPosition = _weekdayPositions[index];
+                          _updateRecurrenceRule();
                         },
                         children: _weekdayPositions
                             .map((pos) => Center(
@@ -390,6 +444,7 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
                         itemExtent: 40.0,
                         onSelectedItemChanged: (index) {
                           _selectedDayOfWeek = _daysOfWeek[index];
+                          _updateRecurrenceRule();
                         },
                         children: _daysOfWeek
                             .map((day) => Center(
@@ -404,73 +459,9 @@ class _RecurrenceSelectorState extends State<RecurrenceSelector> {
               ),
             ],
           ],
-          const SizedBox(height: 32),
-          Center(
-            child: ElevatedButton(
-              onPressed: _buildAndSaveRecurrenceRule,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                child: Text(
-                  "Save Recurrence Rule",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
-  }
-
-  // Method to generate the RRULE string and pass it to the parent widget
-  void _buildAndSaveRecurrenceRule() {
-    RecurrenceRule rrule;
-    if (_frequency == Frequency.daily) {
-      rrule = RecurrenceRule(frequency: Frequency.daily, interval: _interval);
-    } else if (_frequency == Frequency.weekly) {
-      rrule = RecurrenceRule(
-        frequency: Frequency.weekly,
-        interval: _interval,
-        byWeekDays: _selectedWeekdays
-            .map((dayIndex) => ByWeekDayEntry(dayIndex))
-            .toSet()
-            .toList(),
-      );
-    } else if (_frequency == Frequency.monthly) {
-      rrule = RecurrenceRule(
-        frequency: Frequency.monthly,
-        interval: _interval,
-        byMonthDays: _eachSelected ? _selectedMonthDays : [],
-        bySetPositions: !_eachSelected
-            ? [_weekdayPositions.indexOf(_weekdayPosition) + 1]
-            : [],
-        byWeekDays: !_eachSelected
-            ? {ByWeekDayEntry(_daysOfWeek.indexOf(_selectedDayOfWeek) % 7 + 1)}
-                .toList()
-            : [],
-      );
-    } else {
-      rrule = RecurrenceRule(
-        frequency: Frequency.yearly,
-        interval: _interval,
-        byMonths: _selectedMonths,
-        bySetPositions: _showYearlyAdvancedOption
-            ? [_weekdayPositions.indexOf(_weekdayPosition) + 1]
-            : [],
-        byWeekDays: _showYearlyAdvancedOption
-            ? {ByWeekDayEntry(_daysOfWeek.indexOf(_selectedDayOfWeek) % 7 + 1)}
-                .toList()
-            : [],
-      );
-    }
-
-    widget.onRecurrenceSelected(rrule.toString());
-    print(DateTime.now().copyWith(isUtc: true));
-    print(rrule
-        .getInstances(
-          start: DateTime.now().copyWith(isUtc: true),
-        )
-        .take(1));
   }
 }
 
